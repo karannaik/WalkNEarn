@@ -1,33 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.androiders.walknearn.MainActivity">
 
-    <TextView
-        android:id="@+id/message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:text="@string/title_home"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <android.support.design.widget.BottomNavigationView
-        android:id="@+id/navigation"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="0dp"
-        android:layout_marginStart="0dp"
-        android:background="?android:attr/windowBackground"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:menu="@menu/navigation" />
 
+        <ImageView
+            android:id="@+id/imageview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/untitled" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageview"
+            android:layout_gravity="center"
+            android:background="@color/colorPrimaryDark"
+            android:gravity="center"
+            android:maxLines="1"
+            android:padding="10dp"
+            android:text="10am         12pm           2pm            4pm          6pm          8pm"
+            android:textColor="@color/white" />
+
+        <ImageView
+            android:id="@+id/imageview2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/textView"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/bg2" />
+
+        <com.androiders.walknearn.fab.FloatingActionsMenu
+            android:id="@+id/fabMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="16dp"
+            fab:fab_addButtonColorNormal="@color/colorAccent"
+            fab:fab_addButtonColorPressed="@color/colorAccentLite"
+            fab:fab_addButtonPlusIconColor="@color/white"
+            fab:fab_addButtonSize="normal"
+            fab:fab_expandDirection="up"
+            fab:fab_labelStyle="@style/menu_labels_style">
+
+            <com.androiders.walknearn.fab.FloatingActionButton
+                android:id="@+id/btnFabMail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                fab:fab_colorNormal="@color/colorAccentLite"
+                fab:fab_colorPressed="@color/colorAccent"
+                fab:fab_icon="@mipmap/ic_settings_white_24dp"
+                fab:fab_title="Settings" />
+
+            <com.androiders.walknearn.fab.FloatingActionButton
+                android:id="@+id/btnFabEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ic_walk_white_24dp"
+                fab:fab_colorNormal="@color/colorAccentLite"
+                fab:fab_colorPressed="@color/colorAccent"
+                fab:fab_title="Walkcoins" />
+
+        </com.androiders.walknearn.fab.FloatingActionsMenu>
+
+
+        <!--<com.robertlevonyan.views.customfloatingactionbutton.FloatingLayout-->
+        <!--android:id="@+id/floating_layout"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="match_parent"-->
+        <!--app:fabMenuGravity="bottom"-->
+        <!--app:fabMenuStyle="popUp"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_alignParentBottom="true">-->
+
+        <!--<com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton-->
+        <!--android:id="@+id/fab1"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--app:fabSizes="mini"-->
+        <!--app:fabIcon="@drawable/ic_walk_black_24dp"-->
+        <!--app:fabColor="@color/colorAccent1"/>-->
+
+        <!--<com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton-->
+        <!--android:id="@+id/fab2"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--app:fabColor="#ff9c10"-->
+        <!--app:fabSizes="mini" />-->
+
+        <!--<com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton-->
+        <!--android:id="@+id/fab3"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--app:fabColor="#0b7bc1"-->
+        <!--app:fabSizes="mini" />-->
+
+        <!--<com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton-->
+        <!--android:id="@+id/fab4"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--app:fabColor="#ea201c"-->
+        <!--app:fabSizes="mini" />-->
+
+        <!--</com.robertlevonyan.views.customfloatingactionbutton.FloatingLayout>-->
+
+    </RelativeLayout>
 </android.support.constraint.ConstraintLayout>
+
+
