@@ -1,5 +1,10 @@
 <resources>
+
+    <string name="facebook_app_id">348230779010504</string>
+    <string name="fb_login_protocol_scheme">fb348230779010504</string>
+
     <string name="app_name">WalkNEarn</string>
+
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>

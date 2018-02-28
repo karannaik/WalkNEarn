@@ -1,36 +1,46 @@
 package com.androiders.walknearn;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androiders.walknearn.dbhelper.SharedPrefs;
 import com.androiders.walknearn.util.Utility;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 
 public class LoginActivity extends AppCompatActivity {
 
 
     private static final String TAG = "LoginActivity";
-
+    private Button mFacebookLoginButton;
     private EditText mEdtEmailId;
     private EditText mEdtPassword;
     private TextInputLayout mTxtInputLayoutEmail;
@@ -39,20 +49,75 @@ public class LoginActivity extends AppCompatActivity {
     private LinearLayout mLinearPassword;
     private ProgressDialog mProgressDialog;
     private CoordinatorLayout mCoordinatorLayout;
+    private CallbackManager mCallBackManager;
+    TextView mInfo;
 
-    private static final String [] LOCATION_PERMS =
+    private static final String[] LOCATION_PERMS =
             {
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.ACCESS_COARSE_LOCATION
             };
-    private static final int INITIAL_REQUEST=1337;
+    private static final int INITIAL_REQUEST = 1337;
 
+    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        FacebookSdk.sdkInitialize(this.getApplicationContext());
+        AppEventsLogger.activateApp(this);
 
-        if (new SharedPrefs(this).getSyncTime() == null) {
+        setContentView(R.layout.activity_login);
+        mFacebookLoginButton = findViewById(R.id.facebook_login_button);
+        Toast.makeText(LoginActivity.this, "Welcome in WalkNEarn app", Toast.LENGTH_SHORT).show();
+        mInfo = (TextView) findViewById(R.id.info);
+
+        mCallBackManager = CallbackManager.Factory.create();
+
+        mFacebookLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                LoginManager.getInstance().registerCallback(mCallBackManager,
+                        new FacebookCallback<LoginResult>() {
+                            public void onSuccess(LoginResult loginResult) {
+
+                                Toast.makeText(LoginActivity.this, "Successful facebook login", Toast.LENGTH_SHORT).show();
+                                /*mInfo.setText(
+                                        "User ID: "
+                                                + loginResult.getAccessToken().getUserId()
+                                                + "\n" +
+                                                "Auth Token: "
+                                                + loginResult.getAccessToken().getToken()
+                                );*/
+                            }
+
+
+                            @Override
+                            public void onCancel() {
+
+                               // mInfo.setText("Login attempt canceled.");
+                            }
+
+                            @Override
+                            public void onError(FacebookException e) {
+
+
+//                                mInfo.setText("Login attempt failed.");
+
+                            }
+                        });
+            }
+        });
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        mCallBackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+
+       /* if (new SharedPrefs(this).getSyncTime() == null) {
 
             int currentapiVersion = Build.VERSION.SDK_INT;
             if (currentapiVersion >= 23){//is marshmallow
@@ -74,9 +139,9 @@ public class LoginActivity extends AppCompatActivity {
             Intent i = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(i);
             finish();
-        }
+        }*/
 
-    }
+
 
     private void showInternetSnackBar() {
         Snackbar snackbar = Snackbar
@@ -223,6 +288,7 @@ public class LoginActivity extends AppCompatActivity {
         return(hasPermission(Manifest.permission.ACCESS_FINE_LOCATION));
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
     private boolean hasPermission(String perm) {
         return(PackageManager.PERMISSION_GRANTED==checkSelfPermission(perm));
     }
