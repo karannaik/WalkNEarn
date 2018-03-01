@@ -108,16 +108,9 @@ public class LoginActivity extends AppCompatActivity {
                         });
             }
         });
-    }
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        mCallBackManager.onActivityResult(requestCode, resultCode, data);
-    }
 
 
-
-       /* if (new SharedPrefs(this).getSyncTime() == null) {
+        if (new SharedPrefs(this).getSyncTime() == null) {
 
             int currentapiVersion = Build.VERSION.SDK_INT;
             if (currentapiVersion >= 23){//is marshmallow
@@ -139,9 +132,13 @@ public class LoginActivity extends AppCompatActivity {
             Intent i = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(i);
             finish();
-        }*/
+        }
+    }
 
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+        mCallBackManager.onActivityResult(requestCode, resultCode, data);
+    }
 
     private void showInternetSnackBar() {
         Snackbar snackbar = Snackbar
@@ -270,7 +267,8 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (mLinearPassword.getVisibility() == View.VISIBLE) {
+
+        if (mLinearPassword!=null && mLinearPassword.getVisibility() == View.VISIBLE) {
             mLinearEmailId.setVisibility(View.VISIBLE);
             mLinearPassword.setVisibility(View.GONE);
             View view = LoginActivity.this.getCurrentFocus();
