@@ -38,7 +38,6 @@ import java.util.Calendar;
 
 public class LoginActivity extends AppCompatActivity {
 
-
     private static final String TAG = "LoginActivity";
     private Button mFacebookLoginButton;
     private EditText mEdtEmailId;
@@ -47,17 +46,9 @@ public class LoginActivity extends AppCompatActivity {
     private TextInputLayout mTxtInputLayoutPassword;
     private LinearLayout mLinearEmailId;
     private LinearLayout mLinearPassword;
-    private ProgressDialog mProgressDialog;
     private CoordinatorLayout mCoordinatorLayout;
     private CallbackManager mCallBackManager;
     TextView mInfo;
-
-    private static final String[] LOCATION_PERMS =
-            {
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-            };
-    private static final int INITIAL_REQUEST = 1337;
 
     @SuppressLint("WrongViewCast")
     @Override
@@ -67,6 +58,8 @@ public class LoginActivity extends AppCompatActivity {
         AppEventsLogger.activateApp(this);
 
         setContentView(R.layout.activity_login);
+
+        initializeViews();
         mFacebookLoginButton = findViewById(R.id.facebook_login_button);
         Toast.makeText(LoginActivity.this, "Welcome in WalkNEarn app", Toast.LENGTH_SHORT).show();
         mInfo = (TextView) findViewById(R.id.info);
@@ -110,34 +103,6 @@ public class LoginActivity extends AppCompatActivity {
         });
 
 
-        if (new SharedPrefs(this).getSyncTime() == null) {
-
-            int currentapiVersion = Build.VERSION.SDK_INT;
-            if (currentapiVersion >= 23){//is marshmallow
-
-                if (!canAccessLocation()) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        requestPermissions(LOCATION_PERMS, INITIAL_REQUEST);
-                    }
-                } else {
-                    initializeViews();
-                }
-            } else{
-
-                initializeViews();
-            }
-
-        } else {
-
-            Intent i = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(i);
-            finish();
-        }
-    }
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        mCallBackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     private void showInternetSnackBar() {
@@ -282,26 +247,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    private boolean canAccessLocation() {
-        return(hasPermission(Manifest.permission.ACCESS_FINE_LOCATION));
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        mCallBackManager.onActivityResult(requestCode, resultCode, data);
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
-    private boolean hasPermission(String perm) {
-        return(PackageManager.PERMISSION_GRANTED==checkSelfPermission(perm));
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-
-        if (!canAccessLocation()) {
-            Toast.makeText(this, "Please enable locations to use this app", Toast.LENGTH_SHORT).show();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(LOCATION_PERMS, INITIAL_REQUEST);
-            }
-        } else {
-            initializeViews();
-        }
-    }
 
 }

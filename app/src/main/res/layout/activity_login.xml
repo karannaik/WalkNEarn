@@ -160,8 +160,6 @@
                     android:src="@drawable/google_logo" />
 
             </LinearLayout>
-
-
         </LinearLayout>
     </ScrollView>
 </android.support.design.widget.CoordinatorLayout>

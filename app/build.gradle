@@ -40,4 +40,6 @@ dependencies {
 
     // Facebook Android SDK (everything)
     compile 'com.facebook.android:facebook-android-sdk:4.+'
+    compile 'com.google.android.gms:play-services-fitness:11.6.0'
+    compile 'com.google.android.gms:play-services-auth:11.6.0'
 }

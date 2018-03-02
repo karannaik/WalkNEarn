@@ -35,7 +35,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
                 if (new SharedPrefs(SplashScreenActivity.this).getSyncTime() == null) {
 
-                    Intent i = new Intent(SplashScreenActivity.this, LoginActivity.class);
+                    Intent i = new Intent(SplashScreenActivity.this, AskingLocaionActivity.class);
                     startActivity(i);
                     finish();
                 } else {
