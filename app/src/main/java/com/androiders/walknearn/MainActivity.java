@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.tv.TvContract;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,12 +41,36 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG = "StepCounter";
     private static final int REQUEST_OAUTH_REQUEST_CODE = 0x1001;
 
+    UserLocalStore userLocalStore;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FitnessOptions fitnessOptions =
+        TextView Username = findViewById(R.id.username);
+        TextView Name = findViewById(R.id.name);
+        TextView StepCount = findViewById(R.id.stepcnt);
+        Button Logout = findViewById(R.id.logout);
+
+        userLocalStore = new UserLocalStore(this);
+        User user = userLocalStore.getLoggedInUser();
+        Toast.makeText(this,"Email is "+user.Email,Toast.LENGTH_LONG).show();
+        Username.setText(user.Email);
+        Name.setText(user.Username);
+        StepCount.setText(user.StepCount+"");
+        Logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                userLocalStore.clearUserData();
+                userLocalStore.setUserLggedIn(false);
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            }
+        });
+    }
+}
+
+        /*FitnessOptions fitnessOptions =
                 FitnessOptions.builder()
                         .addDataType(DataType.TYPE_STEP_COUNT_CUMULATIVE)
                         .addDataType(DataType.TYPE_STEP_COUNT_DELTA)
@@ -72,11 +98,11 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, CouponActivity.class));
             }
-        });
+        });*/
 
-    }
+    //}
 
-    @Override
+    /*@Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_OAUTH_REQUEST_CODE) {
@@ -86,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /** Records step data by requesting a subscription to background step data. */
-    public void subscribe() {
+    /*public void subscribe() {
         // To create a subscription, invoke the Recording API. As soon as the subscription is
         // active, fitness data will start recording.
         Fitness.getRecordingClient(this, GoogleSignIn.getLastSignedInAccount(this))
@@ -108,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
      * Reads the current daily step total, computed from midnight of the current day on the device's
      * current timezone.
      */
-    private void readData() {
+    /*private void readData() {
         Fitness.getHistoryClient(this, GoogleSignIn.getLastSignedInAccount(this))
                 .readDailyTotal(DataType.TYPE_STEP_COUNT_DELTA)
                 .addOnSuccessListener(
@@ -133,4 +159,4 @@ public class MainActivity extends AppCompatActivity {
                         });
     }
 
-}
+}*/

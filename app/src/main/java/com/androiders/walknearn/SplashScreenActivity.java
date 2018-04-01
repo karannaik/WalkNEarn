@@ -15,11 +15,14 @@ import com.androiders.walknearn.dbhelper.SharedPrefs;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
+    UserLocalStore userLocalStore;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
+        userLocalStore = new UserLocalStore(this);
         int SPLASH_TIME_OUT = 2000;
         new Handler().postDelayed(new Runnable() {
 
@@ -30,19 +33,31 @@ public class SplashScreenActivity extends AppCompatActivity {
 
             @Override
             public void run() {
+
+                if(userLocalStore.isUserLoggedIn()){
+                    Intent i = new Intent(SplashScreenActivity.this, MainActivity.class);
+                    startActivity(i);
+                    finish();
+                }
+                else{
+                    Intent i = new Intent(SplashScreenActivity.this, LoginActivity.class);
+                    startActivity(i);
+                    finish();
+                }
                 // This method will be executed once the timer is over
                 // Start your app main activity
 
-                if (new SharedPrefs(SplashScreenActivity.this).getSyncTime() == null) {
+                /*if (new SharedPrefs(SplashScreenActivity.this).getSyncTime() == null) {
 
-                    Intent i = new Intent(SplashScreenActivity.this, AskingLocaionActivity.class);
+                    Intent i = new Intent(SplashScreenActivity.this, LoginActivity.class);
                     startActivity(i);
                     finish();
                 } else {
                     Intent i = new Intent(SplashScreenActivity.this, MainActivity.class);
                     startActivity(i);
                     finish();
-                }
+                }*/
+
             }
         }, SPLASH_TIME_OUT);
     }

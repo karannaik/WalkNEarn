@@ -7,7 +7,36 @@
     android:layout_height="match_parent"
     tools:context="com.androiders.walknearn.MainActivity">
 
-    <RelativeLayout
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/username"
+            android:text="Username"
+            android:textSize="20sp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/name"
+            android:text="Name"
+            android:textSize="20sp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/stepcnt"
+            android:text="Step count"
+            android:textSize="20sp"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/logout"
+            android:text="Logout"/>
+    </LinearLayout>
+
+    <!--<RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -43,7 +72,7 @@
                 android:textColor="@color/white"
                 android:textSize="14sp"
                 android:layout_below="@+id/text1"
-                android:text="--Total steps--"/>
+                android:text="Total steps"/>
 
             <ImageView
                 android:id="@+id/imageRefresh"
@@ -124,7 +153,7 @@
         </com.androiders.walknearn.fab.FloatingActionsMenu>
 
 
-        <!--<com.robertlevonyan.views.customfloatingactionbutton.FloatingLayout-->
+        <com.robertlevonyan.views.customfloatingactionbutton.FloatingLayout-->
         <!--android:id="@+id/floating_layout"-->
         <!--android:layout_width="wrap_content"-->
         <!--android:layout_height="match_parent"-->
@@ -164,7 +193,7 @@
 
         <!--</com.robertlevonyan.views.customfloatingactionbutton.FloatingLayout>-->
 
-    </RelativeLayout>
+    <!--</RelativeLayout>-->
 </android.support.constraint.ConstraintLayout>
 
 

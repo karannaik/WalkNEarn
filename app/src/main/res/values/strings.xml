@@ -2,11 +2,30 @@
 
     <string name="facebook_app_id">348230779010504</string>
     <string name="fb_login_protocol_scheme">fb348230779010504</string>
-
     <string name="app_name">WalkNEarn</string>
-
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_blank"></string>
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to login and signup -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="prompt_name">Display name(Optional)</string>
+    <string name="action_forgot_password">Forgot Password?</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_up">Sign up</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_email">Invalid username</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="new_user">New User?</string>
+    <string name="returning_user">Already have an account?</string>
+    <string name="login_options">Sign in with</string>
+    <string name="signup_options">Sign up with</string>
+    <string name="facebook_signup_success">Facebook Sign Up successful</string>
+    <string name="internet_unavailable">Internet not available</string>
+
 </resources>
