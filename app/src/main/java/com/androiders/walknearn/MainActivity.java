@@ -48,29 +48,29 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TextView Username = findViewById(R.id.username);
-        TextView Name = findViewById(R.id.name);
-        TextView StepCount = findViewById(R.id.stepcnt);
-        Button Logout = findViewById(R.id.logout);
+        /*TextView Username = findViewById(R.id.username);
+            TextView Name = findViewById(R.id.name);
+            TextView StepCount = findViewById(R.id.stepcnt);
+            Button Logout = findViewById(R.id.logout);
 
-        userLocalStore = new UserLocalStore(this);
-        User user = userLocalStore.getLoggedInUser();
-        Toast.makeText(this,"Email is "+user.Email,Toast.LENGTH_LONG).show();
-        Username.setText(user.Email);
-        Name.setText(user.Username);
-        StepCount.setText(user.StepCount+"");
-        Logout.setOnClickListener(new View.OnClickListener() {
+            userLocalStore = new UserLocalStore(this);
+            User user = userLocalStore.getLoggedInUser();
+            Toast.makeText(this,"Email is "+user.Email,Toast.LENGTH_LONG).show();
+            Username.setText(user.Email);
+            Name.setText(user.Username);
+            StepCount.setText(user.StepCount+"");
+            Logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 userLocalStore.clearUserData();
                 userLocalStore.setUserLggedIn(false);
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
             }
-        });
-    }
-}
+            });
+            }
+        }*/
 
-        /*FitnessOptions fitnessOptions =
+        FitnessOptions fitnessOptions =
                 FitnessOptions.builder()
                         .addDataType(DataType.TYPE_STEP_COUNT_CUMULATIVE)
                         .addDataType(DataType.TYPE_STEP_COUNT_DELTA)
@@ -81,10 +81,10 @@ public class MainActivity extends AppCompatActivity {
                     REQUEST_OAUTH_REQUEST_CODE,
                     GoogleSignIn.getLastSignedInAccount(this),
                     fitnessOptions);
-        } else {
+        }
+        else {
             subscribe();
         }
-
         findViewById(R.id.imageRefresh).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,11 +98,18 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, CouponActivity.class));
             }
-        });*/
+        });
 
-    //}
+        findViewById(R.id.btnFabSettings).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this,SettingsActivity.class));
+            }
+        });
 
-    /*@Override
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_OAUTH_REQUEST_CODE) {
@@ -112,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /** Records step data by requesting a subscription to background step data. */
-    /*public void subscribe() {
+    public void subscribe() {
         // To create a subscription, invoke the Recording API. As soon as the subscription is
         // active, fitness data will start recording.
         Fitness.getRecordingClient(this, GoogleSignIn.getLastSignedInAccount(this))
@@ -134,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
      * Reads the current daily step total, computed from midnight of the current day on the device's
      * current timezone.
      */
-    /*private void readData() {
+    private void readData() {
         Fitness.getHistoryClient(this, GoogleSignIn.getLastSignedInAccount(this))
                 .readDailyTotal(DataType.TYPE_STEP_COUNT_DELTA)
                 .addOnSuccessListener(
@@ -159,4 +166,4 @@ public class MainActivity extends AppCompatActivity {
                         });
     }
 
-}*/
+}

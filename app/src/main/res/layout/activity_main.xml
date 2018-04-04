@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context="com.androiders.walknearn.MainActivity">
 
-    <LinearLayout
+    <!-- <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -34,9 +34,9 @@
             android:layout_height="wrap_content"
             android:id="@+id/logout"
             android:text="Logout"/>
-    </LinearLayout>
+    </LinearLayout>-->
 
-    <!--<RelativeLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -123,7 +123,7 @@
             fab:fab_labelStyle="@style/menu_labels_style">
 
             <com.androiders.walknearn.fab.FloatingActionButton
-                android:id="@+id/btnFabMail"
+                android:id="@+id/btnFabSettings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 fab:fab_colorNormal="@color/colorAccentLite"
@@ -132,7 +132,7 @@
                 fab:fab_title="Settings" />
 
             <com.androiders.walknearn.fab.FloatingActionButton
-                android:id="@+id/btnFabEdit"
+                android:id="@+id/btnFabTasks"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@mipmap/ic_walk_white_24dp"
@@ -153,7 +153,7 @@
         </com.androiders.walknearn.fab.FloatingActionsMenu>
 
 
-        <com.robertlevonyan.views.customfloatingactionbutton.FloatingLayout-->
+        <!--<com.robertlevonyan.views.customfloatingactionbutton.FloatingLayout-->
         <!--android:id="@+id/floating_layout"-->
         <!--android:layout_width="wrap_content"-->
         <!--android:layout_height="match_parent"-->
@@ -193,7 +193,7 @@
 
         <!--</com.robertlevonyan.views.customfloatingactionbutton.FloatingLayout>-->
 
-    <!--</RelativeLayout>-->
+    </RelativeLayout>
 </android.support.constraint.ConstraintLayout>
 
 

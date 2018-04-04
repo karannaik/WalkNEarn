@@ -210,54 +210,49 @@ public class SignUpActivity extends AppCompatActivity {
         // Set permissions to open the fb login page (By default opens if used com.facebook.....loginbutton
         LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("email","user_photos","public_profile"));
 
-        LoginManager.getInstance().registerCallback(mCallBackManager,
-                new FacebookCallback<LoginResult>() {
+        LoginManager.getInstance().registerCallback(mCallBackManager,new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+
+                //System.out.println("Success");
+                Toast.makeText(SignUpActivity.this,"Success",Toast.LENGTH_LONG).show();
+                /*GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                     @Override
-                    public void onSuccess(LoginResult loginResult) {
+                    public void onCompleted(JSONObject json, GraphResponse response) {
+                        if (response.getError() != null) {
+                            // handle error
+                            System.out.println("ERROR");
+                        }
+                        else {
+                            System.out.println("Success");
+                            try {
+                                String jsonresult = String.valueOf(json);
+                                System.out.println("JSON Result"+jsonresult);
 
-                        //System.out.println("Success");
-                        Toast.makeText(SignUpActivity.this,"Success",Toast.LENGTH_LONG).show();
-                        /*GraphRequest.newMeRequest(
-                                loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
-                                    @Override
-                                    public void onCompleted(JSONObject json, GraphResponse response) {
-                                        if (response.getError() != null) {
-                                            // handle error
-                                            System.out.println("ERROR");
-                                        } else {
-                                            System.out.println("Success");
-                                            try {
-
-                                                String jsonresult = String.valueOf(json);
-                                                System.out.println("JSON Result"+jsonresult);
-
-                                                String str_email = json.getString("email");
-                                                String str_id = json.getString("id");
-                                                String str_firstname = json.getString("first_name");
-                                                String str_lastname = json.getString("last_name");
-
-                                            } catch (JSONException e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    }
-
-                                }).executeAsync();
-                                */
+                                String str_email = json.getString("email");
+                                String str_id = json.getString("id");
+                                String str_firstname = json.getString("first_name");
+                                String str_lastname = json.getString("last_name");
+                            }
+                            catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
-
-                    @Override
-                    public void onCancel() {
-                        Toast.makeText(SignUpActivity.this,"Cancel",Toast.LENGTH_LONG).show();
-                        Log.d("Tag_Cancel","On cancel");
-                    }
-
-                    @Override
-                    public void onError(FacebookException error) {
-                        Toast.makeText(SignUpActivity.this,"Error",Toast.LENGTH_LONG).show();
-                        Log.d("Tag_Error",error.toString());
-                    }
-                });
+                }).executeAsync();
+                */
+            }
+            @Override
+            public void onCancel() {
+                Toast.makeText(SignUpActivity.this,"Cancel",Toast.LENGTH_LONG).show();
+                Log.d("Tag_Cancel","On cancel");
+            }
+            @Override
+            public void onError(FacebookException error) {
+                Toast.makeText(SignUpActivity.this,"Error",Toast.LENGTH_LONG).show();
+                Log.d("Tag_Error",error.toString());
+            }
+        });
     }
 
     @Override
