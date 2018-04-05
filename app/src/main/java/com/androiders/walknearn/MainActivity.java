@@ -48,6 +48,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        userLocalStore = new UserLocalStore(this);
+        User user = userLocalStore.getLoggedInUser();
+        Toast.makeText(this,"User name = "+user.Username,Toast.LENGTH_SHORT).show();
+
         /*TextView Username = findViewById(R.id.username);
             TextView Name = findViewById(R.id.name);
             TextView StepCount = findViewById(R.id.stepcnt);

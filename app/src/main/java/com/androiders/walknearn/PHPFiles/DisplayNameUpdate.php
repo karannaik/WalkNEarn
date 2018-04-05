@@ -3,25 +3,25 @@
 	$con = mysqli_connect("localhost", "id5250406_walknearn", "walknearn", "id5250406_walknearn");
     
     $email = $_POST["email"];
-    $name = $_POST["name"];
     $password = $_POST["password"];
+    $name = $_POST["name"];
     
     $response = array();
     
-    $CheckQuery = "SELECT * FROM Users WHERE user_email = '$email'";
+    $CheckQuery = "SELECT * FROM Users WHERE user_email = '$email' AND user_password = '$password' ";
     $ExecuteQuery = mysqli_query($con,$CheckQuery);
-    if(mysqli_num_rows($ExecuteQuery) > 0) 
+    if(mysqli_num_rows($ExecuteQuery) > 0)
+    {
         $response["exists"] = true;
-	else
-	{
-	    $response["exists"] = false;
-	    $InsertQuery = "INSERT INTO Users (user_email,user_password,user_name) VALUES ('$email', '$password','$name')";
-	    $ExecInsertQuery = mysqli_query($con,$InsertQuery);
-	    if($ExecInsertQuery)
+        $UpdateQuery = "UPDATE Users SET user_name ='$name' WHERE user_email = '$email' ";
+        $ExecUpdateQuery = mysqli_query($con,$UpdateQuery);
+	    if($ExecUpdateQuery)
             $response["success"] = true;
         else
             $response["success"] = false;
-	}
+    }
+    else
+	    $response["exists"] = false;
     
     echo json_encode($response);
 ?>

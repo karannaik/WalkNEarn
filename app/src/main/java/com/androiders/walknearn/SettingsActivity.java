@@ -33,14 +33,14 @@ public class SettingsActivity extends AppCompatActivity {
         ChngPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(SettingsActivity.this,"Changing Password",Toast.LENGTH_LONG).show();
+                startActivity(new Intent(SettingsActivity.this,PasswordChangeActivity.class));
             }
         });
 
         ChngDisplayName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(SettingsActivity.this,"Changing Display name",Toast.LENGTH_LONG).show();
+                startActivity(new Intent(SettingsActivity.this,DisplayNameChangeActivity.class));
             }
         });
 

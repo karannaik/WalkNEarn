@@ -5,17 +5,13 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -25,114 +21,74 @@ import com.androiders.walknearn.util.Utility;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+public class PasswordChangeActivity extends AppCompatActivity {
 
-/**
- * A login screen that offers login via email/password.
- */
-public class LoginActivity extends AppCompatActivity {
-
-    // UI references.
-    private EditText mEmailText, mPasswordText;
-    private Button mSignIn,mSignUp;
-    private TextView mForgotPassword;
-    ImageView mFbLogin,mGoogleLogin;
-    private CoordinatorLayout mCoordinatorLayout;
-    String email,password;
-    Utility util = new Utility(LoginActivity.this);
+    EditText mOldPswrd, mNewPswrd;
+    Button mChngPswrd, mCancel;
+    CoordinatorLayout mCoordinatelayout;
+    Utility util = new Utility(PasswordChangeActivity.this);
     UserLocalStore userLocalStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        initializeViews();
-        userLocalStore = new UserLocalStore(this);
+        setContentView(R.layout.activity_password_change);
 
-        mPasswordText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        InitializeViews();
+        userLocalStore = new UserLocalStore(this);
+        mOldPswrd.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if(keyEvent.getAction() != KeyEvent.ACTION_DOWN)
+                if (keyEvent.getAction() != KeyEvent.ACTION_DOWN)
                     return false;
-                attemptLogin();
+                ChangePassword();
                 return true;
             }
         });
 
-        mSignIn.setOnClickListener(new OnClickListener() {
+        mChngPswrd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptLogin();
+                ChangePassword();
             }
         });
 
-        mForgotPassword.setOnClickListener(new OnClickListener() {
+        mCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(LoginActivity.this,"Working Forgot Password",Toast.LENGTH_LONG).show();
+                startActivity(new Intent(PasswordChangeActivity.this, SettingsActivity.class));
             }
         });
-
-        mSignUp.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent SignUpIntent = new Intent(LoginActivity.this,SignUpActivity.class);
-                startActivity(SignUpIntent);
-            }
-        });
-
-        mFbLogin.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(LoginActivity.this,"Working FB login",Toast.LENGTH_LONG).show();
-            }
-        });
-
-        mGoogleLogin.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(LoginActivity.this,"Working Google login",Toast.LENGTH_LONG).show();
-            }
-        });
-
     }
 
-    void initializeViews(){
-        mEmailText = findViewById(R.id.email_login);
-        mPasswordText = findViewById(R.id.password_login);
-        mForgotPassword = findViewById(R.id.forgot_password);
-        mSignIn = findViewById(R.id.sign_in_button);
-        mSignUp = findViewById(R.id.login_sign_up_button);
-        mFbLogin = findViewById(R.id.fb_login);
-        mGoogleLogin = findViewById(R.id.google_login);
-        mCoordinatorLayout = findViewById(R.id.LoginCoordinatorLayout);
+    void InitializeViews() {
+        mOldPswrd = findViewById(R.id.old_password);
+        mNewPswrd = findViewById(R.id.new_password);
+        mChngPswrd = findViewById(R.id.change_password_button);
+        mCancel = findViewById(R.id.chng_pswrd_cancel_button);
+        mCoordinatelayout = findViewById(R.id.ChngPswrdCoordinatorLayout);
     }
 
-    /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
-     */
-    private void attemptLogin(){
-        // Reset errors.
-        mEmailText.setError(null);
-        mPasswordText.setError(null);
+    void ChangePassword() {
+        mNewPswrd.setError(null);
+        mOldPswrd.setError(null);
 
         // Store values at the time of the login attempt.
-        email = mEmailText.getText().toString();
-        password = mPasswordText.getText().toString();
+        final String newPassword = mNewPswrd.getText().toString();
+        String oldPassword = mOldPswrd.getText().toString();
 
         View focusView = null;
         boolean cancel = false;
 
-        if(util.isFieldEmpty(email,mEmailText)){
-            focusView = mEmailText;
+        if (!util.isPasswordValid(newPassword, mNewPswrd)) {
+            focusView = mNewPswrd;
             cancel = true;
         }
         if (!util.isConnectingToInternet())
             showInternetSnackBar();
-        if(util.isFieldEmpty(password,mPasswordText)){
+        if (util.isFieldEmpty(oldPassword,mOldPswrd)) {
             if(!cancel){
-                focusView = mPasswordText;
+                focusView = mOldPswrd;
                 cancel = true;
             }
         }
@@ -143,7 +99,49 @@ public class LoginActivity extends AppCompatActivity {
         }
         else {
 
+            final User user = userLocalStore.getLoggedInUser();
+            String email = user.Email;
+
             Response.Listener<String> responseListener = new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        Log.d("convertstr", response);
+                        JSONObject jsonResponse = new JSONObject(response);
+                        boolean exists = jsonResponse.getBoolean("exists");
+                        if (exists) {
+                            boolean success = jsonResponse.getBoolean("success");
+                            if(success) {
+                                userLocalStore.updateUserPassword(newPassword);
+                                util.showProgressDialog("Updating Password", PasswordChangeActivity.this);
+                                startActivity(new Intent(PasswordChangeActivity.this, SettingsActivity.class));
+                            }
+                            else{
+                                AlertDialog.Builder builder = new AlertDialog.Builder(PasswordChangeActivity.this);
+                                builder.setMessage("Updating Password failed")
+                                        .setNegativeButton("Retry", null)
+                                        .create()
+                                        .show();
+                            }
+                        } else {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(PasswordChangeActivity.this);
+                            builder.setMessage("Incorrect Password")
+                                    .setNegativeButton("Retry", null)
+                                    .create()
+                                    .show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+
+            PasswordRequest passwordRequest = new PasswordRequest(email,oldPassword,newPassword,responseListener);
+            RequestQueue queue = Volley.newRequestQueue(PasswordChangeActivity.this);
+            queue.add(passwordRequest);
+
+
+            /*Response.Listener<String> responseListener = new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     Log.d("success",response);
@@ -175,12 +173,13 @@ public class LoginActivity extends AppCompatActivity {
             LoginRequest loginRequest = new LoginRequest(email,password,responseListener);
             RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
             queue.add(loginRequest);
+        }*/
         }
     }
 
     private void showInternetSnackBar() {
         Snackbar snackbar = Snackbar
-                .make(mCoordinatorLayout,getString(R.string.internet_unavailable), Snackbar.LENGTH_LONG)
+                .make(mCoordinatelayout,getString(R.string.internet_unavailable), Snackbar.LENGTH_LONG)
                 .setAction("Settings", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -191,4 +190,3 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 }
-

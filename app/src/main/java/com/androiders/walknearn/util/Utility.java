@@ -9,6 +9,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.androiders.walknearn.R;
@@ -58,34 +59,40 @@ public class Utility{
         return false;
     }
 
-    public boolean isValidEmail(String email, TextView emailText){
-        if (email.isEmpty()) {
-            emailText.setError(mContext.getResources().getString(R.string.error_field_required));
-            return false;
+    public boolean isEmailValid(String email, EditText emailText){
+        if(! isFieldEmpty(email,emailText)) {
+            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                emailText.setError(mContext.getResources().getString(R.string.error_invalid_email));
+                return false;
+            } else {
+                emailText.setError(null);
+                return true;
+            }
         }
-        else if(! android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            emailText.setError(mContext.getResources().getString(R.string.error_invalid_email));
-            return false;
-        }
-        else {
-            emailText.setError(null);
-            return true;
-        }
+        return false;
     }
 
-    public boolean isPasswordValid(String password,TextView passwordText){
-        if (password.isEmpty()) {
-            passwordText.setError(mContext.getResources().getString(R.string.error_field_required));
-            return false;
+    public boolean isPasswordValid(String password,EditText passwordText){
+        if (! isFieldEmpty(password,passwordText)){
+            if(password.length() < 4){
+                passwordText.setError(mContext.getResources().getString(R.string.error_invalid_password));
+                return false;
+            }
+            else{
+                passwordText.setError(null);
+                return true;
+            }
         }
-        else if(password.length() < 4){
-            passwordText.setError(mContext.getResources().getString(R.string.error_invalid_password));
-            return false;
-        }
-        else{
-            passwordText.setError(null);
+        return false;
+    }
+
+    public boolean isFieldEmpty(String fieldValue,EditText mField){
+        if (fieldValue.isEmpty()) {
+            mField.setError(mContext.getResources().getString(R.string.error_field_required));
             return true;
         }
+        mField.setError(null);
+        return false;
     }
 
     public void showProgressDialog(String title,Context context){

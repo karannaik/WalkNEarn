@@ -30,6 +30,18 @@ public class UserLocalStore {
         return LoggedUser;
     }
 
+    public void updateUserPassword(String password){
+        SharedPreferences.Editor spEditor = UserLocalDatabase.edit();
+        spEditor.putString("Password",password);
+        spEditor.commit();
+    }
+
+    public void updateDisplayName(String name){
+        SharedPreferences.Editor spEditor = UserLocalDatabase.edit();
+        spEditor.putString("UserName",name);
+        spEditor.commit();
+    }
+
     public void setUserLggedIn(boolean loggedIn){
         SharedPreferences.Editor spEditor = UserLocalDatabase.edit();
         spEditor.putBoolean("LoggedIn",loggedIn);

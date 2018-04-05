@@ -124,15 +124,17 @@ public class SignUpActivity extends AppCompatActivity {
         View focusView = null;
         boolean cancel = false;
 
-        if(!util.isValidEmail(email,mEmailText)){
+        if(!util.isEmailValid(email,mEmailText)){
             focusView = mEmailText;
             cancel = true;
         }
-        if (!new Utility(SignUpActivity.this).isConnectingToInternet())
+        if (!util.isConnectingToInternet())
             showInternetSnackBar();
         if(!util.isPasswordValid(password,mPasswordText)){
-            focusView = mPasswordText;
-            cancel = true;
+            if(!cancel){
+                focusView = mPasswordText;
+                cancel = true;
+            }
         }
         if (cancel) {
             // There was an error; don't attempt login and focus the first

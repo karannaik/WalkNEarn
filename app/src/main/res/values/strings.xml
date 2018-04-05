@@ -12,10 +12,15 @@
     <!-- Strings related to login and signup -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
+    <string name="prompt_oldpassword">Old Password</string>
+    <string name="prompt_newpassword">New Password</string>
     <string name="prompt_name">Display name(Optional)</string>
+    <string name="prompt_newname">New display name</string>
     <string name="action_forgot_password">Forgot Password?</string>
     <string name="action_sign_in">Sign in</string>
     <string name="action_sign_up">Sign up</string>
+    <string name="action_change_password">Change Password</string>
+    <string name="action_change_name">Change Name</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_email">Invalid username</string>
@@ -27,5 +32,6 @@
     <string name="signup_options">Sign up with</string>
     <string name="facebook_signup_success">Facebook Sign Up successful</string>
     <string name="internet_unavailable">Internet not available</string>
+    <string name="action_cancel">Cancel</string>
 
 </resources>

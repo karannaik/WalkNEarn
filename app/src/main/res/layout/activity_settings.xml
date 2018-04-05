@@ -16,7 +16,8 @@
             android:layout_height="200dp"
             android:src="@drawable/empty_profile"
             android:layout_centerHorizontal="true"
-            android:id="@+id/ProfilePic"/>
+            android:id="@+id/ProfilePic"
+            android:layout_marginTop="20dp"/>
 
         <ImageView
             android:layout_width="wrap_content"
