@@ -44,13 +44,14 @@
 
         <activity android:name=".AskingLocaionActivity" />
         <activity android:name=".CouponActivity" />
-        <activity android:name=".SignUpActivity" />
-        <activity
-            android:name=".LoginActivity"
-            android:label="@string/title_activity_login" />
-        <activity android:name=".SettingsActivity" />
-        <activity android:name=".PasswordChangeActivity" />
-        <activity android:name=".DisplayNameChangeActivity"></activity>
+        <activity android:name=".SignUpActivity" android:parentActivityName=".LoginActivity"/>
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".SettingsActivity" android:label="@string/title_settings" android:theme="@style/BasicTitleTheme"
+            android:parentActivityName=".MainActivity"/>
+        <activity android:name=".PasswordChangeActivity" android:label="@string/action_change_password" android:theme="@style/BasicTitleTheme"
+            android:parentActivityName=".SettingsActivity"/>
+        <activity android:name=".DisplayNameChangeActivity" android:label="@string/action_change_name" android:theme="@style/BasicTitleTheme"
+            android:parentActivityName=".SettingsActivity"/>
     </application>
 
 </manifest>

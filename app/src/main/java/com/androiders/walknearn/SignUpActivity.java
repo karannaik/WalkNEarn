@@ -1,6 +1,7 @@
 package com.androiders.walknearn;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -25,6 +26,7 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.Login;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 
@@ -112,6 +114,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void attemptSignUp(){
+
         mEmailText.setError(null);
         mPasswordText.setError(null);
 
@@ -142,46 +145,11 @@ public class SignUpActivity extends AppCompatActivity {
             focusView.requestFocus();
         }
         else {
-            Response.Listener<String> responseListener = new Response.Listener<String>(){
-                @Override
-                public void onResponse(String response) {
-                    try {
-                        Log.d("tagconvertstr", response);
-                        JSONObject jsonResponse = new JSONObject(response);
-                        boolean exists = jsonResponse.getBoolean("exists");
-                        if (exists) {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(SignUpActivity.this);
-                            builder.setMessage("Email already exists")
-                                    .setNegativeButton("Retry", null)
-                                    .create()
-                                    .show();
-                        } else {
-                            boolean success = jsonResponse.getBoolean("success");
-                            if (success) {
-                                User NewUser = new User(email,password,name);
-                                userLocalStore.storeUserData(NewUser);
-                                userLocalStore.setUserLggedIn(true);
-                                util.showProgressDialog("Signing up",SignUpActivity.this);
-                                Intent MainActivityIntent = new Intent(SignUpActivity.this, MainActivity.class);
-                                startActivity(MainActivityIntent);
-                            }
-                            else{
-                                AlertDialog.Builder builder = new AlertDialog.Builder(SignUpActivity.this);
-                                builder.setMessage("Sign up failed")
-                                        .setNegativeButton("Retry", null)
-                                        .create()
-                                        .show();
-                            }
-                        }
-                    }
-                    catch(JSONException e){
-                        e.printStackTrace();
-                    }
-                }
-            };
-            SignUpRequest signUpRequest = new SignUpRequest(email,password,name,responseListener);
-            RequestQueue queue = Volley.newRequestQueue(SignUpActivity.this);
-            queue.add(signUpRequest);
+
+            GPSAccess();
+
+
+
 
             /*startActivity(new Intent(SignUpActivity.this, MainActivity.class));
             View view = SignUpActivity.this.getCurrentFocus();
@@ -191,6 +159,92 @@ public class SignUpActivity extends AppCompatActivity {
             }
             new SharedPrefs(SignUpActivity.this).setSyncTime(String.valueOf(Calendar.getInstance().getTimeInMillis()));*/
         }
+    }
+
+    private void GPSAccess(){
+        final AlertDialog.Builder GPSAccessAlert = new AlertDialog.Builder(SignUpActivity.this,R.style.AlertDialogTheme);
+        GPSAccessAlert.setTitle("GPS ACCESS")
+            .setMessage("Allow WALKNEARN to access GPS location of your device")
+            .setOnKeyListener(new DialogInterface.OnKeyListener() {
+                @Override
+                public boolean onKey(DialogInterface dialogInterface, int i, KeyEvent keyEvent) {
+                    if(i == KeyEvent.KEYCODE_BACK)
+                        startActivity(new Intent(SignUpActivity.this,LoginActivity.class));
+                    return true;
+                }
+            })
+            .setPositiveButton("Allow", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    Response.Listener<String> responseListener = new Response.Listener<String>(){
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                Log.d("tagconvertstr", response);
+                                JSONObject jsonResponse = new JSONObject(response);
+                                boolean exists = jsonResponse.getBoolean("exists");
+                                if (exists) {
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(SignUpActivity.this,R.style.AlertDialogTheme);
+                                    builder.setMessage("Email already exists")
+                                        .setNegativeButton("Retry", null)
+                                        .create()
+                                        .show();
+                                }
+                                else {
+                                    boolean success = jsonResponse.getBoolean("success");
+                                    if (success) {
+                                        User NewUser = new User(email,password,name);
+                                        userLocalStore.storeUserData(NewUser);
+                                        userLocalStore.setUserLggedIn(true);
+                                        util.showProgressDialog("Signing up",SignUpActivity.this);
+                                        Intent MainActivityIntent = new Intent(SignUpActivity.this, MainActivity.class);
+                                        startActivity(MainActivityIntent);
+                                    }
+                                    else{
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(SignUpActivity.this,R.style.AlertDialogTheme);
+                                        builder.setMessage("Sign up failed")
+                                            .setNegativeButton("Retry", null)
+                                            .create()
+                                            .show();
+                                    }
+                                }
+                            }
+                            catch(JSONException e){
+                                e.printStackTrace();
+                            }
+                        }
+                    };
+                    SignUpRequest signUpRequest = new SignUpRequest(email,password,name,responseListener);
+                    RequestQueue queue = Volley.newRequestQueue(SignUpActivity.this);
+                    queue.add(signUpRequest);
+                }
+            })
+            .setNegativeButton("Deny", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    AlertDialog.Builder GPSAlert = new AlertDialog.Builder(SignUpActivity.this,R.style.AlertDialogTheme);
+                    GPSAlert.setTitle("ALERT!!")
+                        .setMessage("Denying WALKNEARN to access GPS location prevents from continuing further")
+                        .setOnKeyListener(new DialogInterface.OnKeyListener() {
+                            @Override
+                            public boolean onKey(DialogInterface dialogInterface, int i, KeyEvent keyEvent) {
+                                if(i == KeyEvent.KEYCODE_BACK)
+                                    startActivity(new Intent(SignUpActivity.this,LoginActivity.class));
+                                return true;
+                            }
+                        })
+                        .setNegativeButton("Back", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                GPSAccess();
+                            }
+                        })
+                        .setIcon(R.drawable.ic_warning_black_24dp)
+                        .show();
+                }
+            })
+            .setIcon(R.drawable.ic_place_black_24dp)
+            .show();
     }
 
     private void showInternetSnackBar() {

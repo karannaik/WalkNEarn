@@ -8,6 +8,7 @@
     <string name="title_notifications">Notifications</string>
     <string name="title_blank"></string>
     <string name="title_activity_login">Sign in</string>
+    <string name="title_settings">Settings</string>
 
     <!-- Strings related to login and signup -->
     <string name="prompt_email">Email</string>
@@ -33,5 +34,6 @@
     <string name="facebook_signup_success">Facebook Sign Up successful</string>
     <string name="internet_unavailable">Internet not available</string>
     <string name="action_cancel">Cancel</string>
+    <string name="logout">Logout</string>
 
 </resources>

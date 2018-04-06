@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/blurry2"
+    tools:context=".SettingsActivity">
 
 
     <RelativeLayout
@@ -22,7 +24,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_photo_camera_black_24dp"
+            app:srcCompat="@drawable/ic_photo_camera_black_24dp"
             android:layout_alignRight="@+id/ProfilePic"
             android:layout_alignBottom="@+id/ProfilePic"
             android:id="@+id/ChngProfilePic"/>
@@ -38,22 +40,22 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Change Password"
+            android:text="@string/action_change_password"
             android:id="@+id/ChngPswrd"
             android:layout_margin="10dp"/>
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Change display name"
+            android:text="@string/action_change_name"
             android:layout_below="@+id/ChngPswrd"
             android:id="@+id/ChngDsplyName"
-            android:layout_margin="10dp"/>
+            android:layout_margin="10dp" />
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Logout"
+            android:text="@string/logout"
             android:layout_below="@+id/ChngDsplyName"
             android:layout_margin="10dp"
             android:id="@+id/Logout"/>
