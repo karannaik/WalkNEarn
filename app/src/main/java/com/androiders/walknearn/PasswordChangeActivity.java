@@ -15,7 +15,10 @@ import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.androiders.walknearn.DBFiles.CheckCredentials;
+import com.androiders.walknearn.DBFiles.PasswordRequest;
 import com.androiders.walknearn.util.Utility;
 
 import org.json.JSONException;
@@ -100,32 +103,20 @@ public class PasswordChangeActivity extends AppCompatActivity {
         else {
 
             final User user = userLocalStore.getLoggedInUser();
-            String email = user.Email;
+            final String email = user.Email;
 
             Response.Listener<String> responseListener = new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     try {
-                        Log.d("convertstr", response);
+                        Log.d("PasswordCredentials", response);
                         JSONObject jsonResponse = new JSONObject(response);
                         boolean exists = jsonResponse.getBoolean("exists");
-                        if (exists) {
-                            boolean success = jsonResponse.getBoolean("success");
-                            if(success) {
-                                userLocalStore.updateUserPassword(newPassword);
-                                util.showProgressDialog("Updating Password", PasswordChangeActivity.this);
-                                startActivity(new Intent(PasswordChangeActivity.this, SettingsActivity.class));
-                            }
-                            else{
-                                AlertDialog.Builder builder = new AlertDialog.Builder(PasswordChangeActivity.this);
-                                builder.setMessage("Updating Password failed")
-                                        .setNegativeButton("Retry", null)
-                                        .create()
-                                        .show();
-                            }
-                        } else {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(PasswordChangeActivity.this);
-                            builder.setMessage("Incorrect Password")
+                        if (exists)
+                            ChangePasswordUtil(email,newPassword);
+                        else{
+                            AlertDialog.Builder builder = new AlertDialog.Builder(PasswordChangeActivity.this, R.style.AlertDialogTheme);
+                            builder.setMessage("Incorrect Credentials")
                                     .setNegativeButton("Retry", null)
                                     .create()
                                     .show();
@@ -135,46 +126,41 @@ public class PasswordChangeActivity extends AppCompatActivity {
                     }
                 }
             };
-
-            PasswordRequest passwordRequest = new PasswordRequest(email,oldPassword,newPassword,responseListener);
+            CheckCredentials credentials = new CheckCredentials(email,oldPassword,responseListener);
             RequestQueue queue = Volley.newRequestQueue(PasswordChangeActivity.this);
-            queue.add(passwordRequest);
+            queue.add(credentials);
 
-
-            /*Response.Listener<String> responseListener = new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    Log.d("success",response);
-                    try{
-                        JSONObject jsonResponse = new JSONObject(response);
-                        boolean success = jsonResponse.getBoolean("success");
-                        if(success){
-                            String name = jsonResponse.getString("userName");
-                            String stepCnt = jsonResponse.getString("userStepCount");
-                            User user = new User(name,email,password,Integer.parseInt(stepCnt));
-                            userLocalStore.storeUserData(user);
-                            userLocalStore.setUserLggedIn(true);
-                            util.showProgressDialog("Logging in",LoginActivity.this);
-                            Intent MainActivityIntent = new Intent(LoginActivity.this,MainActivity.class);
-                            startActivity(MainActivityIntent);
-                        }
-                        else{AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                            builder.setMessage("Invalid Email or Password")
-                                    .setNegativeButton("Retry", null)
-                                    .create()
-                                    .show();
-                        }
-                    }
-                    catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            };
-            LoginRequest loginRequest = new LoginRequest(email,password,responseListener);
-            RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
-            queue.add(loginRequest);
-        }*/
         }
+    }
+
+    private void ChangePasswordUtil(String email, final String password){
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    Log.d("passwordChange", response);
+                    JSONObject jsonResponse = new JSONObject(response);
+                    boolean success = jsonResponse.getBoolean("success");
+                    if (success) {
+                        userLocalStore.updateUserPassword(password);
+                        util.showProgressDialog("Updating Password", PasswordChangeActivity.this);
+                        startActivity(new Intent(PasswordChangeActivity.this, SettingsActivity.class));
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(PasswordChangeActivity.this);
+                        builder.setMessage("Updating Password failed")
+                                .setNegativeButton("Retry", null)
+                                .create()
+                                .show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        PasswordRequest passwordRequest = new PasswordRequest(email,password,responseListener);
+        RequestQueue queue = Volley.newRequestQueue(PasswordChangeActivity.this);
+        queue.add(passwordRequest);
     }
 
     private void showInternetSnackBar() {

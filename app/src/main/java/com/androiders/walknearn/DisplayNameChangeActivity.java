@@ -15,8 +15,9 @@ import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.androiders.walknearn.DBFiles.CheckCredentials;
+import com.androiders.walknearn.DBFiles.DisplayNameRequest;
 import com.androiders.walknearn.util.Utility;
 
 import org.json.JSONException;
@@ -79,7 +80,7 @@ public class DisplayNameChangeActivity extends AppCompatActivity {
 
         // Store values at the time of the login attempt.
         final String name = mNewName.getText().toString();
-        String password = mPassword.getText().toString();
+        final String password = mPassword.getText().toString();
 
         View focusView = null;
         boolean cancel = false;
@@ -103,31 +104,20 @@ public class DisplayNameChangeActivity extends AppCompatActivity {
         }
         else {
             final User user = userLocalStore.getLoggedInUser();
-            String email = user.Email;
+            final String email = user.Email;
+
             Response.Listener<String> responseListener = new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     try {
-                        Log.d("DisplayName", response);
+                        Log.d("NameCredentials", response);
                         JSONObject jsonResponse = new JSONObject(response);
                         boolean exists = jsonResponse.getBoolean("exists");
-                        if (exists) {
-                            boolean success = jsonResponse.getBoolean("success");
-                            if(success) {
-                                userLocalStore.updateDisplayName(name);
-                                util.showProgressDialog("Updating display name", DisplayNameChangeActivity.this);
-                                startActivity(new Intent(DisplayNameChangeActivity.this, SettingsActivity.class));
-                            }
-                            else{
-                                AlertDialog.Builder builder = new AlertDialog.Builder(DisplayNameChangeActivity.this);
-                                builder.setMessage("Updating display name failed")
-                                        .setNegativeButton("Retry", null)
-                                        .create()
-                                        .show();
-                            }
-                        } else {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(DisplayNameChangeActivity.this);
-                            builder.setMessage("Incorrect Password")
+                        if (exists)
+                            ChangeNameUtil(email,password);
+                        else{
+                            AlertDialog.Builder builder = new AlertDialog.Builder(DisplayNameChangeActivity.this, R.style.AlertDialogTheme);
+                            builder.setMessage("Incorrect Credentials")
                                     .setNegativeButton("Retry", null)
                                     .create()
                                     .show();
@@ -138,10 +128,40 @@ public class DisplayNameChangeActivity extends AppCompatActivity {
                 }
             };
 
-            DisplayNameRequest displayNameRequest = new DisplayNameRequest(email,password,name,responseListener);
+            CheckCredentials credentials = new CheckCredentials(email,password,responseListener);
             RequestQueue queue = Volley.newRequestQueue(DisplayNameChangeActivity.this);
-            queue.add(displayNameRequest);
+            queue.add(credentials);
         }
+    }
+
+    private void ChangeNameUtil(String email, final String name){
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    Log.d("NameChange", response);
+                    JSONObject jsonResponse = new JSONObject(response);
+                    boolean success = jsonResponse.getBoolean("success");
+                    if (success) {
+                        userLocalStore.updateDisplayName(name);
+                        util.showProgressDialog("Updating display name", DisplayNameChangeActivity.this);
+                        startActivity(new Intent(DisplayNameChangeActivity.this, SettingsActivity.class));
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(DisplayNameChangeActivity.this);
+                        builder.setMessage("Updating display name failed")
+                                .setNegativeButton("Retry", null)
+                                .create()
+                                .show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        DisplayNameRequest displayNameRequest = new DisplayNameRequest(email,name,responseListener);
+        RequestQueue queue = Volley.newRequestQueue(DisplayNameChangeActivity.this);
+        queue.add(displayNameRequest);
     }
 
     private void showInternetSnackBar() {

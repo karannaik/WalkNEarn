@@ -20,13 +20,14 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.androiders.walknearn.DBFiles.CheckIfExists;
+import com.androiders.walknearn.DBFiles.SignUpRequest;
 import com.androiders.walknearn.util.Utility;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
-import com.facebook.login.Login;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 
@@ -145,19 +146,29 @@ public class SignUpActivity extends AppCompatActivity {
             focusView.requestFocus();
         }
         else {
-
-            GPSAccess();
-
-
-
-
-            /*startActivity(new Intent(SignUpActivity.this, MainActivity.class));
-            View view = SignUpActivity.this.getCurrentFocus();
-            if (view != null) {
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-            }
-            new SharedPrefs(SignUpActivity.this).setSyncTime(String.valueOf(Calendar.getInstance().getTimeInMillis()));*/
+            Response.Listener<String> responseListener = new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        Log.d("userExists", response);
+                        JSONObject jsonResponse = new JSONObject(response);
+                        boolean exists = jsonResponse.getBoolean("exists");
+                        if (exists) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(SignUpActivity.this, R.style.AlertDialogTheme);
+                            builder.setMessage("Email already exists")
+                                    .setNegativeButton("Retry", null)
+                                    .create()
+                                    .show();
+                        } else
+                            GPSAccess();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            CheckIfExists UserExists = new CheckIfExists(email,responseListener);
+            RequestQueue queue = Volley.newRequestQueue(SignUpActivity.this);
+            queue.add(UserExists);
         }
     }
 
@@ -180,33 +191,23 @@ public class SignUpActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(String response) {
                             try {
-                                Log.d("tagconvertstr", response);
+                                Log.d("signUp", response);
                                 JSONObject jsonResponse = new JSONObject(response);
-                                boolean exists = jsonResponse.getBoolean("exists");
-                                if (exists) {
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(SignUpActivity.this,R.style.AlertDialogTheme);
-                                    builder.setMessage("Email already exists")
+                                boolean success = jsonResponse.getBoolean("success");
+                                if (success) {
+                                    User NewUser = new User(email,password,name);
+                                    userLocalStore.storeUserData(NewUser);
+                                    userLocalStore.setUserLggedIn(true);
+                                    util.showProgressDialog("Signing up",SignUpActivity.this);
+                                    Intent MainActivityIntent = new Intent(SignUpActivity.this, MainActivity.class);
+                                    startActivity(MainActivityIntent);
+                                }
+                                else {
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(SignUpActivity.this, R.style.AlertDialogTheme);
+                                    builder.setMessage("Sign up failed")
                                         .setNegativeButton("Retry", null)
                                         .create()
                                         .show();
-                                }
-                                else {
-                                    boolean success = jsonResponse.getBoolean("success");
-                                    if (success) {
-                                        User NewUser = new User(email,password,name);
-                                        userLocalStore.storeUserData(NewUser);
-                                        userLocalStore.setUserLggedIn(true);
-                                        util.showProgressDialog("Signing up",SignUpActivity.this);
-                                        Intent MainActivityIntent = new Intent(SignUpActivity.this, MainActivity.class);
-                                        startActivity(MainActivityIntent);
-                                    }
-                                    else{
-                                        AlertDialog.Builder builder = new AlertDialog.Builder(SignUpActivity.this,R.style.AlertDialogTheme);
-                                        builder.setMessage("Sign up failed")
-                                            .setNegativeButton("Retry", null)
-                                            .create()
-                                            .show();
-                                    }
                                 }
                             }
                             catch(JSONException e){
