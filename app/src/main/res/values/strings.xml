@@ -15,6 +15,7 @@
     <string name="prompt_password">Password</string>
     <string name="prompt_oldpassword">Old Password</string>
     <string name="prompt_newpassword">New Password</string>
+    <string name="prompt_temp_password">Temporary password (sent in mail)</string>
     <string name="prompt_name">Display name(Optional)</string>
     <string name="prompt_newname">New display name</string>
     <string name="action_forgot_password">Forgot Password?</string>
@@ -22,6 +23,7 @@
     <string name="action_sign_up">Sign up</string>
     <string name="action_change_password">Change Password</string>
     <string name="action_change_name">Change Name</string>
+    <string name="action_continue">Continue</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_email">Invalid username</string>

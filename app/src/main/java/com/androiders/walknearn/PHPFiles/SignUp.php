@@ -8,20 +8,12 @@
     
     $response = array();
     
-    $CheckQuery = "SELECT * FROM Users WHERE user_email = '$email'";
-    $ExecuteQuery = mysqli_query($con,$CheckQuery);
-    if(mysqli_num_rows($ExecuteQuery) > 0) 
-        $response["exists"] = true;
-	else
-	{
-	    $response["exists"] = false;
-	    $InsertQuery = "INSERT INTO Users (user_email,user_password,user_name) VALUES ('$email', '$password','$name')";
-	    $ExecInsertQuery = mysqli_query($con,$InsertQuery);
-	    if($ExecInsertQuery)
-            $response["success"] = true;
-        else
-            $response["success"] = false;
-	}
+    $InsertQuery = "INSERT INTO Users (user_email,user_password,user_name) VALUES ('$email', '$password','$name')";
+    $ExecInsertQuery = mysqli_query($con,$InsertQuery);
+	if($ExecInsertQuery)
+        $response["success"] = true;
+    else
+        $response["success"] = false;
     
     echo json_encode($response);
 ?>

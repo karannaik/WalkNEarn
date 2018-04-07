@@ -36,7 +36,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mEmailText, mPasswordText;
     private Button mSignIn,mSignUp;
     private TextView mForgotPassword;
-    ImageView mFbLogin,mGoogleLogin;
+    ImageView mGoogleLogin;
     private CoordinatorLayout mCoordinatorLayout;
     String email,password;
     Utility util = new Utility(LoginActivity.this);
@@ -49,6 +49,7 @@ public class LoginActivity extends AppCompatActivity {
         initializeViews();
         userLocalStore = new UserLocalStore(this);
 
+        // Login on pressing enter key rather than clicking Login button
         mPasswordText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
@@ -69,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
         mForgotPassword.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(LoginActivity.this,"Working Forgot Password",Toast.LENGTH_LONG).show();
+                startActivity(new Intent(LoginActivity.this,ForgotPasswordActivity.class));
             }
         });
 
@@ -78,13 +79,6 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent SignUpIntent = new Intent(LoginActivity.this,SignUpActivity.class);
                 startActivity(SignUpIntent);
-            }
-        });
-
-        mFbLogin.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(LoginActivity.this,"Working FB login",Toast.LENGTH_LONG).show();
             }
         });
 
@@ -97,6 +91,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    // Exits the app on pressing back button
     @Override
     public void onBackPressed(){
         Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -111,7 +106,6 @@ public class LoginActivity extends AppCompatActivity {
         mForgotPassword = findViewById(R.id.forgot_password);
         mSignIn = findViewById(R.id.sign_in_button);
         mSignUp = findViewById(R.id.login_sign_up_button);
-        mFbLogin = findViewById(R.id.fb_login);
         mGoogleLogin = findViewById(R.id.google_login);
         mCoordinatorLayout = findViewById(R.id.LoginCoordinatorLayout);
     }
@@ -171,9 +165,9 @@ public class LoginActivity extends AppCompatActivity {
                         }
                         else{AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                             builder.setMessage("Invalid Email or Password")
-                                    .setNegativeButton("Retry", null)
-                                    .create()
-                                    .show();
+                                .setNegativeButton("Retry", null)
+                                .create()
+                                .show();
                         }
                     }
                     catch (JSONException e) {

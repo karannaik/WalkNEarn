@@ -7,14 +7,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PasswordRequest extends StringRequest {
-    private static final String LOGIN_REQUEST_URL = "https://walknearn.000webhostapp.com/PasswordUpdate.php";
+    private static final String PASSWORD_REQUEST_URL = "https://walknearn.000webhostapp.com/PasswordUpdate.php";
     private Map<String,String> params;
 
     public PasswordRequest(String email, String newPassword,Response.Listener<String> listener){
-        super(Method.POST,LOGIN_REQUEST_URL,listener,null);
+        super(Method.POST,PASSWORD_REQUEST_URL,listener,null);
         params = new HashMap<>();
         params.put("email",email);
-        params.put("newpassword",newPassword);
+        params.put("password",newPassword);
     }
 
     @Override
