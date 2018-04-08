@@ -121,30 +121,20 @@ public class LoginActivity extends AppCompatActivity {
         mPasswordText.setError(null);
 
         // Store values at the time of the login attempt.
-        email = mEmailText.getText().toString();
+        email = mEmailText.getText().toString().toLowerCase();
         password = mPasswordText.getText().toString();
 
-        View focusView = null;
         boolean cancel = false;
 
-        if(util.isFieldEmpty(email,mEmailText)){
-            focusView = mEmailText;
+        if(util.isFieldEmpty(email,mEmailText))
             cancel = true;
-        }
         if (!util.isConnectingToInternet())
             showInternetSnackBar();
         if(util.isFieldEmpty(password,mPasswordText)){
-            if(!cancel){
-                focusView = mPasswordText;
+            if(!cancel)
                 cancel = true;
-            }
         }
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
-        }
-        else {
+        if(!cancel) {
 
             Response.Listener<String> responseListener = new Response.Listener<String>() {
                 @Override

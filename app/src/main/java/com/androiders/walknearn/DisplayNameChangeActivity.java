@@ -1,5 +1,6 @@
 package com.androiders.walknearn;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -73,64 +74,68 @@ public class DisplayNameChangeActivity extends AppCompatActivity {
         mCoordinateLayout = findViewById(R.id.ChngNameCoordinatorLayout);
     }
 
-    void ChangeName(){
+    void ChangeName() {
 
         mNewName.setError(null);
         mPassword.setError(null);
 
         // Store values at the time of the login attempt.
-        final String name = mNewName.getText().toString();
+        final String newName = mNewName.getText().toString();
         final String password = mPassword.getText().toString();
 
-        View focusView = null;
         boolean cancel = false;
 
-        if (util.isFieldEmpty(name,mNewName)) {
-            focusView = mNewName;
+        if (util.isFieldEmpty(newName, mNewName))
             cancel = true;
-        }
         if (!util.isConnectingToInternet())
             showInternetSnackBar();
-        if(util.isFieldEmpty(password,mPassword)){
-            if(!cancel){
-                focusView = mPassword;
+        if (util.isFieldEmpty(password, mPassword)) {
+            if (!cancel)
                 cancel = true;
-            }
         }
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
+        final User user = userLocalStore.getLoggedInUser();
+        final String email = user.Email;
+        String oldName = user.Username;
+        if (oldName.equals(newName)) {
+            AlertDialog.Builder passwordMatch = new AlertDialog.Builder(this, R.style.AlertDialogTheme);
+            passwordMatch.setMessage("New password cannot be the same as old one")
+                    .setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            mNewName.requestFocus();
+                        }
+                    })
+                    .setTitle("Warning")
+                    .setIcon(R.drawable.ic_warning_black_24dp)
+                    .show();
         }
         else {
-            final User user = userLocalStore.getLoggedInUser();
-            final String email = user.Email;
-
-            Response.Listener<String> responseListener = new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    try {
-                        Log.d("NameCredentials", response);
-                        JSONObject jsonResponse = new JSONObject(response);
-                        boolean exists = jsonResponse.getBoolean("exists");
-                        if (exists)
-                            ChangeNameUtil(email,password);
-                        else{
-                            AlertDialog.Builder builder = new AlertDialog.Builder(DisplayNameChangeActivity.this, R.style.AlertDialogTheme);
-                            builder.setMessage("Incorrect Credentials")
-                                    .setNegativeButton("Retry", null)
-                                    .create()
-                                    .show();
+            if (!cancel) {
+                Response.Listener<String> responseListener = new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            Log.d("NameCredentials", response);
+                            JSONObject jsonResponse = new JSONObject(response);
+                            boolean exists = jsonResponse.getBoolean("exists");
+                            if (exists)
+                                ChangeNameUtil(email, password);
+                            else {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(DisplayNameChangeActivity.this, R.style.AlertDialogTheme);
+                                builder.setMessage("Incorrect Credentials")
+                                        .setNegativeButton("Retry", null)
+                                        .create()
+                                        .show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
                     }
-                }
-            };
-
-            CheckCredentials credentials = new CheckCredentials(email,password,responseListener);
-            RequestQueue queue = Volley.newRequestQueue(DisplayNameChangeActivity.this);
-            queue.add(credentials);
+                };
+                CheckCredentials credentials = new CheckCredentials(email, password, responseListener);
+                RequestQueue queue = Volley.newRequestQueue(DisplayNameChangeActivity.this);
+                queue.add(credentials);
+            }
         }
     }
 

@@ -96,33 +96,30 @@ public class SignUpActivity extends AppCompatActivity {
         mEmailText.setError(null);
         mPasswordText.setError(null);
 
-        email = mEmailText.getText().toString();
+        email = mEmailText.getText().toString().toLowerCase();
         name = mDisplayName.getText().toString();
         password = mPasswordText.getText().toString();
 
-        if (name.isEmpty())
-            name = "temp name";
-        View focusView = null;
         boolean cancel = false;
 
-        if(!util.isEmailValid(email,mEmailText)){
-            focusView = mEmailText;
+        if(!util.isEmailValid(email,mEmailText))
             cancel = true;
-        }
         if (!util.isConnectingToInternet())
             showInternetSnackBar();
-        if(!util.isPasswordValid(password,mPasswordText)){
-            if(!cancel){
-                focusView = mPasswordText;
-                cancel = true;
+        if (! name.isEmpty()){
+            if(name.length() > 20){
+                mDisplayName.setError(getString(R.string.error_lengthy_name));
+                if(!cancel)
+                    cancel = true;
             }
         }
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
+        else
+            name = GetNameFromEmail(email);
+        if(!util.isPasswordValid(password,mPasswordText)){
+            if(!cancel)
+                cancel = true;
         }
-        else {
+        if(!cancel) {
             Response.Listener<String> responseListener = new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
@@ -147,6 +144,16 @@ public class SignUpActivity extends AppCompatActivity {
             RequestQueue queue = Volley.newRequestQueue(SignUpActivity.this);
             queue.add(UserExists);
         }
+    }
+
+    private String GetNameFromEmail(String email){
+        String ResStr = "";
+        int i = 0;
+        while(Character.isLetter(email.charAt(i)) && i < 20){
+            ResStr += email.charAt(i);
+            i++;
+        }
+        return ResStr;
     }
 
     private void GPSAccess(){

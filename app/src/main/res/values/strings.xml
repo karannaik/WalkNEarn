@@ -28,6 +28,8 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_email">Invalid username</string>
     <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_lengthy_password">Password cannot exceed 20 characters</string>
+    <string name="error_lengthy_name">Name cannot exceed 20 characters</string>
     <string name="error_field_required">This field is required</string>
     <string name="new_user">New User?</string>
     <string name="returning_user">Already have an account?</string>

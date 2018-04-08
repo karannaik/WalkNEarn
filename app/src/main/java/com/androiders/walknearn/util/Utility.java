@@ -78,6 +78,10 @@ public class Utility{
                 passwordText.setError(mContext.getResources().getString(R.string.error_invalid_password));
                 return false;
             }
+            else if(password.length() > 20){
+                passwordText.setError(mContext.getResources().getString(R.string.error_lengthy_password));
+                return false;
+            }
             else{
                 passwordText.setError(null);
                 return true;

@@ -1,5 +1,6 @@
 package com.androiders.walknearn;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -79,56 +80,61 @@ public class PasswordChangeActivity extends AppCompatActivity {
         final String newPassword = mNewPswrd.getText().toString();
         String oldPassword = mOldPswrd.getText().toString();
 
-        View focusView = null;
         boolean cancel = false;
 
-        if (!util.isPasswordValid(newPassword, mNewPswrd)) {
-            focusView = mNewPswrd;
+        if (!util.isPasswordValid(newPassword, mNewPswrd))
             cancel = true;
-        }
         if (!util.isConnectingToInternet())
             showInternetSnackBar();
         if (util.isFieldEmpty(oldPassword,mOldPswrd)) {
-            if(!cancel){
-                focusView = mOldPswrd;
+            if(!cancel)
                 cancel = true;
-            }
         }
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
+        if(newPassword.equals(oldPassword)){
+            AlertDialog.Builder passwordMatch = new AlertDialog.Builder(this,R.style.AlertDialogTheme);
+            passwordMatch.setMessage("New password cannot be the same as old one")
+                .setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        mNewPswrd.requestFocus();
+                    }
+                })
+                .setTitle("Warning")
+                .setIcon(R.drawable.ic_warning_black_24dp)
+                .show();
         }
         else {
+            if (!cancel) {
 
-            final User user = userLocalStore.getLoggedInUser();
-            final String email = user.Email;
+                final User user = userLocalStore.getLoggedInUser();
+                final String email = user.Email;
 
-            Response.Listener<String> responseListener = new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    try {
-                        Log.d("PasswordCredentials", response);
-                        JSONObject jsonResponse = new JSONObject(response);
-                        boolean exists = jsonResponse.getBoolean("exists");
-                        if (exists)
-                            ChangePasswordUtil(email,newPassword);
-                        else{
-                            AlertDialog.Builder builder = new AlertDialog.Builder(PasswordChangeActivity.this, R.style.AlertDialogTheme);
-                            builder.setMessage("Incorrect Credentials")
-                                    .setNegativeButton("Retry", null)
-                                    .create()
-                                    .show();
+                Response.Listener<String> responseListener = new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            Log.d("PasswordCredentials", response);
+                            JSONObject jsonResponse = new JSONObject(response);
+                            boolean exists = jsonResponse.getBoolean("exists");
+                            if (exists)
+                                ChangePasswordUtil(email, newPassword);
+                            else {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(PasswordChangeActivity.this, R.style.AlertDialogTheme);
+                                builder.setMessage("Incorrect Credentials")
+                                        .setNegativeButton("Retry", null)
+                                        .create()
+                                        .show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
                     }
-                }
-            };
-            CheckCredentials credentials = new CheckCredentials(email,oldPassword,responseListener);
-            RequestQueue queue = Volley.newRequestQueue(PasswordChangeActivity.this);
-            queue.add(credentials);
+                };
+                CheckCredentials credentials = new CheckCredentials(email, oldPassword, responseListener);
+                RequestQueue queue = Volley.newRequestQueue(PasswordChangeActivity.this);
+                queue.add(credentials);
 
+            }
         }
     }
 
