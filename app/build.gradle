@@ -25,6 +25,7 @@ dependencies {
     //noinspection GradleCompatible
     implementation 'com.android.support:appcompat-v7:26.1.0'
 
+    implementation 'com.google.firebase:firebase-invites:11.6.0'
     compile 'com.android.support:cardview-v7:26.1.0'
     implementation 'com.android.support:design:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
@@ -48,3 +49,4 @@ dependencies {
 
     compile 'de.hdodenhof:circleimageview:2.1.0'
 }
+apply plugin: 'com.google.gms.google-services'

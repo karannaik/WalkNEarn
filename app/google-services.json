@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "128157715229",
+    "firebase_url": "https://walknearn-d8d19.firebaseio.com",
+    "project_id": "walknearn-d8d19",
+    "storage_bucket": "walknearn-d8d19.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:128157715229:android:c9c62c6c228ea99f",
+        "android_client_info": {
+          "package_name": "com.androiders.walknearn"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "128157715229-ibdraqs7rkvkss81vbl9g8b90oko9bst.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.androiders.walknearn",
+            "certificate_hash": "a4a5eee08e09b7066c8af17b919de03e3dc7fc2d"
+          }
+        },
+        {
+          "client_id": "128157715229-39kqc07m7iih8k89mfo2he2scfak615p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbUX-rKt-lKFJQM_kmWxLkvHawF8OuTrI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "128157715229-39kqc07m7iih8k89mfo2he2scfak615p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

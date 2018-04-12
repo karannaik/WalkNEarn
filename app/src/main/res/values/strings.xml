@@ -39,5 +39,19 @@
     <string name="internet_unavailable">Internet not available</string>
     <string name="action_cancel">Cancel</string>
     <string name="logout">Logout</string>
+    <string name="send_feedback">Send Feedback</string>
+    <string name="t_and_c">Terms and Conditions</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="fb_invite">Invite friends on Facebook</string>
+    <string name="contacts_invite">Invite friends from Contacts</string>
+    <string name="on">ON</string>
+    <string name="off">OFF</string>
+    <string name="notifications">Notifications</string>
+
+
+    <string name="invitation_title">WalkNEarn Invitation</string>
+    <string name="invitation_message">Would you like to earn free food for being fit and healthy, then try WalkNEarn</string>
+    <string name="invitation_deep_link">http://google.com</string>
+    <string name="invitation_cta">Invitation CTA</string>
 
 </resources>

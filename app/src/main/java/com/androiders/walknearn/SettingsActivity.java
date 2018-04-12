@@ -9,20 +9,25 @@ import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.Button;
+import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.gms.appinvite.AppInviteInvitation;
+
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 public class SettingsActivity extends AppCompatActivity {
 
 
     ImageView ChngProfilePic;
-    Button ChngPassword,ChngDisplayName,Logout;
     UserLocalStore userLocalStore;
+    ListView SettingsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,45 +35,85 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
         InitializeViews();
 
-        userLocalStore = new UserLocalStore(this);
+        ArrayList<String> settingsActionList = new ArrayList<>();
+        settingsActionList.add(getString(R.string.action_change_password));
+        settingsActionList.add(getString(R.string.action_change_name));
+        settingsActionList.add(getString(R.string.notifications));
+        settingsActionList.add(getString(R.string.contacts_invite));
+        settingsActionList.add(getString(R.string.fb_invite));
+        settingsActionList.add(getString(R.string.send_feedback));
+        settingsActionList.add(getString(R.string.t_and_c));
+        settingsActionList.add(getString(R.string.privacy_policy));
+        settingsActionList.add(getString(R.string.logout));
 
-        ChngProfilePic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ChangeProfilePic();
-            }
-        });
+        ListButtonAdapter settingsListAdapter = new ListButtonAdapter(this,R.layout.listview_text_type,settingsActionList);
+        SettingsList.setAdapter(settingsListAdapter);
 
-        ChngPassword.setOnClickListener(new View.OnClickListener() {
+        SettingsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View view) {
-                startActivity(new Intent(SettingsActivity.this,PasswordChangeActivity.class));
-            }
-        });
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
-        ChngDisplayName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(SettingsActivity.this,DisplayNameChangeActivity.class));
-            }
-        });
-
-        Logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                userLocalStore.clearUserData();
-                userLocalStore.setUserLggedIn(false);
-                startActivity(new Intent(SettingsActivity.this, LoginActivity.class));
+                long viewId = view.getId();
+                if(viewId == R.id.ChngProfilePic)
+                    ChangeProfilePic();
+                if(viewId == R.id.listViewSwitch){
+                    if(l == 1)
+                        Toast.makeText(SettingsActivity.this,"Switch on",Toast.LENGTH_LONG).show();
+                    else
+                        Toast.makeText(SettingsActivity.this,"Switch off",Toast.LENGTH_LONG).show();
+                }
+                if (position == 1) // Change password
+                {
+                    startActivity(new Intent(SettingsActivity.this,PasswordChangeActivity.class));
+                }
+                else if(position == 2) // Change name
+                {
+                    startActivity(new Intent(SettingsActivity.this,DisplayNameChangeActivity.class));
+                }
+                else if(position == 4) // Contacts invites
+                {
+                    InviteFromContacts();
+                      //Toast.makeText(SettingsActivity.this,"Contacts invite checking",Toast.LENGTH_LONG).show();
+                }
+                else if(position == 5) // switch
+                {
+                    Toast.makeText(SettingsActivity.this,"FB invite checking",Toast.LENGTH_LONG).show();
+                }
+                else if(position == 6) // switch
+                {
+                    Toast.makeText(SettingsActivity.this,"Send feedback checking",Toast.LENGTH_LONG).show();
+                }
+                else if(position == 7) // switch
+                {
+                    Toast.makeText(SettingsActivity.this,"T & C checking",Toast.LENGTH_LONG).show();
+                }
+                else if(position == 8) // switch
+                {
+                    Toast.makeText(SettingsActivity.this,"Switch checking",Toast.LENGTH_LONG).show();
+                }
+                else if(position == 9) //Logout
+                {
+                    userLocalStore.clearUserData();
+                    userLocalStore.setUserLggedIn(false);
+                    startActivity(new Intent(SettingsActivity.this, LoginActivity.class));
+                }
             }
         });
 
     }
 
+    void InviteFromContacts(){
+        Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.invitation_title))
+                .setMessage(getString(R.string.invitation_message))
+                .setDeepLink(Uri.parse(getString(R.string.invitation_deep_link)))
+                .setCallToActionText(getString(R.string.invitation_cta))
+                .build();
+        startActivityForResult(intent, 100);
+    }
+
     void InitializeViews(){
         ChngProfilePic = findViewById(R.id.ChngProfilePic);
-        ChngPassword = findViewById(R.id.ChngPswrd);
-        ChngDisplayName = findViewById(R.id.ChngDsplyName);
-        Logout = findViewById(R.id.Logout);
+        SettingsList = findViewById(R.id.settingsList);
     }
 
     void ChangeProfilePic(){
@@ -133,14 +178,21 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode,int resultCode,Intent data){
         super.onActivityResult(requestCode,resultCode,data);
         if(resultCode == RESULT_OK){
-            Uri targetUri = data.getData();
-            Bitmap bitmap;
-            try{
-                bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri));
-                ChngProfilePic.setImageBitmap(bitmap);
+            if(requestCode == 100){
+                String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
+                for (String id : ids) {
+                    Log.d("Invite", "onActivityResult: sent invitation " + id);
+                }
             }
-            catch(FileNotFoundException e){
-                e.printStackTrace();
+            else {
+                Uri targetUri = data.getData();
+                Bitmap bitmap;
+                try {
+                    bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri));
+                    ChngProfilePic.setImageBitmap(bitmap);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

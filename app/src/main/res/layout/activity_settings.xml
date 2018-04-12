@@ -1,37 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/blurry2"
     tools:context=".SettingsActivity">
 
-
-    <RelativeLayout
+    <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/PhotoLayout">
+        android:id="@+id/settingsList"
+        android:layout_marginTop="10dp"
+        android:divider="@color/colorPrimary"
+        android:dividerHeight="1dp"
+        android:listSelector="@android:color/transparent"
+        android:clickable="false">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:src="@drawable/empty_profile"
-            android:layout_centerHorizontal="true"
-            android:id="@+id/ProfilePic"
-            android:layout_marginTop="20dp"/>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_photo_camera_black_24dp"
-            android:layout_alignRight="@+id/ProfilePic"
-            android:layout_alignBottom="@+id/ProfilePic"
-            android:id="@+id/ChngProfilePic"/>
-
-    </RelativeLayout>
-
-    <RelativeLayout
+    </ListView>
+    <!--<RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/PhotoLayout"
@@ -42,7 +28,7 @@
             android:layout_height="wrap_content"
             android:text="@string/action_change_password"
             android:id="@+id/ChngPswrd"
-            android:layout_margin="10dp"/>
+            android:padding="10dp"/>
 
         <Button
             android:layout_width="match_parent"
@@ -50,15 +36,15 @@
             android:text="@string/action_change_name"
             android:layout_below="@+id/ChngPswrd"
             android:id="@+id/ChngDsplyName"
-            android:layout_margin="10dp" />
+            android:padding="10dp"/>
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/logout"
             android:layout_below="@+id/ChngDsplyName"
-            android:layout_margin="10dp"
-            android:id="@+id/Logout"/>
+            android:id="@+id/Logout"
+            android:padding="10dp"/>
 
-    </RelativeLayout>
+    </RelativeLayout>-->
 </RelativeLayout>
