@@ -47,7 +47,8 @@
     <string name="on">ON</string>
     <string name="off">OFF</string>
     <string name="notifications">Notifications</string>
-
+    <string name="prompt_feedback">Write your feedback</string>
+    <string name="action_feedback">Send Feedback</string>
 
     <string name="invitation_title">WalkNEarn Invitation</string>
     <string name="invitation_message">Would you like to earn free food for being fit and healthy, then try WalkNEarn</string>

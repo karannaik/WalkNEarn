@@ -29,6 +29,7 @@ public class ListButtonAdapter extends ArrayAdapter<String>{
 
     @Override
     public View getView(final int position, View convertView, final ViewGroup parent) {
+        String settingsListItem = settingsList.get(position);
         if(convertView == null){
             if(getItemViewType(position) == IMAGE_VIEW)
                 convertView = LayoutInflater.from(context).inflate(R.layout.listview_image_type,parent,false);
@@ -48,12 +49,10 @@ public class ListButtonAdapter extends ArrayAdapter<String>{
             });
         }
         else if(getItemViewType(position) == TEXT_VIEW) {
-            String settingsListItem = settingsList.get(position-1);
             TextView settingsButton = convertView.findViewById(R.id.listViewButton);
             settingsButton.setText(settingsListItem);
         }
         else{
-            String settingsListItem = settingsList.get(position-1);
             //setting switch view
             final Switch switchView = convertView.findViewById(R.id.listViewSwitch);
             switchView.setText(settingsListItem);

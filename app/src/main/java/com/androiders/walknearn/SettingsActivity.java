@@ -34,8 +34,10 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         InitializeViews();
+        userLocalStore = new UserLocalStore(this);
 
         ArrayList<String> settingsActionList = new ArrayList<>();
+        settingsActionList.add("Profile picture");
         settingsActionList.add(getString(R.string.action_change_password));
         settingsActionList.add(getString(R.string.action_change_name));
         settingsActionList.add(getString(R.string.notifications));
@@ -53,45 +55,35 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
-                long viewId = view.getId();
-                if(viewId == R.id.ChngProfilePic)
-                    ChangeProfilePic();
-                if(viewId == R.id.listViewSwitch){
-                    if(l == 1)
-                        Toast.makeText(SettingsActivity.this,"Switch on",Toast.LENGTH_LONG).show();
-                    else
-                        Toast.makeText(SettingsActivity.this,"Switch off",Toast.LENGTH_LONG).show();
+                if(position == 0) {
+                    long viewId = view.getId();
+                    if (viewId == R.id.ChngProfilePic)
+                        ChangeProfilePic();
                 }
-                if (position == 1) // Change password
-                {
+                else if (position == 1) // Change password
                     startActivity(new Intent(SettingsActivity.this,PasswordChangeActivity.class));
-                }
                 else if(position == 2) // Change name
-                {
                     startActivity(new Intent(SettingsActivity.this,DisplayNameChangeActivity.class));
+                else if(position == 3){ // Switch view
+                    long viewId = view.getId();
+                    if(viewId == R.id.listViewSwitch){
+                        if(l == 1)
+                            Toast.makeText(SettingsActivity.this,"Switch on",Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(SettingsActivity.this,"Switch off",Toast.LENGTH_LONG).show();
+                    }
                 }
                 else if(position == 4) // Contacts invites
-                {
                     InviteFromContacts();
-                      //Toast.makeText(SettingsActivity.this,"Contacts invite checking",Toast.LENGTH_LONG).show();
-                }
-                else if(position == 5) // switch
-                {
+                else if(position == 5) // FB invites
                     Toast.makeText(SettingsActivity.this,"FB invite checking",Toast.LENGTH_LONG).show();
-                }
-                else if(position == 6) // switch
-                {
-                    Toast.makeText(SettingsActivity.this,"Send feedback checking",Toast.LENGTH_LONG).show();
-                }
-                else if(position == 7) // switch
-                {
+                else if(position == 6) // Feedback
+                    startActivity(new Intent(SettingsActivity.this,FeedbackActivity.class));
+                else if(position == 7) // T & C
                     Toast.makeText(SettingsActivity.this,"T & C checking",Toast.LENGTH_LONG).show();
-                }
-                else if(position == 8) // switch
-                {
-                    Toast.makeText(SettingsActivity.this,"Switch checking",Toast.LENGTH_LONG).show();
-                }
-                else if(position == 9) //Logout
+                else if(position == 8) // Privacy policy
+                    Toast.makeText(SettingsActivity.this,"Privacy policy checking",Toast.LENGTH_LONG).show();
+                else if(position == 9) // Logout
                 {
                     userLocalStore.clearUserData();
                     userLocalStore.setUserLggedIn(false);
