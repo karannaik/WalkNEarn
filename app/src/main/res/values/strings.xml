@@ -54,7 +54,4 @@
     <string name="invitation_deep_link">http://google.com</string>
     <string name="invitation_cta">Invitation CTA</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
 </resources>
