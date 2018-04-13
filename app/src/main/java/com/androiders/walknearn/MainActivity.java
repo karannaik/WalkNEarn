@@ -82,8 +82,7 @@ public class MainActivity extends AppCompatActivity {
         initializeGraph();
 
     }
-
-
+    
     private void setAutomaticRefreshTimers() {
         final Handler mHandler = new Handler();
 
