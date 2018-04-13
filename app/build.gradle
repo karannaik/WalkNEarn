@@ -55,5 +55,5 @@ dependencies {
     compile 'com.android.support:support-core-ui:26.1.0'
 
     compile 'com.jjoe64:graphview:4.2.1'
+    apply plugin: 'com.google.gms.google-services'
 }
-apply plugin: 'com.google.gms.google-services'
