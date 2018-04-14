@@ -39,7 +39,7 @@
 
         <provider
             android:name="com.facebook.FacebookContentProvider"
-            android:authorities="com.facebook.app.FacebookContentProvider348230779010504"
+            android:authorities="com.facebook.app.FacebookContentProvider2041768342704216"
             android:exported="true" />
 
         <activity android:name=".AskingLocaionActivity" />
@@ -69,7 +69,7 @@
         <activity android:name=".UpdateFrgtPswrdActivity" />
         <activity
             android:name=".FeedbackActivity"
-            android:parentActivityName=".SettingsActivity"/>
+            android:parentActivityName="."/>
     </application>
 
 </manifest>

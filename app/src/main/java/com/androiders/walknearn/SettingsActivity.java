@@ -17,10 +17,23 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.google.android.gms.appinvite.AppInviteInvitation;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -28,11 +41,17 @@ public class SettingsActivity extends AppCompatActivity {
     ImageView ChngProfilePic;
     UserLocalStore userLocalStore;
     ListView SettingsList;
+    CallbackManager mCallbackManager;
+    final int MEDIA_ACCESS_REQUESTCODE =1;
+    final int CONTACT_INVITES_REQUESTCODE = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
+
         InitializeViews();
         userLocalStore = new UserLocalStore(this);
 
@@ -76,7 +95,7 @@ public class SettingsActivity extends AppCompatActivity {
                 else if(position == 4) // Contacts invites
                     InviteFromContacts();
                 else if(position == 5) // FB invites
-                    Toast.makeText(SettingsActivity.this,"FB invite checking",Toast.LENGTH_LONG).show();
+                    InviteOnFacebook();
                 else if(position == 6) // Feedback
                     startActivity(new Intent(SettingsActivity.this,FeedbackActivity.class));
                 else if(position == 7) // T & C
@@ -92,15 +111,6 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-    }
-
-    void InviteFromContacts(){
-        Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.invitation_title))
-                .setMessage(getString(R.string.invitation_message))
-                .setDeepLink(Uri.parse(getString(R.string.invitation_deep_link)))
-                .setCallToActionText(getString(R.string.invitation_cta))
-                .build();
-        startActivityForResult(intent, 100);
     }
 
     void InitializeViews(){
@@ -128,7 +138,7 @@ public class SettingsActivity extends AppCompatActivity {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(intent,0);
+                    startActivityForResult(intent,MEDIA_ACCESS_REQUESTCODE);
                     Toast.makeText(SettingsActivity.this,"Changing profile pic",Toast.LENGTH_LONG).show();
                 }
             })
@@ -166,27 +176,85 @@ public class SettingsActivity extends AppCompatActivity {
             .show();
     }
 
+    void InviteFromContacts(){
+        Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.invitation_title))
+                .setMessage(getString(R.string.invitation_message))
+                .setDeepLink(Uri.parse(getString(R.string.invitation_deep_link)))
+                .setCallToActionText(getString(R.string.invitation_cta))
+                .build();
+        startActivityForResult(intent, CONTACT_INVITES_REQUESTCODE);
+    }
+
     @Override
     protected void onActivityResult(int requestCode,int resultCode,Intent data){
         super.onActivityResult(requestCode,resultCode,data);
         if(resultCode == RESULT_OK){
-            if(requestCode == 100){
-                String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
-                for (String id : ids) {
-                    Log.d("Invite", "onActivityResult: sent invitation " + id);
+            switch (requestCode){
+                case  MEDIA_ACCESS_REQUESTCODE:{
+                    Uri targetUri = data.getData();
+                    Bitmap bitmap;
+                    try {
+                        bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri));
+                        ChngProfilePic.setImageBitmap(bitmap);
+                    }
+                    catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-            else {
-                Uri targetUri = data.getData();
-                Bitmap bitmap;
-                try {
-                    bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(targetUri));
-                    ChngProfilePic.setImageBitmap(bitmap);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
+                break;
+                case CONTACT_INVITES_REQUESTCODE: {
+                    String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
+                    for (String id : ids) {
+                        Log.d("Invite", "onActivityResult: sent invitation " + id);
+                    }
                 }
+                break;
+                default:
+                    mCallbackManager.onActivityResult(requestCode, resultCode, data);
+                break;
             }
         }
     }
 
+    void InviteOnFacebook(){
+        mCallbackManager = CallbackManager.Factory.create();
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("email","user_photos","public_profile","user_friends"));
+
+        LoginManager.getInstance().registerCallback(mCallbackManager,new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+
+                // Replace invitable_friends[gives the list of all friends] with friends[gives the list of friends using the app]
+                new GraphRequest(loginResult.getAccessToken(),"/me/friends",null, HttpMethod.GET,new GraphRequest.Callback() {
+                    public void onCompleted(GraphResponse response) {
+                        //Helps getting the list of friends (Only after app reviewed by Facebook developers)
+                         try {
+                             JSONArray rawName = response.getJSONObject().getJSONArray("data");
+                             ArrayList<String> friends = new ArrayList<>();
+                             for(int i=0;i < rawName.length();i++){
+                                 friends.add(rawName.getJSONObject(i).getString("name"));
+                                 Log.d("JSONArray",rawName.getJSONObject(i).getString("name"));
+                             }
+                        }
+                        catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).executeAsync();
+            }
+            @Override
+            public void onCancel() {
+                Toast.makeText(SettingsActivity.this,"Cancel",Toast.LENGTH_LONG).show();
+                Log.d("Tag_Cancel","On cancel");
+            }
+            @Override
+            public void onError(FacebookException error) {
+                Toast.makeText(SettingsActivity.this,"Error",Toast.LENGTH_LONG).show();
+                Log.d("Tag_Error",error.toString());
+            }
+        });
+
+        Toast.makeText(this,"Getting friends list ",Toast.LENGTH_SHORT).show();
+        LoginManager.getInstance().logOut();
+    }
 }
