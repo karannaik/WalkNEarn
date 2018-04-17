@@ -1,7 +1,7 @@
 <resources>
 
-    <string name="facebook_app_id">348230779010504</string>
-    <string name="fb_login_protocol_scheme">fb348230779010504</string>
+    <string name="facebook_app_id">2041768342704216</string>
+    <string name="fb_login_protocol_scheme">fb2041768342704216</string>
     <string name="app_name">WalkNEarn</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
@@ -47,14 +47,12 @@
     <string name="on">ON</string>
     <string name="off">OFF</string>
     <string name="notifications">Notifications</string>
-
+    <string name="prompt_feedback">Write your feedback</string>
+    <string name="action_feedback">Send Feedback</string>
 
     <string name="invitation_title">WalkNEarn Invitation</string>
     <string name="invitation_message">Would you like to earn free food for being fit and healthy, then try WalkNEarn</string>
     <string name="invitation_deep_link">http://google.com</string>
     <string name="invitation_cta">Invitation CTA</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
