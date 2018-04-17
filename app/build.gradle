@@ -48,5 +48,10 @@ dependencies {
     compile 'com.android.volley:volley:1.0.0'
 
     compile 'de.hdodenhof:circleimageview:2.1.0'
+    apply plugin: 'com.google.gms.google-services'
+    compile 'com.jjoe64:graphview:4.2.1'
+    compile 'com.romandanylyk:pageindicatorview:1.0.0@aar'
+    compile 'com.android.support:support-annotations:26.1.0'
+    compile 'com.android.support:support-compat:26.1.0'
+    compile 'com.android.support:support-core-ui:26.1.0'
 }
-apply plugin: 'com.google.gms.google-services'

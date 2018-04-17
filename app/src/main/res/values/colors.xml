@@ -13,7 +13,7 @@
     <color name="red">#b80000</color>
     <color name="transparent_black">#77000000</color>
     <color name="transparent_dark_black">#AA000000</color>
-
+    <color name="transparent_accent">#110ecffd</color>
 
     <color name="colorPrimaryLight">#5b5999</color>
     <color name="colorAccentLite">#0ecffd</color>
