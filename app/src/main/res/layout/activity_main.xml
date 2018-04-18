@@ -159,7 +159,7 @@
             android:id="@+id/ProfilePic"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_margin="20dp"
+            android:layout_margin="10dp"
             android:clickable="false"
             android:src="@drawable/empty_profile" />
 

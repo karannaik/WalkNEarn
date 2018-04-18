@@ -359,11 +359,14 @@ public class MainActivity extends AppCompatActivity {
                         new OnSuccessListener<DataSet>() {
                             @Override
                             public void onSuccess(DataSet dataSet) {
-                                String total = dataSet.getDataPoints().get(0).getValue(Field.FIELD_CALORIES).toString();
+                                if(dataSet.getDataPoints().size()!=0) {
 
-                                Log.i(TAG, "Total calories: " + total);
-                                //call fragment methods
-                                mFragmentTotalCalories.updateText(""+Math.round(Float.parseFloat(total)));
+                                    String total = dataSet.getDataPoints().get(0).getValue(Field.FIELD_CALORIES).toString();
+
+                                    Log.i(TAG, "Total calories: " + total);
+                                    //call fragment methods
+                                    mFragmentTotalCalories.updateText(""+Math.round(Float.parseFloat(total)));
+                                }
                             }
                         })
                 .addOnFailureListener(
@@ -375,29 +378,29 @@ public class MainActivity extends AppCompatActivity {
                         });
 
 
-        Fitness.getHistoryClient(this, GoogleSignIn.getLastSignedInAccount(this))
-                .readDailyTotal(DataType.TYPE_DISTANCE_DELTA)
-                .addOnSuccessListener(
-                        new OnSuccessListener<DataSet>() {
-                            @Override
-                            public void onSuccess(DataSet dataSet) {
-                                long total =
-                                        dataSet.isEmpty()
-                                                ? 0
-                                                : dataSet.getDataPoints().get(0).getValue(Field.FIELD_DISTANCE).asInt();
-
-                                Log.i(TAG, "Total calories: " + total);
-                                //call fragment methods
-                                mFragmentTotalCalories.updateText(""+total);
-                            }
-                        })
-                .addOnFailureListener(
-                        new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w(TAG, "There was a problem getting the step count.", e);
-                            }
-                        });
+//        Fitness.getHistoryClient(this, GoogleSignIn.getLastSignedInAccount(this))
+//                .readDailyTotal(DataType.TYPE_DISTANCE_DELTA)
+//                .addOnSuccessListener(
+//                        new OnSuccessListener<DataSet>() {
+//                            @Override
+//                            public void onSuccess(DataSet dataSet) {
+//                                long total =
+//                                        dataSet.isEmpty()
+//                                                ? 0
+//                                                : dataSet.getDataPoints().get(0).getValue(Field.FIELD_DISTANCE).asInt();
+//
+//                                Log.i(TAG, "Total calories: " + total);
+//                                //call fragment methods
+//                                mFragmentTotalCalories.updateText(""+total);
+//                            }
+//                        })
+//                .addOnFailureListener(
+//                        new OnFailureListener() {
+//                            @Override
+//                            public void onFailure(@NonNull Exception e) {
+//                                Log.w(TAG, "There was a problem getting the step count.", e);
+//                            }
+//                        });
 
         //Get all summary
     }
