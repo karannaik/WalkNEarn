@@ -2,7 +2,7 @@ package com.androiders.walknearn.model;
 
 public class User {
 
-    private String Username, Email, Password;
+    private String Username, Email, Password, photoUrl;
     private int StepCount;
 
     public int getStepCount() {
@@ -35,5 +35,13 @@ public class User {
 
     public void setPassword(String password) {
         Password = password;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
+
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 }

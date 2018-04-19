@@ -20,6 +20,7 @@ public class UserLocalStore {
         spEditor.putString("Email",user.getEmail());
         spEditor.putString("Password",user.getPassword());
         spEditor.putInt("StepCount",user.getStepCount());
+        spEditor.putString("PhotoURL",user.getPhotoUrl());
         spEditor.commit();
     }
 
@@ -30,6 +31,7 @@ public class UserLocalStore {
         loggedUser.setUsername(UserLocalDatabase.getString("UserName",""));
         loggedUser.setStepCount(UserLocalDatabase.getInt("StepCount",0));
         loggedUser.setPassword(UserLocalDatabase.getString("Password",""));
+        loggedUser.setPhotoUrl(UserLocalDatabase.getString("PhotoURL",""));
         return loggedUser;
     }
 

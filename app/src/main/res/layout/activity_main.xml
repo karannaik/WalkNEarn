@@ -85,15 +85,6 @@
             fab:fab_labelStyle="@style/menu_labels_style">
 
             <com.androiders.walknearn.fab.FloatingActionButton
-                android:id="@+id/btnFabSettings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                fab:fab_colorNormal="@color/colorAccentLite"
-                fab:fab_colorPressed="@color/colorAccent"
-                fab:fab_icon="@mipmap/ic_settings_white_24dp"
-                fab:fab_title="Settings" />
-
-            <com.androiders.walknearn.fab.FloatingActionButton
                 android:id="@+id/btnFabTasks"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -115,55 +106,14 @@
         </com.androiders.walknearn.fab.FloatingActionsMenu>
 
 
-        <!--<com.robertlevonyan.views.customfloatingactionbutton.FloatingLayout-->
-        <!--android:id="@+id/floating_layout"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="match_parent"-->
-        <!--app:fabMenuGravity="bottom"-->
-        <!--app:fabMenuStyle="popUp"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:layout_alignParentBottom="true">-->
-
-        <!--<com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton-->
-        <!--android:id="@+id/fab1"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--app:fabSizes="mini"-->
-        <!--app:fabIcon="@drawable/ic_walk_black_24dp"-->
-        <!--app:fabColor="@color/colorAccent1"/>-->
-
-        <!--<com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton-->
-        <!--android:id="@+id/fab2"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--app:fabColor="#ff9c10"-->
-        <!--app:fabSizes="mini" />-->
-
-        <!--<com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton-->
-        <!--android:id="@+id/fab3"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--app:fabColor="#0b7bc1"-->
-        <!--app:fabSizes="mini" />-->
-
-        <!--<com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton-->
-        <!--android:id="@+id/fab4"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--app:fabColor="#ea201c"-->
-        <!--app:fabSizes="mini" />-->
-
-        <!--</com.robertlevonyan.views.customfloatingactionbutton.FloatingLayout>-->
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/ProfilePic"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_margin="10dp"
+            android:elevation="10dp"
             android:clickable="false"
             android:src="@drawable/empty_profile" />
-
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>
-
-

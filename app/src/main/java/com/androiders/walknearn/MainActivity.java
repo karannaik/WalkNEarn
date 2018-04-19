@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.tv.TvContract;
 import android.os.Bundle;
@@ -19,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +29,8 @@ import com.androiders.walknearn.dbhelper.SharedPrefs;
 import com.androiders.walknearn.fragment.TotalCaloriesFragment;
 import com.androiders.walknearn.fragment.TotalDistanceFragment;
 import com.androiders.walknearn.fragment.TotalStepsFragment;
+import com.androiders.walknearn.model.User;
+import com.androiders.walknearn.model.UserLocalStore;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.fitness.Fitness;
 import com.google.android.gms.fitness.FitnessOptions;
@@ -48,6 +53,8 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import com.rd.PageIndicatorView;
 import com.rd.animation.type.AnimationType;
 
+import java.io.IOException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -116,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.btnFabSettings).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.ProfilePic).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this,SettingsActivity.class));
@@ -143,6 +150,31 @@ public class MainActivity extends AppCompatActivity {
             public void onPageScrollStateChanged(int state) {/*empty*/}
         });
 
+        final User user = new UserLocalStore(this).getLoggedInUser();
+        if (user.getPhotoUrl()!=null && !user.getPhotoUrl().isEmpty()) {
+            //load profile pic
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (true) {
+                        try {
+                            Bitmap bmp = null;
+                            try {
+                                URL url = new URL(user.getPhotoUrl());
+                                bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                                ((de.hdodenhof.circleimageview.CircleImageView)findViewById(R.id.ProfilePic)).setImageBitmap(bmp);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }).start();
+
+        }
     }
 
     private void initializeGraph() {

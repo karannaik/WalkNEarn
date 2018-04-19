@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.androiders.walknearn.model.User;
 import com.androiders.walknearn.model.UserLocalStore;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -35,6 +36,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -138,6 +141,32 @@ public class SettingsActivity extends AppCompatActivity {
     void InitializeViews(){
         ChngProfilePic = findViewById(R.id.ChngProfilePic);
         SettingsList = findViewById(R.id.settingsList);
+
+        final User user = new UserLocalStore(this).getLoggedInUser();
+        if (user.getPhotoUrl()!=null && !user.getPhotoUrl().isEmpty()) {
+            //load profile pic
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (true) {
+                        try {
+                            Bitmap bmp = null;
+                            try {
+                                URL url = new URL(user.getPhotoUrl());
+                                bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                                ((de.hdodenhof.circleimageview.CircleImageView)findViewById(R.id.ProfilePic)).setImageBitmap(bmp);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }).start();
+
+        }
     }
 
     void ChangeProfilePic(){
