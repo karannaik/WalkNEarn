@@ -1,4 +1,4 @@
-package com.androiders.walknearn.DBFiles;
+package com.androiders.walknearn.dbfiles;
 
 import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;

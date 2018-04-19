@@ -15,7 +15,7 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
-import com.androiders.walknearn.DBFiles.FeedbackRequest;
+import com.androiders.walknearn.dbfiles.FeedbackRequest;
 import com.androiders.walknearn.model.User;
 import com.androiders.walknearn.model.UserLocalStore;
 import com.androiders.walknearn.util.Utility;

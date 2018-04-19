@@ -18,9 +18,9 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
-import com.androiders.walknearn.DBFiles.CheckIfExists;
-import com.androiders.walknearn.DBFiles.ForgotPasswordRequest;
-import com.androiders.walknearn.DBFiles.PasswordRequest;
+import com.androiders.walknearn.dbfiles.CheckIfExists;
+import com.androiders.walknearn.dbfiles.ForgotPasswordRequest;
+import com.androiders.walknearn.dbfiles.PasswordRequest;
 import com.androiders.walknearn.util.Utility;
 
 import org.json.JSONException;
