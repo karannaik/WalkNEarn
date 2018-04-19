@@ -16,6 +16,8 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.androiders.walknearn.DBFiles.CheckCredentials;
 import com.androiders.walknearn.DBFiles.PasswordRequest;
+import com.androiders.walknearn.model.User;
+import com.androiders.walknearn.model.UserLocalStore;
 import com.androiders.walknearn.util.Utility;
 
 import org.json.JSONException;
@@ -132,8 +134,12 @@ public class UpdateFrgtPswrdActivity extends AppCompatActivity {
                     if (success) {
                         String name = jsonResponse.getString("userName");
                         String stepCnt = jsonResponse.getString("userStepCount");
-                        User NewUser = new User(name,email,password,Integer.parseInt(stepCnt));
-                        userLocalStore.storeUserData(NewUser);
+                        User newUser = new User();
+                        newUser.setUsername(name);
+                        newUser.setStepCount(Integer.parseInt(stepCnt));
+                        newUser.setEmail(email);
+                        newUser.setPassword(password);
+                        userLocalStore.storeUserData(newUser);
                         userLocalStore.setUserLggedIn(true);
                         util.showProgressDialog("Changing Password", UpdateFrgtPswrdActivity.this);
                         startActivity(new Intent(UpdateFrgtPswrdActivity.this, MainActivity.class));

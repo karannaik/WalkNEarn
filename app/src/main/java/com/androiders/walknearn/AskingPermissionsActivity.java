@@ -16,7 +16,7 @@ import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 
-public class AskingLocaionActivity extends AppCompatActivity {
+public class AskingPermissionsActivity extends AppCompatActivity {
 
     private static final String[] LOCATION_PERMS =
             {
@@ -54,20 +54,20 @@ public class AskingLocaionActivity extends AppCompatActivity {
             if (currentapiVersion >= 23) {//is marshmallow
 
                 if (canAccessLocation()) {
-                    Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+                    Intent i = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(i);
                     finish();
                 }
             } else {
 
-                Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+                Intent i = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(i);
                 finish();
             }
 
         } else {
 
-            Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+            Intent i = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(i);
             finish();
         }
@@ -91,7 +91,7 @@ public class AskingLocaionActivity extends AppCompatActivity {
                 requestPermissions(LOCATION_PERMS, INITIAL_REQUEST);
             }
         } else {
-            Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+            Intent i = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(i);
             finish();
         }

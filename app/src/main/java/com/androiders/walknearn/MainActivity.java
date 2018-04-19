@@ -77,8 +77,6 @@ public class MainActivity extends AppCompatActivity {
 
         initializeViews();
 
-        setAutomaticRefreshTimers();
-
         initializeGraph();
 
     }
@@ -168,61 +166,6 @@ public class MainActivity extends AppCompatActivity {
         graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
         graph.getGridLabelRenderer().setHorizontalLabelsVisible(false);
         graph.getGridLabelRenderer().setVerticalLabelsVisible(false);
-
-
-//
-//        // generate Dates
-//        Calendar calendar = Calendar.getInstance();
-//        Date d1 = calendar.getTime();
-//        calendar.add(Calendar.DATE, 1);
-//        Date d2 = calendar.getTime();
-//        calendar.add(Calendar.DATE, 1);
-//        Date d3 = calendar.getTime();
-//
-//        GraphView graph = (GraphView) findViewById(R.id.graph);
-//
-//// you can directly pass Date objects to DataPoint-Constructor
-//// this will convert the Date to double via Date#getTime()
-//        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[] {
-//                new DataPoint(d1, 1),
-//                new DataPoint(d2, 5),
-//                new DataPoint(d3, 3)
-//        });
-//
-//        graph.addSeries(series);
-//
-//// set date label formatter
-//        graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(this));
-//        graph.getGridLabelRenderer().setNumHorizontalLabels(3); // only 4 because of the space
-//
-//// set manual x bounds to have nice steps
-//        graph.getViewport().setMinX(d1.getTime());
-//        graph.getViewport().setMaxX(d3.getTime());
-//        graph.getViewport().setXAxisBoundsManual(true);
-//
-//// as we use dates as labels, the human rounding to nice readable numbers
-//// is not necessary
-//        graph.getGridLabelRenderer().setHumanRounding(false);
-//// activate horizontal scrolling
-//        graph.getViewport().setScrollable(true);
-//
-////
-////        GraphView graph = (GraphView) findViewById(R.id.graph);
-////        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[] {
-////                new DataPoint(0, 1),
-////                new DataPoint(1, 5),
-////                new DataPoint(2, 3),
-////                new DataPoint(3, 2),
-////                new DataPoint(4, 6)
-////        });
-////        series.setDrawBackground(true);
-////        series.setBackgroundColor(getResources().getColor(R.color.colorAccentLite));
-////        series.setDrawDataPoints(true);
-////        StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graph);
-////        staticLabelsFormatter.setHorizontalLabels(new String[] {"old", "middle", "new"});
-////        staticLabelsFormatter.setVerticalLabels(new String[] {"low", "middle", "high"});
-////        graph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
-////        graph.addSeries(series);
     }
 
     private void initializeGoogleFit() {
@@ -231,20 +174,20 @@ public class MainActivity extends AppCompatActivity {
                 FitnessOptions.builder()
                         .addDataType(DataType.TYPE_STEP_COUNT_CUMULATIVE)
                         .addDataType(DataType.TYPE_STEP_COUNT_DELTA)
-                        .addDataType(DataType.TYPE_CALORIES_EXPENDED)
-                        .addDataType(DataType.TYPE_DISTANCE_DELTA)
+                        .addDataType(DataType.AGGREGATE_STEP_COUNT_DELTA)
+                  //      .addDataType(DataType.TYPE_CALORIES_EXPENDED)
+                   //     .addDataType(DataType.TYPE_DISTANCE_DELTA)
                         .build();
+
         if (!GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(this), fitnessOptions)) {
             GoogleSignIn.requestPermissions(
                     this,
                     REQUEST_OAUTH_REQUEST_CODE,
                     GoogleSignIn.getLastSignedInAccount(this),
                     fitnessOptions);
-        }
-        else {
+        } else {
             subscribe();
         }
-
     }
 
     @Override
@@ -259,8 +202,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_OAUTH_REQUEST_CODE) {
+                Toast.makeText(this, "subscribe", Toast.LENGTH_SHORT).show();
                 subscribe();
             }
+        } else {
+
+            Toast.makeText(this, "Google fit authentication failed", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -316,6 +263,8 @@ public class MainActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
                                     Log.i(TAG, "Successfully subscribed!");
+
+                                    setAutomaticRefreshTimers();
                                     readData();
                                     readHistoryData();
                                 } else {
@@ -376,7 +325,6 @@ public class MainActivity extends AppCompatActivity {
                                 Log.w(TAG, "There was a problem getting the step count.", e);
                             }
                         });
-
 
 //        Fitness.getHistoryClient(this, GoogleSignIn.getLastSignedInAccount(this))
 //                .readDailyTotal(DataType.TYPE_DISTANCE_DELTA)

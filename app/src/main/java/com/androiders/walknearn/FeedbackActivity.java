@@ -16,6 +16,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.androiders.walknearn.DBFiles.FeedbackRequest;
+import com.androiders.walknearn.model.User;
+import com.androiders.walknearn.model.UserLocalStore;
 import com.androiders.walknearn.util.Utility;
 
 import org.json.JSONException;
@@ -63,7 +65,7 @@ public class FeedbackActivity extends AppCompatActivity {
         User user = userLocalStore.getLoggedInUser();
 
         final String msg = mFeedbackText.getText().toString();
-        final String email = user.Email;
+        final String email = user.getEmail();
 
         if(util.isFieldEmpty(msg,mFeedbackText))
             mFeedbackText.requestFocus();

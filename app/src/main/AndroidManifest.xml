@@ -42,7 +42,7 @@
             android:authorities="com.facebook.app.FacebookContentProvider2041768342704216"
             android:exported="true" />
 
-        <activity android:name=".AskingLocaionActivity" />
+        <activity android:name=".AskingPermissionsActivity" />
         <activity android:name=".CouponActivity" />
         <activity
             android:name=".SignUpActivity"
@@ -68,8 +68,7 @@
             android:parentActivityName=".LoginActivity" />
         <activity android:name=".UpdateFrgtPswrdActivity" />
         <activity
-            android:name=".FeedbackActivity"
-            android:parentActivityName="."/>
+            android:name=".FeedbackActivity"/>
     </application>
 
 </manifest>

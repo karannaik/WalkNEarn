@@ -22,6 +22,8 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.androiders.walknearn.DBFiles.CheckIfExists;
 import com.androiders.walknearn.DBFiles.SignUpRequest;
+import com.androiders.walknearn.model.User;
+import com.androiders.walknearn.model.UserLocalStore;
 import com.androiders.walknearn.util.Utility;
 
 import org.json.JSONException;
@@ -179,8 +181,11 @@ public class SignUpActivity extends AppCompatActivity {
                                 JSONObject jsonResponse = new JSONObject(response);
                                 boolean success = jsonResponse.getBoolean("success");
                                 if (success) {
-                                    User NewUser = new User(email,password,name);
-                                    userLocalStore.storeUserData(NewUser);
+                                    User newUser = new User();
+                                    newUser.setPassword(password);
+                                    newUser.setUsername(name);
+                                    newUser.setEmail(email);
+                                    userLocalStore.storeUserData(newUser);
                                     userLocalStore.setUserLggedIn(true);
                                     util.showProgressDialog("Signing up",SignUpActivity.this);
                                     Intent MainActivityIntent = new Intent(SignUpActivity.this, MainActivity.class);

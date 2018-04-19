@@ -21,7 +21,15 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.androiders.walknearn.DBFiles.LoginRequest;
+import com.androiders.walknearn.model.User;
+import com.androiders.walknearn.model.UserLocalStore;
 import com.androiders.walknearn.util.Utility;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,15 +40,38 @@ import org.json.JSONObject;
  */
 public class LoginActivity extends AppCompatActivity {
 
+    private static final String TAG = "LoginActivity";
     // UI references.
     private EditText mEmailText, mPasswordText;
-    private Button mSignIn,mSignUp;
+    private Button mSignIn, mSignUp;
     private TextView mForgotPassword;
     ImageView mGoogleLogin;
     private CoordinatorLayout mCoordinatorLayout;
-    String email,password;
-    Utility util = new Utility(LoginActivity.this);
+    String email, password;
+    private Utility mUtil;
     UserLocalStore userLocalStore;
+
+    private GoogleSignInClient mGoogleSignInClient;
+    private int RC_SIGN_IN = 11;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // Check for existing Google Sign In account, if the user is already signed in
+        // the GoogleSignInAccount will be non-null.
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if (account!=null) {
+
+            startPermissionsActivity(account);
+            finish();
+        }
+    }
+
+    private void startPermissionsActivity(GoogleSignInAccount account) {
+        Intent intent = new Intent(this, AskingPermissionsActivity.class);
+        intent.putExtra("email", account.getEmail());
+        startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +84,7 @@ public class LoginActivity extends AppCompatActivity {
         mPasswordText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if(keyEvent.getAction() != KeyEvent.ACTION_DOWN)
+                if (keyEvent.getAction() != KeyEvent.ACTION_DOWN)
                     return false;
                 attemptLogin();
                 return true;
@@ -70,14 +101,14 @@ public class LoginActivity extends AppCompatActivity {
         mForgotPassword.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(LoginActivity.this,ForgotPasswordActivity.class));
+                startActivity(new Intent(LoginActivity.this, ForgotPasswordActivity.class));
             }
         });
 
         mSignUp.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent SignUpIntent = new Intent(LoginActivity.this,SignUpActivity.class);
+                Intent SignUpIntent = new Intent(LoginActivity.this, SignUpActivity.class);
                 startActivity(SignUpIntent);
             }
         });
@@ -85,22 +116,13 @@ public class LoginActivity extends AppCompatActivity {
         mGoogleLogin.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(LoginActivity.this,"Working Google login",Toast.LENGTH_LONG).show();
+                signInWithGoogle();
             }
         });
 
     }
 
-    // Exits the app on pressing back button
-    @Override
-    public void onBackPressed(){
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-    }
-
-    void initializeViews(){
+    void initializeViews() {
         mEmailText = findViewById(R.id.email_login);
         mPasswordText = findViewById(R.id.password_login);
         mForgotPassword = findViewById(R.id.forgot_password);
@@ -108,6 +130,48 @@ public class LoginActivity extends AppCompatActivity {
         mSignUp = findViewById(R.id.login_sign_up_button);
         mGoogleLogin = findViewById(R.id.google_login);
         mCoordinatorLayout = findViewById(R.id.LoginCoordinatorLayout);
+        mUtil = new Utility(LoginActivity.this);
+    }
+
+    private void signInWithGoogle() {
+// Configure sign-in to request the user's ID, email address, and basic
+// profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        mGoogleSignInClient = GoogleSignIn.getClient(LoginActivity.this, gso);
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
+            // The Task returned from this call is always completed, no need to attach
+            // a listener.
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            handleSignInResult(task);
+        }
+    }
+
+
+    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+        try {
+            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+
+            // Signed in successfully, show authenticated UI.
+            startPermissionsActivity(account);
+            Toast.makeText(this, "Welcome "+account.getGivenName(), Toast.LENGTH_LONG).show();
+
+        } catch (ApiException e) {
+            // The ApiException status code indicates the detailed failure reason.
+            // Please refer to the GoogleSignInStatusCodes class reference for more information.
+            Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
+        }
     }
 
     /**
@@ -115,7 +179,7 @@ public class LoginActivity extends AppCompatActivity {
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
-    private void attemptLogin(){
+    private void attemptLogin() {
         // Reset errors.
         mEmailText.setError(null);
         mPasswordText.setError(null);
@@ -126,54 +190,59 @@ public class LoginActivity extends AppCompatActivity {
 
         boolean cancel = false;
 
-        if(util.isFieldEmpty(email,mEmailText))
+        if (mUtil.isFieldEmpty(email, mEmailText))
             cancel = true;
-        if (!util.isConnectingToInternet())
+        if (!mUtil.isConnectingToInternet())
             showInternetSnackBar();
-        if(util.isFieldEmpty(password,mPasswordText)){
-            if(!cancel)
+        if (mUtil.isFieldEmpty(password, mPasswordText)) {
+            if (!cancel)
                 cancel = true;
         }
-        if(!cancel) {
+        if (!cancel) {
 
             Response.Listener<String> responseListener = new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    Log.d("success",response);
-                    try{
+                    Log.d("success", response);
+                    try {
                         JSONObject jsonResponse = new JSONObject(response);
                         boolean success = jsonResponse.getBoolean("success");
-                        if(success){
+                        if (success) {
                             String name = jsonResponse.getString("userName");
                             String stepCnt = jsonResponse.getString("userStepCount");
-                            User user = new User(name,email,password,Integer.parseInt(stepCnt));
+                            User user = new User();
+                            user.setUsername(name);
+                            user.setEmail(email);
+                            user.setPassword(password);
+                            user.setStepCount(Integer.parseInt(stepCnt));
+
                             userLocalStore.storeUserData(user);
                             userLocalStore.setUserLggedIn(true);
-                            util.showProgressDialog("Logging in",LoginActivity.this);
-                            Intent MainActivityIntent = new Intent(LoginActivity.this,MainActivity.class);
-                            startActivity(MainActivityIntent);
-                        }
-                        else{AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                            Intent intent = new Intent(LoginActivity.this, AskingPermissionsActivity.class);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                             builder.setMessage("Invalid Email or Password")
-                                .setNegativeButton("Retry", null)
-                                .create()
-                                .show();
+                                    .setNegativeButton("Retry", null)
+                                    .create()
+                                    .show();
                         }
-                    }
-                    catch (JSONException e) {
+                    } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
             };
-            LoginRequest loginRequest = new LoginRequest(email,password,responseListener);
+            LoginRequest loginRequest = new LoginRequest(email, password, responseListener);
             RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
             queue.add(loginRequest);
+            mUtil.showProgressDialog("Logging in", LoginActivity.this);
         }
     }
 
     private void showInternetSnackBar() {
         Snackbar snackbar = Snackbar
-                .make(mCoordinatorLayout,getString(R.string.internet_unavailable), Snackbar.LENGTH_LONG)
+                .make(mCoordinatorLayout, getString(R.string.internet_unavailable), Snackbar.LENGTH_LONG)
                 .setAction("Settings", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -182,6 +251,5 @@ public class LoginActivity extends AppCompatActivity {
                 });
         snackbar.show();
     }
-
 }
 

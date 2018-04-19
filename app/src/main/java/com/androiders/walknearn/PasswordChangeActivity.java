@@ -19,6 +19,8 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.androiders.walknearn.DBFiles.CheckCredentials;
 import com.androiders.walknearn.DBFiles.PasswordRequest;
+import com.androiders.walknearn.model.User;
+import com.androiders.walknearn.model.UserLocalStore;
 import com.androiders.walknearn.util.Utility;
 
 import org.json.JSONException;
@@ -107,7 +109,7 @@ public class PasswordChangeActivity extends AppCompatActivity {
             if (!cancel) {
 
                 final User user = userLocalStore.getLoggedInUser();
-                final String email = user.Email;
+                final String email = user.getEmail();
 
                 Response.Listener<String> responseListener = new Response.Listener<String>() {
                     @Override

@@ -1,7 +1,9 @@
-package com.androiders.walknearn;
+package com.androiders.walknearn.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
+import com.androiders.walknearn.model.User;
 
 public class UserLocalStore {
 
@@ -14,20 +16,21 @@ public class UserLocalStore {
 
     public void storeUserData(User user){
         SharedPreferences.Editor spEditor = UserLocalDatabase.edit();
-        spEditor.putString("UserName",user.Username);
-        spEditor.putString("Email",user.Email);
-        spEditor.putString("Password",user.Password);
-        spEditor.putInt("StepCount",user.StepCount);
+        spEditor.putString("UserName",user.getUsername());
+        spEditor.putString("Email",user.getEmail());
+        spEditor.putString("Password",user.getPassword());
+        spEditor.putInt("StepCount",user.getStepCount());
         spEditor.commit();
     }
 
     public User getLoggedInUser(){
-        String UserName = UserLocalDatabase.getString("UserName","");
-        String Email = UserLocalDatabase.getString("Email","");
-        String Password = UserLocalDatabase.getString("Password","");
-        int StepCount = UserLocalDatabase.getInt("StepCount",0);
-        User LoggedUser = new User(UserName,Email,Password,StepCount);
-        return LoggedUser;
+
+        User loggedUser = new User();
+        loggedUser.setEmail(UserLocalDatabase.getString("Email",""));
+        loggedUser.setUsername(UserLocalDatabase.getString("UserName",""));
+        loggedUser.setStepCount(UserLocalDatabase.getInt("StepCount",0));
+        loggedUser.setPassword(UserLocalDatabase.getString("Password",""));
+        return loggedUser;
     }
 
     public void updateUserPassword(String password){

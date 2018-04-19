@@ -19,6 +19,8 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.androiders.walknearn.DBFiles.CheckCredentials;
 import com.androiders.walknearn.DBFiles.DisplayNameRequest;
+import com.androiders.walknearn.model.User;
+import com.androiders.walknearn.model.UserLocalStore;
 import com.androiders.walknearn.util.Utility;
 
 import org.json.JSONException;
@@ -94,8 +96,8 @@ public class DisplayNameChangeActivity extends AppCompatActivity {
                 cancel = true;
         }
         final User user = userLocalStore.getLoggedInUser();
-        final String email = user.Email;
-        String oldName = user.Username;
+        final String email = user.getEmail();
+        String oldName = user.getUsername();
         if (oldName.equals(newName)) {
             AlertDialog.Builder passwordMatch = new AlertDialog.Builder(this, R.style.AlertDialogTheme);
             passwordMatch.setMessage("New password cannot be the same as old one")
