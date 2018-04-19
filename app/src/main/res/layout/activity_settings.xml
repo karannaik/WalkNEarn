@@ -16,6 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"/>
 
+
         <ListView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -29,4 +30,34 @@
         </ListView>
     </LinearLayout>
 
+    <!--<RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/PhotoLayout"
+        android:layout_marginTop="20dp">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/action_change_password"
+            android:id="@+id/ChngPswrd"
+            android:padding="10dp"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/action_change_name"
+            android:layout_below="@+id/ChngPswrd"
+            android:id="@+id/ChngDsplyName"
+            android:padding="10dp"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/logout"
+            android:layout_below="@+id/ChngDsplyName"
+            android:id="@+id/Logout"
+            android:padding="10dp"/>
+
+    </RelativeLayout>-->
 </RelativeLayout>
