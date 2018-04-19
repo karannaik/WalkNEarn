@@ -33,7 +33,6 @@ public class SignUpActivity extends AppCompatActivity {
 
     private EditText mEmailText, mDisplayName, mPasswordText;
     private Button mSignUpButton, mSignInButton;
-    private ImageView mGoogleSignUp;
     private CoordinatorLayout mCoordinatorLayout;
     String email,password,name;
     Utility util = new Utility(SignUpActivity.this);
@@ -74,13 +73,6 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
-        mGoogleSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(SignUpActivity.this,"Working google sign up", Toast.LENGTH_SHORT).show();
-            }
-        });
-
     }
 
     private void initializeViews() {
@@ -89,7 +81,6 @@ public class SignUpActivity extends AppCompatActivity {
         mPasswordText = findViewById(R.id.password_signup);
         mSignUpButton = findViewById(R.id.sign_up_button);
         mSignInButton = findViewById(R.id.signup_sign_in_button);
-        mGoogleSignUp = findViewById(R.id.google_signup);
         mCoordinatorLayout = findViewById(R.id.SignUpCoordinatorLayout);
     }
 
@@ -121,6 +112,7 @@ public class SignUpActivity extends AppCompatActivity {
             if(!cancel)
                 cancel = true;
         }
+
         if(!cancel) {
             Response.Listener<String> responseListener = new Response.Listener<String>() {
                 @Override

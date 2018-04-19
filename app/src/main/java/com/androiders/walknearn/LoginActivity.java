@@ -86,7 +86,12 @@ public class LoginActivity extends AppCompatActivity {
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (keyEvent.getAction() != KeyEvent.ACTION_DOWN)
                     return false;
-                attemptLogin();
+
+                if (!mUtil.isConnectingToInternet()) {
+                    showInternetSnackBar();
+                } else {
+                    attemptLogin();
+                }
                 return true;
             }
         });
@@ -94,7 +99,11 @@ public class LoginActivity extends AppCompatActivity {
         mSignIn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptLogin();
+                if (!mUtil.isConnectingToInternet()) {
+                    showInternetSnackBar();
+                } else {
+                    attemptLogin();
+                }
             }
         });
 
@@ -192,8 +201,6 @@ public class LoginActivity extends AppCompatActivity {
 
         if (mUtil.isFieldEmpty(email, mEmailText))
             cancel = true;
-        if (!mUtil.isConnectingToInternet())
-            showInternetSnackBar();
         if (mUtil.isFieldEmpty(password, mPasswordText)) {
             if (!cancel)
                 cancel = true;

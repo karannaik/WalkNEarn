@@ -45,27 +45,19 @@
         <activity android:name=".AskingPermissionsActivity" />
         <activity android:name=".CouponActivity" />
         <activity
-            android:name=".SignUpActivity"
-            android:parentActivityName=".LoginActivity" />
+            android:name=".SignUpActivity"/>
         <activity android:name=".LoginActivity" />
         <activity
             android:name=".SettingsActivity"
-            android:label="@string/title_settings"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/BasicTitleTheme" />
+            android:label="@string/title_settings" />
         <activity
             android:name=".PasswordChangeActivity"
-            android:label="@string/action_change_password"
-            android:parentActivityName=".SettingsActivity"
-            android:theme="@style/BasicTitleTheme" />
+            android:label="@string/action_change_password" />
         <activity
             android:name=".DisplayNameChangeActivity"
-            android:label="@string/action_change_name"
-            android:parentActivityName=".SettingsActivity"
-            android:theme="@style/BasicTitleTheme" />
+            android:label="@string/action_change_name" />
         <activity
-            android:name=".ForgotPasswordActivity"
-            android:parentActivityName=".LoginActivity" />
+            android:name=".ForgotPasswordActivity"/>
         <activity android:name=".UpdateFrgtPswrdActivity" />
         <activity
             android:name=".FeedbackActivity"/>

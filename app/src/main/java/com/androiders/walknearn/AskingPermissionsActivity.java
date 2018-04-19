@@ -2,6 +2,7 @@ package com.androiders.walknearn;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -15,6 +16,9 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.fitness.FitnessOptions;
+import com.google.android.gms.fitness.data.DataType;
 
 public class AskingPermissionsActivity extends AppCompatActivity {
 
@@ -25,6 +29,7 @@ public class AskingPermissionsActivity extends AppCompatActivity {
             };
 
     private static final int INITIAL_REQUEST = 1337;
+    private static final int REQUEST_OAUTH_REQUEST_CODE = 0x1001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,22 +59,16 @@ public class AskingPermissionsActivity extends AppCompatActivity {
             if (currentapiVersion >= 23) {//is marshmallow
 
                 if (canAccessLocation()) {
-                    Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(i);
-                    finish();
+                    initializeGoogleFit();
                 }
             } else {
 
-                Intent i = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(i);
-                finish();
+                initializeGoogleFit();
             }
 
         } else {
 
-            Intent i = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(i);
-            finish();
+            initializeGoogleFit();
         }
     }
 
@@ -91,9 +90,46 @@ public class AskingPermissionsActivity extends AppCompatActivity {
                 requestPermissions(LOCATION_PERMS, INITIAL_REQUEST);
             }
         } else {
+            initializeGoogleFit();
+        }
+    }
+
+    private void initializeGoogleFit() {
+
+        FitnessOptions fitnessOptions =
+                FitnessOptions.builder()
+                        .addDataType(DataType.TYPE_STEP_COUNT_CUMULATIVE)
+                        .addDataType(DataType.TYPE_STEP_COUNT_DELTA)
+                        .addDataType(DataType.AGGREGATE_STEP_COUNT_DELTA)
+                        //      .addDataType(DataType.TYPE_CALORIES_EXPENDED)
+                        //     .addDataType(DataType.TYPE_DISTANCE_DELTA)
+                        .build();
+
+        if (!GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(this), fitnessOptions)) {
+            GoogleSignIn.requestPermissions(
+                    this,
+                    REQUEST_OAUTH_REQUEST_CODE,
+                    GoogleSignIn.getLastSignedInAccount(this),
+                    fitnessOptions);
+        } else {
             Intent i = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(i);
             finish();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == REQUEST_OAUTH_REQUEST_CODE) {
+                Toast.makeText(this, "subscribed", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(i);
+                finish();
+            }
+        } else {
+
+            Toast.makeText(this, "Google fit authentication failed", Toast.LENGTH_SHORT).show();
         }
     }
 }

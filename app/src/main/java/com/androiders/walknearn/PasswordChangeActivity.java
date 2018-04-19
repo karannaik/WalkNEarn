@@ -7,8 +7,10 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,6 +35,7 @@ public class PasswordChangeActivity extends AppCompatActivity {
     CoordinatorLayout mCoordinatelayout;
     Utility util = new Utility(PasswordChangeActivity.this);
     UserLocalStore userLocalStore;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +43,9 @@ public class PasswordChangeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_password_change);
 
         InitializeViews();
+
+        setupToolbar();
+
         userLocalStore = new UserLocalStore(this);
         mOldPswrd.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -66,6 +72,17 @@ public class PasswordChangeActivity extends AppCompatActivity {
         });
     }
 
+
+    private void setupToolbar() {
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+    }
+
     void InitializeViews() {
         mOldPswrd = findViewById(R.id.old_password);
         mNewPswrd = findViewById(R.id.new_password);
@@ -73,6 +90,13 @@ public class PasswordChangeActivity extends AppCompatActivity {
         mCancel = findViewById(R.id.chng_pswrd_cancel_button);
         mCoordinatelayout = findViewById(R.id.ChngPswrdCoordinatorLayout);
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        onBackPressed();
+        return super.onOptionsItemSelected(item);
+    }
+
 
     void ChangePassword() {
         mNewPswrd.setError(null);

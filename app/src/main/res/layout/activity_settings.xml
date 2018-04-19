@@ -6,17 +6,31 @@
     android:background="@drawable/blurry2"
     tools:context=".SettingsActivity">
 
-    <ListView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/settingsList"
-        android:layout_marginTop="10dp"
-        android:divider="@color/colorPrimary"
-        android:dividerHeight="1dp"
-        android:listSelector="@android:color/transparent"
-        android:clickable="false">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    </ListView>
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            style="@style/Toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"/>
+
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/settingsList"
+            android:layout_marginTop="10dp"
+            android:divider="@color/colorPrimary"
+            android:dividerHeight="1dp"
+            android:listSelector="@android:color/transparent"
+            android:clickable="false">
+
+        </ListView>
+    </LinearLayout>
+
     <!--<RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

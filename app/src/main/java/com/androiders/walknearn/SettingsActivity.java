@@ -9,8 +9,10 @@ import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -38,18 +40,20 @@ import java.util.Arrays;
 
 public class SettingsActivity extends AppCompatActivity {
 
-
     ImageView ChngProfilePic;
     UserLocalStore userLocalStore;
     ListView SettingsList;
     CallbackManager mCallbackManager;
     final int MEDIA_ACCESS_REQUESTCODE =1;
     final int CONTACT_INVITES_REQUESTCODE = 2;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+        setupToolbar();
 
         FacebookSdk.sdkInitialize(getApplicationContext());
 
@@ -111,6 +115,23 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             }
         });
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        onBackPressed();
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    private void setupToolbar() {
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
     }
 

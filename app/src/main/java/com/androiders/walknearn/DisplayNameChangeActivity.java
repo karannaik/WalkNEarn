@@ -7,8 +7,10 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,6 +35,7 @@ public class DisplayNameChangeActivity extends AppCompatActivity {
     CoordinatorLayout mCoordinateLayout;
     Utility util = new Utility(DisplayNameChangeActivity.this);
     UserLocalStore userLocalStore;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +43,7 @@ public class DisplayNameChangeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_display_name_change);
 
         InitializeViews();
+        setupToolbar();
         userLocalStore = new UserLocalStore(this);
 
         mPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -74,6 +78,22 @@ public class DisplayNameChangeActivity extends AppCompatActivity {
         mChngName = findViewById(R.id.change_name_button);
         mCancel = findViewById(R.id.chng_name_cancel_button);
         mCoordinateLayout = findViewById(R.id.ChngNameCoordinatorLayout);
+    }
+
+    private void setupToolbar() {
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        onBackPressed();
+        return super.onOptionsItemSelected(item);
     }
 
     void ChangeName() {

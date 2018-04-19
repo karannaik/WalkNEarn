@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,6 +33,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     EditText mEmailText;
     Button mContinueBtn,mCancelBtn;
     Utility util = new Utility(ForgotPasswordActivity.this);
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +41,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         setContentView(R.layout.activity_forgot_password);
         InitializeViews();
 
+        setupToolbar();
         mContinueBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -68,6 +72,22 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         mEmailText = findViewById(R.id.email_forgotpswd);
         mContinueBtn = findViewById(R.id.frgtpwsd_button);
         mCancelBtn = findViewById(R.id.frgtpwsdcncl_button);
+    }
+
+    private void setupToolbar() {
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        onBackPressed();
+        return super.onOptionsItemSelected(item);
     }
 
     void attemptFrgtPswd(){

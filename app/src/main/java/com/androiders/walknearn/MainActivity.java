@@ -73,12 +73,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initializeGoogleFit();
-
         initializeViews();
 
         initializeGraph();
 
+        subscribe();
     }
 
     private void setAutomaticRefreshTimers() {
@@ -168,47 +167,12 @@ public class MainActivity extends AppCompatActivity {
         graph.getGridLabelRenderer().setVerticalLabelsVisible(false);
     }
 
-    private void initializeGoogleFit() {
-
-        FitnessOptions fitnessOptions =
-                FitnessOptions.builder()
-                        .addDataType(DataType.TYPE_STEP_COUNT_CUMULATIVE)
-                        .addDataType(DataType.TYPE_STEP_COUNT_DELTA)
-                        .addDataType(DataType.AGGREGATE_STEP_COUNT_DELTA)
-                  //      .addDataType(DataType.TYPE_CALORIES_EXPENDED)
-                   //     .addDataType(DataType.TYPE_DISTANCE_DELTA)
-                        .build();
-
-        if (!GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(this), fitnessOptions)) {
-            GoogleSignIn.requestPermissions(
-                    this,
-                    REQUEST_OAUTH_REQUEST_CODE,
-                    GoogleSignIn.getLastSignedInAccount(this),
-                    fitnessOptions);
-        } else {
-            subscribe();
-        }
-    }
-
     @Override
     public void onBackPressed(){
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_HOME);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == REQUEST_OAUTH_REQUEST_CODE) {
-                Toast.makeText(this, "subscribe", Toast.LENGTH_SHORT).show();
-                subscribe();
-            }
-        } else {
-
-            Toast.makeText(this, "Google fit authentication failed", Toast.LENGTH_SHORT).show();
-        }
     }
 
     private void setupViewPager(ViewPager viewPager) {
