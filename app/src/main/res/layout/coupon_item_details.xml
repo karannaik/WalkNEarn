@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/edit_text_box">
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:id="@+id/offer_value"
+        android:layout_weight="1"
+        android:text="Walkcoins"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/black"
+        android:gravity="center"/>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:id="@+id/offer_value_percent"
+        android:layout_weight="1"
+        android:text="Discount(%)"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/black"
+        android:gravity="center"/>
+
+    <Button
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:id="@+id/redeem"
+        android:layout_weight="1"
+        android:text="Redeem"
+        android:textColor="@color/white"
+        android:padding="10dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_gravity="center_vertical"/>
+
+</LinearLayout>

@@ -43,9 +43,12 @@
             android:exported="true" />
 
         <activity android:name=".AskingPermissionsActivity" />
-        <activity android:name=".CouponActivity" />
         <activity
-            android:name=".SignUpActivity"/>
+            android:name=".CouponActivity"
+            android:label="Coupons"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/BasicTitleTheme" />
+        <activity android:name=".SignUpActivity" />
         <activity android:name=".LoginActivity" />
         <activity
             android:name=".SettingsActivity"
@@ -56,11 +59,10 @@
         <activity
             android:name=".DisplayNameChangeActivity"
             android:label="@string/action_change_name" />
-        <activity
-            android:name=".ForgotPasswordActivity"/>
+        <activity android:name=".ForgotPasswordActivity" />
         <activity android:name=".UpdateFrgtPswrdActivity" />
-        <activity
-            android:name=".FeedbackActivity"/>
+        <activity android:name=".FeedbackActivity" />
+        <activity android:name=".CouponDetailsActivity"></activity>
     </application>
 
 </manifest>
