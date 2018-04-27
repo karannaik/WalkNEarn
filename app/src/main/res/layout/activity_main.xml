@@ -106,13 +106,24 @@
 
         </com.androiders.walknearn.fab.FloatingActionsMenu>
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/ProfilePic"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_margin="10dp"
-            android:elevation="10dp"
-            android:clickable="false"
-            android:src="@drawable/empty_profile" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/ProfilePic"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="10dp"
+                android:elevation="10dp"
+                android:clickable="false"
+                android:src="@drawable/empty_profile" />
+            <TextView
+                android:id="@+id/WalkCOins"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="0"
+                android:textColor="@color/white"/>
+        </LinearLayout>
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

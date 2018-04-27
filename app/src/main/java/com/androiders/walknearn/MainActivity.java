@@ -15,8 +15,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.androiders.walknearn.fab.FloatingActionButton;
 import com.androiders.walknearn.fragment.TotalCaloriesFragment;
 import com.androiders.walknearn.fragment.TotalDistanceFragment;
 import com.androiders.walknearn.fragment.TotalStepsFragment;
@@ -62,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private TotalStepsFragment mFragmentTotalSteps;
     private TotalDistanceFragment mFragmentTotalDistance;
     private PageIndicatorView pageIndicatorView;
+    private TextView mWalkCoins;
 
     private static final int GRAPH_DAILY = 1;
     private static final int GRAPH_WEEKLY = 2;
@@ -144,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private void initializeViews() {
 
         graph = (GraphView) findViewById(R.id.graph);
+        mWalkCoins = findViewById(R.id.WalkCOins);
 
         findViewById(R.id.btnFabCoupons).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -372,6 +376,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                 Log.i(TAG, "Total steps: " + total);
                                 //call fragment methods
                                 mFragmentTotalSteps.updateText(total);
+                                mWalkCoins.setText(Double.toString(total/2000.0));
                             }
                         })
                 .addOnFailureListener(
