@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <solid android:color="@color/colorPrimaryDark" />
+
+            <stroke
+                android:width="1dp"
+                android:color="#6f94c7" />
+        </shape>
+    </item>
+    <item
+        android:gravity="end"
+        android:drawable="@drawable/ic_arrow_drop_down_black_24dp" />
+</layer-list>
