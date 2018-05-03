@@ -1,24 +1,13 @@
 package com.androiders.walknearn.util;
 
 import android.app.ActivityManager;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
-import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.androiders.walknearn.R;
-import com.androiders.walknearn.SignUpActivity;
-
-import java.sql.Date;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
 
 /**
  * Created by K@R@N on 22-03-2016.

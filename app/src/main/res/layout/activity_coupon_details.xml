@@ -4,16 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.androiders.walknearn.CouponDetailsActivity"
     android:orientation="vertical"
     android:paddingLeft="10dp"
-    android:paddingRight="10dp">
+    android:paddingRight="10dp"
+    tools:context="com.androiders.walknearn.CouponDetailsActivity">
+
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        style="@style/Toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize" />
 
     <ImageView
+        android:id="@+id/selected_logo"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:id="@+id/selected_logo"/>
+        android:layout_weight="1" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -24,32 +31,31 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="Walkcoins"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/black"
-            android:gravity="center"/>
+            android:textColor="@color/black" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="Discount(%)"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/black"
-            android:gravity="center"/>
+            android:textColor="@color/black" />
 
         <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
     </LinearLayout>
 
     <ListView
+        android:id="@+id/selected_offers"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:id="@+id/selected_offers">
-    </ListView>
+        android:layout_weight="1"></ListView>
 
 </LinearLayout>

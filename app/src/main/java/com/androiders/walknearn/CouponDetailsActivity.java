@@ -2,24 +2,31 @@ package com.androiders.walknearn;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.androiders.walknearn.adapter.CouponItemDetailsAdapter;
+
 import java.util.ArrayList;
 
 public class CouponDetailsActivity extends AppCompatActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_coupon_details);
 
+        setupToolbar();
+
         Bundle extras = getIntent().getExtras();
         String couponId = extras.getString("CouponId");
-        String couponvalue = extras.getString("CouponValue");
+        String couponvalue = extras.getString("buttonCouponValue");
         couponvalue = couponvalue.substring(0,couponvalue.length()-1);
 
         ImageView image = findViewById(R.id.selected_logo);
@@ -44,5 +51,20 @@ public class CouponDetailsActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void setupToolbar() {
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        onBackPressed();
+        return super.onOptionsItemSelected(item);
     }
 }

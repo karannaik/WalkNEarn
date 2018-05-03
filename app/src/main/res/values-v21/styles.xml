@@ -66,6 +66,7 @@
         <item name="android:minHeight">?attr/actionBarSize</item>
         <!-- dark toolbar -->
         <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="android:elevation">4dp</item>
         <!-- light popup -->
         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
     </style>

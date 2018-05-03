@@ -45,9 +45,7 @@
         <activity android:name=".AskingPermissionsActivity" />
         <activity
             android:name=".CouponActivity"
-            android:label="Coupons"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/BasicTitleTheme" />
+            android:label="Coupons" />
         <activity android:name=".SignUpActivity" />
         <activity android:name=".LoginActivity" />
         <activity
@@ -59,10 +57,16 @@
         <activity
             android:name=".DisplayNameChangeActivity"
             android:label="@string/action_change_name" />
-        <activity android:name=".ForgotPasswordActivity" />
-        <activity android:name=".UpdateFrgtPswrdActivity" />
-        <activity android:name=".FeedbackActivity" />
-        <activity android:name=".CouponDetailsActivity"></activity>
+        <activity android:name=".ForgotPasswordActivity"
+            android:label="Forgot Password" />
+        <activity android:name=".UpdateForgotPasswordActivity"
+            android:label="Update Password" />
+        <activity android:name=".FeedbackActivity"
+            android:label="Feedback" />
+        <activity android:name=".CouponDetailsActivity"
+            android:label="Coupons" />
+        <activity android:name=".CouponTypeActivity"
+            android:label="Coupons" />
     </application>
 
 </manifest>

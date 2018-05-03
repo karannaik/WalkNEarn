@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.androiders.walknearn.adapter.ListButtonAdapter;
 import com.androiders.walknearn.model.User;
 import com.androiders.walknearn.model.UserLocalStore;
 import com.facebook.CallbackManager;

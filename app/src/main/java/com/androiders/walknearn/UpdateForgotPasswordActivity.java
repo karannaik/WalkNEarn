@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,18 +25,20 @@ import com.androiders.walknearn.util.Utility;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class UpdateFrgtPswrdActivity extends AppCompatActivity {
+public class UpdateForgotPasswordActivity extends AppCompatActivity {
 
     EditText mEmailText,mTempPassword,mNewPassword;
     Button mChangePassword;
     UserLocalStore userLocalStore;
     Utility util = new Utility(this);
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_frgt_pswrd);
         InitializeViews();
+        setupToolbar();
         userLocalStore = new UserLocalStore(this);
         mNewPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -60,6 +64,22 @@ public class UpdateFrgtPswrdActivity extends AppCompatActivity {
         mTempPassword = findViewById(R.id.temp_password);
         mNewPassword = findViewById(R.id.update_password);
         mChangePassword = findViewById(R.id.updatefrgtpwsd_button);
+    }
+
+    private void setupToolbar() {
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        onBackPressed();
+        return super.onOptionsItemSelected(item);
     }
 
     void UpdatePassword(){
@@ -106,7 +126,7 @@ public class UpdateFrgtPswrdActivity extends AppCompatActivity {
                         if (exists)
                             UpdatePasswordUtil(email,newPassword);
                         else{
-                            AlertDialog.Builder builder = new AlertDialog.Builder(UpdateFrgtPswrdActivity.this, R.style.AlertDialogTheme);
+                            AlertDialog.Builder builder = new AlertDialog.Builder(UpdateForgotPasswordActivity.this, R.style.AlertDialogTheme);
                             builder.setMessage("Incorrect Credentials")
                                     .setNegativeButton("Retry", null)
                                     .create()
@@ -118,7 +138,7 @@ public class UpdateFrgtPswrdActivity extends AppCompatActivity {
                 }
             };
             CheckCredentials credentials = new CheckCredentials(email,tempPassword,responseListener);
-            RequestQueue queue = Volley.newRequestQueue(UpdateFrgtPswrdActivity.this);
+            RequestQueue queue = Volley.newRequestQueue(UpdateForgotPasswordActivity.this);
             queue.add(credentials);
         }
     }
@@ -141,10 +161,10 @@ public class UpdateFrgtPswrdActivity extends AppCompatActivity {
                         newUser.setPassword(password);
                         userLocalStore.storeUserData(newUser);
                         userLocalStore.setUserLggedIn(true);
-                        util.showProgressDialog("Changing Password", UpdateFrgtPswrdActivity.this);
-                        startActivity(new Intent(UpdateFrgtPswrdActivity.this, MainActivity.class));
+                        util.showProgressDialog("Changing Password", UpdateForgotPasswordActivity.this);
+                        startActivity(new Intent(UpdateForgotPasswordActivity.this, MainActivity.class));
                     } else {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(UpdateFrgtPswrdActivity.this);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(UpdateForgotPasswordActivity.this);
                         builder.setMessage("Updating Password failed")
                             .setNegativeButton("Retry", null)
                             .create()
@@ -157,7 +177,7 @@ public class UpdateFrgtPswrdActivity extends AppCompatActivity {
         };
 
         PasswordRequest passwordRequest = new PasswordRequest(email,password,responseListener);
-        RequestQueue queue = Volley.newRequestQueue(UpdateFrgtPswrdActivity.this);
+        RequestQueue queue = Volley.newRequestQueue(UpdateForgotPasswordActivity.this);
         queue.add(passwordRequest);
     }
 

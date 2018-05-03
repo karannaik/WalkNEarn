@@ -1,4 +1,4 @@
-package com.androiders.walknearn;
+package com.androiders.walknearn.adapter;
 
 import android.content.Context;
 import android.graphics.drawable.RippleDrawable;
@@ -13,6 +13,8 @@ import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.androiders.walknearn.R;
 
 import java.util.ArrayList;
 

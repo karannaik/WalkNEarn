@@ -12,10 +12,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.androiders.walknearn.dbhelper.SharedPrefs;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.fitness.FitnessOptions;
 import com.google.android.gms.fitness.data.DataType;

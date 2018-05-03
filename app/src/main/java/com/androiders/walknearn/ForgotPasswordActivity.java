@@ -13,7 +13,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -62,7 +61,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         mCancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(ForgotPasswordActivity.this,LoginActivity.class));
+                finish();
             }
         });
 
@@ -137,7 +136,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
     void attemptFrgtPswdUtil(final String email){
         final String randomPswd = GenerateRandomPswd();
-        Toast.makeText(ForgotPasswordActivity.this,randomPswd,Toast.LENGTH_LONG).show();
         String to = "jyothsna.kilaru04@gmail.com";
         String sub = "WalkNEarn Recovery Password";
         String msg = "Try changing the password using "+randomPswd+" as old password";
@@ -157,7 +155,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                                     JSONObject jsonResponse = new JSONObject(response);
                                     boolean success = jsonResponse.getBoolean("success");
                                     if(success){
-                                        startActivity(new Intent(ForgotPasswordActivity.this,UpdateFrgtPswrdActivity.class));
+                                        startActivity(new Intent(ForgotPasswordActivity.this,UpdateForgotPasswordActivity.class));
                                     }
                                     else{
                                         AlertDialog.Builder builder = new AlertDialog.Builder(ForgotPasswordActivity.this, R.style.AlertDialogTheme);

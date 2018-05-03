@@ -16,9 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.androiders.walknearn.fab.FloatingActionButton;
 import com.androiders.walknearn.fragment.TotalCaloriesFragment;
 import com.androiders.walknearn.fragment.TotalDistanceFragment;
 import com.androiders.walknearn.fragment.TotalStepsFragment;
@@ -125,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public void run() {
                 while (true) {
                     try {
-                        Thread.sleep(10000);
+                        Thread.sleep(4000);
                         mHandler.post(new Runnable() {
 
                             @Override
@@ -150,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         findViewById(R.id.btnFabCoupons).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, CouponActivity.class));
+                startActivity(new Intent(MainActivity.this, CouponTypeActivity.class));
             }
         });
 
@@ -180,6 +178,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onPageScrollStateChanged(int state) {/*empty*/}
         });
+
+        mViewPager.setOffscreenPageLimit(3);
 
         final User user = new UserLocalStore(this).getLoggedInUser();
         if (user.getPhotoUrl()!=null && !user.getPhotoUrl().isEmpty()) {

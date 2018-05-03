@@ -79,7 +79,10 @@ public class LoginActivity extends AppCompatActivity {
         User user = new User();
         user.setUsername(account.getDisplayName()+"");
         user.setEmail(account.getEmail());
-        user.setPhotoUrl(account.getPhotoUrl().toString());
+        if(account.getPhotoUrl()!=null) {
+
+            user.setPhotoUrl(account.getPhotoUrl().toString());
+        }
 
         userLocalStore.storeUserData(user);
         userLocalStore.setUserLggedIn(true);
