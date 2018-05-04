@@ -122,7 +122,12 @@ public class SignUpActivity extends AppCompatActivity {
                         if (exists) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(SignUpActivity.this, R.style.AlertDialogTheme);
                             builder.setMessage("Email already exists")
-                                .setNegativeButton("Retry", null)
+                                .setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        mEmailText.requestFocus();
+                                    }
+                                })
                                 .create()
                                 .show();
                         }

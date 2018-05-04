@@ -66,7 +66,7 @@ public class DisplayNameChangeActivity extends AppCompatActivity {
         mCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(DisplayNameChangeActivity.this,SettingsActivity.class));
+                finish();
             }
         });
 

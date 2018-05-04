@@ -226,8 +226,56 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 graph.addSeries(series);
                 break;
             case GRAPH_WEEKLY:
-
-                series = new LineGraphSeries<>(new DataPoint[] {
+            {
+                /*Calendar calendar = Calendar.getInstance();
+                Date date = new Date(); // Current data
+                calendar.setTime(date);
+                long endTime = calendar.getTimeInMillis();
+                calendar.add(Calendar.WEEK_OF_YEAR,-1);
+                long startTime = calendar.getTimeInMillis();
+                java.text.DateFormat dateFormat = getDateInstance();
+                Log.i(TAG,"RANGE START : "+dateFormat.format(startTime));
+                Log.i(TAG,"RANGE END : "+dateFormat.format(endTime));
+                DataReadRequest readRequest = new DataReadRequest.Builder()
+                        .aggregate(DataType.TYPE_STEP_COUNT_DELTA,DataType.AGGREGATE_STEP_COUNT_DELTA)
+                        .bucketByTime(1,TimeUnit.DAYS)
+                        .setTimeRange(startTime,endTime,TimeUnit.MILLISECONDS)
+                        .build();
+                Task<DataReadResponse> responseTask = Fitness.getHistoryClient(this,GoogleSignIn.getLastSignedInAccount(this))
+                    .readData(readRequest)
+                    .addOnSuccessListener(new OnSuccessListener<DataReadResponse>()
+                    {
+                        @Override
+                        public void onSuccess(DataReadResponse dataReadResponse) {
+                            Log.i(TAG,"Response size : "+dataReadResponse.getBuckets().size());
+                            if (dataReadResponse.getBuckets().size() > 0)
+                            {
+                                Log.i(TAG, "Number of returned buckets of DataSets is: " + dataReadResponse.getBuckets().size());
+                                for (Bucket bucket : dataReadResponse.getBuckets()) {
+                                    List<DataSet> dataSets = bucket.getDataSets();
+                                    for (DataSet dataSet : dataSets) {
+                                        dumpDataSet(dataSet);
+                                    }
+                                }
+                            }
+                            else if (dataReadResponse.getDataSets().size() > 0) {
+                                Log.i(TAG, "Number of returned DataSets is: " + dataReadResponse.getDataSets().size());
+                                for (DataSet dataSet : dataReadResponse.getDataSets()) {
+                                    dumpDataSet(dataSet);
+                                }
+                            }
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener()
+                    {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.e(TAG, "There was a problem reading the data.", e);
+                        }
+                    });*/
+                //List<DataSet> dataSets = responseTask.getResult().getDataSets();
+                //Log.i(TAG,"DataSet size : "+dataSets.size());
+                series = new LineGraphSeries<>(new DataPoint[]{
                         new DataPoint(0, 1),
                         new DataPoint(1, 5),
                         new DataPoint(2, 3),
@@ -240,7 +288,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         new DataPoint(9, 3)
                 });
                 graph.addSeries(series);
-                break;
+            }
+            break;
             case GRAPH_MONTHLY:
 
                 series = new LineGraphSeries<>(new DataPoint[] {
@@ -540,7 +589,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             for (Field field : dp.getDataType().getFields()) {
                 Log.i(TAG, "\tField: " + field.getName() + " Value: " + dp.getValue(field));
             }
-        }
+        }Log.i(TAG, "DONE");
     }
     // [END parse_dataset]
 

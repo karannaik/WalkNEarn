@@ -1,5 +1,6 @@
 package com.androiders.walknearn;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -57,13 +58,17 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        // Check for existing Google Sign In account, if the user is already signed in
-        // the GoogleSignInAccount will be non-null.
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        if (account!=null) {
 
-            startPermissionsActivity(account);
-            finish();
+        // Get the account details only if the user is logged in
+        // setUserLoggedIn is set to false on clicking Logout button in settings page
+        if(userLocalStore.isUserLoggedIn()) {
+            // Check for existing Google Sign In account, if the user is already signed in
+            // the GoogleSignInAccount will be non-null.
+            GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+            if (account != null) {
+                startPermissionsActivity(account);
+                finish();
+            }
         }
     }
 
@@ -80,10 +85,8 @@ public class LoginActivity extends AppCompatActivity {
         user.setUsername(account.getDisplayName()+"");
         user.setEmail(account.getEmail());
         if(account.getPhotoUrl()!=null) {
-
             user.setPhotoUrl(account.getPhotoUrl().toString());
         }
-
         userLocalStore.storeUserData(user);
         userLocalStore.setUserLggedIn(true);
     }
@@ -101,10 +104,10 @@ public class LoginActivity extends AppCompatActivity {
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 if (keyEvent.getAction() != KeyEvent.ACTION_DOWN)
                     return false;
-
                 if (!mUtil.isConnectingToInternet()) {
                     showInternetSnackBar();
-                } else {
+                }
+                else {
                     attemptLogin();
                 }
                 return true;
@@ -116,7 +119,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (!mUtil.isConnectingToInternet()) {
                     showInternetSnackBar();
-                } else {
+                }
+                else {
                     attemptLogin();
                 }
             }
@@ -143,7 +147,6 @@ public class LoginActivity extends AppCompatActivity {
                 signInWithGoogle();
             }
         });
-
     }
 
     void initializeViews() {
@@ -158,11 +161,11 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void signInWithGoogle() {
-// Configure sign-in to request the user's ID, email address, and basic
-// profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+        // Configure sign-in to request the user's ID, email address, and basic
+        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
+            .requestEmail()
+            .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(LoginActivity.this, gso);
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
@@ -182,16 +185,14 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-
             // Signed in successfully, show authenticated UI.
             startPermissionsActivity(account);
             Toast.makeText(this, "Welcome "+account.getGivenName(), Toast.LENGTH_LONG).show();
-
-        } catch (ApiException e) {
+        }
+        catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
@@ -199,10 +200,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
-     */
+        * Attempts to sign in or register the account specified by the login form.
+        * If there are form errors (invalid email, missing fields, etc.), the
+        * errors are presented and no actual login attempt is made.
+    **/
     private void attemptLogin() {
         // Reset errors.
         mEmailText.setError(null);
@@ -240,17 +241,24 @@ public class LoginActivity extends AppCompatActivity {
 
                             userLocalStore.storeUserData(user);
                             userLocalStore.setUserLggedIn(true);
-                            Intent intent = new Intent(LoginActivity.this, AskingPermissionsActivity.class);
-                            startActivity(intent);
-                            finish();
-                        } else {
+                            mUtil.showProgressDialog("Logging in", LoginActivity.this);
+                            startActivity(new Intent(LoginActivity.this, AskingPermissionsActivity.class));
+                            //finish();
+                        }
+                        else {
                             AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                             builder.setMessage("Invalid Email or Password")
-                                    .setNegativeButton("Retry", null)
+                                    .setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            mEmailText.requestFocus();
+                                        }
+                                    })
                                     .create()
                                     .show();
                         }
-                    } catch (JSONException e) {
+                    }
+                    catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
@@ -258,7 +266,6 @@ public class LoginActivity extends AppCompatActivity {
             LoginRequest loginRequest = new LoginRequest(email, password, responseListener);
             RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
             queue.add(loginRequest);
-            mUtil.showProgressDialog("Logging in", LoginActivity.this);
         }
     }
 
@@ -274,4 +281,3 @@ public class LoginActivity extends AppCompatActivity {
         snackbar.show();
     }
 }
-
