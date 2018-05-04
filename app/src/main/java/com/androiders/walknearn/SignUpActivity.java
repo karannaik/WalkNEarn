@@ -125,8 +125,10 @@ public class SignUpActivity extends AppCompatActivity {
                                 .setNegativeButton("Retry", null)
                                 .create()
                                 .show();
-                        } else
-                            GPSAccess();
+                        }
+                        else
+                            //GPSAccess();
+                            startActivity(new Intent(SignUpActivity.this,AskingPermissionsActivity.class));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

@@ -119,8 +119,8 @@ public class DisplayNameChangeActivity extends AppCompatActivity {
         final String email = user.getEmail();
         String oldName = user.getUsername();
         if (oldName.equals(newName)) {
-            AlertDialog.Builder passwordMatch = new AlertDialog.Builder(this, R.style.AlertDialogTheme);
-            passwordMatch.setMessage("New password cannot be the same as old one")
+            AlertDialog.Builder nameMatch = new AlertDialog.Builder(this, R.style.AlertDialogTheme);
+            nameMatch.setMessage("New name cannot be the same as old one")
                     .setNegativeButton("Retry", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
