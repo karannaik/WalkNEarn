@@ -346,7 +346,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                 if (task.isSuccessful()) {
                                     Log.i(TAG, "Successfully subscribed!");
 
-                                    setAutomaticRefreshTimers();
+                                    //setAutomaticRefreshTimers();
                                     readData();
                                     readHistoryData();
                                 } else {

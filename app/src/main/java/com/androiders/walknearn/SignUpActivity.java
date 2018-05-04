@@ -178,8 +178,8 @@ public class SignUpActivity extends AppCompatActivity {
                                     userLocalStore.storeUserData(newUser);
                                     userLocalStore.setUserLggedIn(true);
                                     util.showProgressDialog("Signing up",SignUpActivity.this);
-                                    Intent MainActivityIntent = new Intent(SignUpActivity.this, MainActivity.class);
-                                    startActivity(MainActivityIntent);
+                                    Intent intent = new Intent(SignUpActivity.this, AskingPermissionsActivity.class);
+                                    startActivity(intent);
                                 }
                                 else {
                                     AlertDialog.Builder builder = new AlertDialog.Builder(SignUpActivity.this, R.style.AlertDialogTheme);
