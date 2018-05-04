@@ -57,16 +57,23 @@
         <activity
             android:name=".DisplayNameChangeActivity"
             android:label="@string/action_change_name" />
-        <activity android:name=".ForgotPasswordActivity"
+        <activity
+            android:name=".ForgotPasswordActivity"
             android:label="Forgot Password" />
-        <activity android:name=".UpdateForgotPasswordActivity"
+        <activity
+            android:name=".UpdateForgotPasswordActivity"
             android:label="Update Password" />
-        <activity android:name=".FeedbackActivity"
+        <activity
+            android:name=".FeedbackActivity"
             android:label="Feedback" />
-        <activity android:name=".CouponDetailsActivity"
+        <activity
+            android:name=".CouponDetailsActivity"
             android:label="Coupons" />
-        <activity android:name=".CouponTypeActivity"
+        <activity
+            android:name=".CouponTypeActivity"
             android:label="Coupons" />
+        <activity android:name=".FitnessTrackerSelectionActivity"
+            android:label="Choose a Fitness Tracker"/>
     </application>
 
 </manifest>

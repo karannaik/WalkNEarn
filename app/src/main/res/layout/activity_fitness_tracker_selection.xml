@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimaryDark">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                style="@style/Toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize" />
+
+            <!--Temp below code for categories-->
+
+
+            <LinearLayout
+                android:id="@+id/linearGoogleFit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="10dp"
+                    android:clickable="false"
+                    android:src="@drawable/google_fit" />
+
+                <TextView
+                    android:id="@+id/textViewGoogleFit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:drawableEnd="@mipmap/ic_chevron_right_white_24dp"
+                    android:drawableRight="@mipmap/ic_chevron_right_white_24dp"
+                    android:gravity="center_vertical"
+                    android:padding="10dp"
+                    android:text="Google Fit"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_margin="10dp"
+                android:background="@color/colorPrimary" />
+
+            <LinearLayout
+                android:id="@+id/linearFitbit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="10dp"
+                    android:clickable="false"
+                    android:src="@drawable/fitbit_logo" />
+
+                <TextView
+                    android:id="@+id/textViewFitbit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:drawableEnd="@mipmap/ic_chevron_right_white_24dp"
+                    android:drawableRight="@mipmap/ic_chevron_right_white_24dp"
+                    android:padding="10dp"
+                    android:text="Fitbit"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_margin="10dp"
+                android:background="@color/colorPrimary" />
+
+            <LinearLayout
+                android:id="@+id/linearSamsungHealth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="10dp"
+                    android:clickable="false"
+                    android:src="@drawable/samsung_health_logo" />
+
+                <TextView
+                    android:id="@+id/textViewSamsungSmartwatch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:drawableEnd="@mipmap/ic_chevron_right_white_24dp"
+                    android:drawableRight="@mipmap/ic_chevron_right_white_24dp"
+                    android:padding="10dp"
+                    android:text="Samsung smartwatch"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</android.support.constraint.ConstraintLayout>

@@ -17,7 +17,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash_screen);
 
         userLocalStore = new UserLocalStore(this);
-        int SPLASH_TIME_OUT = 2000;
+        int SPLASH_TIME_OUT = 1500;
         new Handler().postDelayed(new Runnable() {
 
             /*
@@ -29,7 +29,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             public void run() {
 
                 if(userLocalStore.isUserLoggedIn()){
-                    Intent i = new Intent(SplashScreenActivity.this, MainActivity.class);
+                    Intent i = new Intent(SplashScreenActivity.this, AskingPermissionsActivity.class);
                     startActivity(i);
                     finish();
                 }
