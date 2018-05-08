@@ -40,7 +40,7 @@
         </RelativeLayout>
 
 
-        <TextView
+        <!--<TextView
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -60,17 +60,64 @@
             android:layout_height="match_parent"
             android:layout_below="@+id/textView"
             android:background="@color/colorPrimary" />
+            -->
 
-        <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/textView"
-            android:background="@drawable/shape_drop_down_normal"
-            android:padding="5dp"
-            android:layout_margin="5dp"/>
+            android:layout_below="@+id/relative"
+            android:id="@+id/spinner_layout"
+            android:background="@color/colorPrimary"
+            android:paddingBottom="10dp">
 
-        <com.androiders.walknearn.fab.FloatingActionsMenu
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/spinner_border"
+                android:layout_marginRight="20dp"
+                android:layout_alignParentLeft="true"
+                android:id="@+id/time_spinner_layout">
+                <Spinner
+                    android:id="@+id/time_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:padding="5dp"
+                    android:layout_margin="5dp"
+                    android:dropDownWidth="wrap_content"
+                    android:popupBackground="@color/white"
+                    android:spinnerMode="dropdown"/>
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/graph_refresh_btn"
+                android:background="@drawable/ic_refresh_black_24dp"
+                android:layout_centerInParent="true"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:tint="@color/white"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/spinner_border"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="20dp">
+                <Spinner
+                    android:id="@+id/details_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:padding="5dp"
+                    android:dropDownWidth="wrap_content"
+                    android:spinnerMode="dropdown"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+
+        <!--<com.androiders.walknearn.fab.FloatingActionsMenu
             android:id="@+id/fabMenu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -104,7 +151,16 @@
                 fab:fab_colorPressed="@color/colorAccent"
                 fab:fab_title="Coupons" />
 
-        </com.androiders.walknearn.fab.FloatingActionsMenu>
+        </com.androiders.walknearn.fab.FloatingActionsMenu>-->
+
+        <com.github.mikephil.charting.charts.BarChart
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimary"
+            android:id="@+id/bar_chart"
+            android:layout_below="@+id/spinner_layout"
+            android:padding="10dp">
+        </com.github.mikephil.charting.charts.BarChart>
 
         <LinearLayout
             android:layout_width="wrap_content"

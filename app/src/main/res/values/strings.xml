@@ -55,4 +55,28 @@
     <string name="invitation_deep_link">http://google.com</string>
     <string name="invitation_cta">Invitation CTA</string>
 
+    <string-array name="time_spinner">
+        <item>Daily</item>
+        <item>Weekly</item>
+        <item>Monthly</item>
+    </string-array>
+
+    <string-array name="details_spinner">
+        <item>Steps</item>
+        <item>Calories</item>
+        <item>Distance</item>
+    </string-array>
+
+    <string-array name="graph_descriptions">
+        <item># of steps walked/4 hours</item>
+        <item># of steps walked/day</item>
+        <item># of steps walked/week</item>
+        <item>calories burned/4 hours</item>
+        <item>calories burned/day</item>
+        <item>calories burned/week</item>
+        <item>distance walked/4 hours</item>
+        <item>distance walked/day</item>
+        <item>distance walked/week</item>
+    </string-array>
+
 </resources>
