@@ -6,6 +6,7 @@ import com.android.volley.toolbox.StringRequest;
 import java.util.HashMap;
 import java.util.Map;
 
+// Class to connect to server and perform the request to check for credentials
 public class CheckCredentials extends StringRequest{
     private static final String CHECK_CREDENTIALS_REQUEST_URL = "https://walknearn.000webhostapp.com/CheckForCredentials.php";
     private Map<String,String> params;

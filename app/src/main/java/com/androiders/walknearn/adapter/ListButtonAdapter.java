@@ -18,6 +18,7 @@ import com.androiders.walknearn.R;
 
 import java.util.ArrayList;
 
+// Custom list adapter for the settings list
 public class ListButtonAdapter extends ArrayAdapter<String>{
     private Context context;
     private ArrayList<String> settingsList = null;

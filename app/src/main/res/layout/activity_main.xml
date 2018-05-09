@@ -39,29 +39,6 @@
                 fab:piv_viewPager="@id/viewPager" />
         </RelativeLayout>
 
-
-        <!--<TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/relative"
-            android:layout_gravity="center"
-            android:background="@color/colorPrimaryDark"
-            android:gravity="center"
-            android:maxLines="1"
-            android:padding="10dp"
-            android:text="10am         12pm           2pm            4pm          6pm          8pm"
-            android:textColor="@color/white" />
-
-
-        <com.jjoe64.graphview.GraphView
-            android:id="@+id/graph"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/textView"
-            android:background="@color/colorPrimary" />
-            -->
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -116,43 +93,6 @@
             </LinearLayout>
         </RelativeLayout>
 
-
-        <!--<com.androiders.walknearn.fab.FloatingActionsMenu
-            android:id="@+id/fabMenu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_margin="16dp"
-            fab:fab_addButtonColorNormal="@color/colorAccent"
-            fab:fab_addButtonColorPressed="@color/colorAccentLite"
-            fab:fab_addButtonPlusIconColor="@color/white"
-            fab:fab_addButtonSize="normal"
-            fab:fab_expandDirection="up"
-            fab:fab_labelStyle="@style/menu_labels_style">
-
-            <com.androiders.walknearn.fab.FloatingActionButton
-                android:id="@+id/btnFabTasks"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/ic_walk_white_24dp"
-                fab:fab_colorNormal="@color/colorAccentLite"
-                fab:fab_colorPressed="@color/colorAccent"
-                fab:fab_title="Walkcoins" />
-
-
-            <com.androiders.walknearn.fab.FloatingActionButton
-                android:id="@+id/btnFabCoupons"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/ic_ticket_percent_white_24dp"
-                fab:fab_colorNormal="@color/colorAccentLite"
-                fab:fab_colorPressed="@color/colorAccent"
-                fab:fab_title="Coupons" />
-
-        </com.androiders.walknearn.fab.FloatingActionsMenu>-->
-
         <com.github.mikephil.charting.charts.BarChart
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -165,21 +105,71 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/ProfilePic"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_margin="10dp"
-                android:elevation="10dp"
-                android:clickable="false"
-                android:src="@drawable/empty_profile" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/ProfilePic"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="10dp"
+                    android:elevation="10dp"
+                    android:clickable="false"
+                    android:src="@drawable/empty_profile" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="Name"
+                    android:textSize="@dimen/text_medium"
+                    android:textColor="@color/white"
+                    android:id="@+id/user_name"/>
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/WalkCOins"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="0"
+                android:text="0.0"
                 android:textColor="@color/white"/>
         </LinearLayout>
+
+        <com.androiders.walknearn.fab.FloatingActionsMenu
+            android:id="@+id/fabMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="16dp"
+            fab:fab_addButtonColorNormal="@color/colorAccent"
+            fab:fab_addButtonColorPressed="@color/colorAccentLite"
+            fab:fab_addButtonPlusIconColor="@color/white"
+            fab:fab_addButtonSize="normal"
+            fab:fab_expandDirection="down"
+            fab:fab_labelStyle="@style/menu_labels_style">
+
+            <com.androiders.walknearn.fab.FloatingActionButton
+                android:id="@+id/btnFabTasks"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ic_walk_white_24dp"
+                fab:fab_colorNormal="@color/colorAccentLite"
+                fab:fab_colorPressed="@color/colorAccent"
+                fab:fab_title="Challenges" />
+
+
+            <com.androiders.walknearn.fab.FloatingActionButton
+                android:id="@+id/btnFabCoupons"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ic_ticket_percent_white_24dp"
+                fab:fab_colorNormal="@color/colorAccentLite"
+                fab:fab_colorPressed="@color/colorAccent"
+                fab:fab_title="Coupons" />
+
+        </com.androiders.walknearn.fab.FloatingActionsMenu>
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

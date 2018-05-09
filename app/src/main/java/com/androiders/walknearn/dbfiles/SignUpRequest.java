@@ -6,6 +6,7 @@ import com.android.volley.toolbox.StringRequest;
 import java.util.HashMap;
 import java.util.Map;
 
+// Class to connect to server and perform the request to allow the user to sign up
 public class SignUpRequest extends StringRequest {
 
     private static final String SIGNUP_REQUEST_URL = "https://walknearn.000webhostapp.com/SignUp.php";

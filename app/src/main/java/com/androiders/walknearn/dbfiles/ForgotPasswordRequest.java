@@ -6,6 +6,7 @@ import com.android.volley.toolbox.StringRequest;
 import java.util.HashMap;
 import java.util.Map;
 
+// Class to connect to server and perform the request to send mail to the user with random password
 public class ForgotPasswordRequest extends StringRequest{
     private static final String FORGOT_PSWD_REQUEST_URL = "https://walknearn.000webhostapp.com/ForgotPassword.php";
     private Map<String,String> params;

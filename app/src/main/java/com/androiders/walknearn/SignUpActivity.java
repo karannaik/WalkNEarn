@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -27,6 +28,7 @@ import com.androiders.walknearn.util.Utility;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+// Sign up activity screen allows the user to create a new account
 public class SignUpActivity extends AppCompatActivity {
 
     private EditText mEmailText, mDisplayName, mPasswordText;
@@ -42,20 +44,23 @@ public class SignUpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
-        initializeViews();
+        initializeViews(); // Initializing the views in the activity
+
+        // Retrieving the data from local database
         userLocalStore = new UserLocalStore(this);
 
-        // Signing up on pressing enter key rather than clicking Login button
+        // Signing up on pressing enter key rather than clicking "Sign Up" button
         mPasswordText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if(keyEvent.getAction() != KeyEvent.ACTION_DOWN)
+                if(i != EditorInfo.IME_ACTION_DONE)
                     return false;
                 attemptSignUp();
                 return true;
             }
         });
 
+        // Signing up the user on clicking "Sign Up" button
         mSignUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -63,6 +68,7 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
+        // Handling the case on clicking "Sign In" button
         mSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,6 +79,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
 
+    // Method initializes the views in the activity
     private void initializeViews() {
         mEmailText = findViewById(R.id.email_signup);
         mDisplayName = findViewById(R.id.name_signup);
@@ -82,6 +89,7 @@ public class SignUpActivity extends AppCompatActivity {
         mCoordinatorLayout = findViewById(R.id.SignUpCoordinatorLayout);
     }
 
+    // Method helps in signing up the user
     private void attemptSignUp(){
 
         mEmailText.setError(null);
@@ -93,6 +101,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         boolean cancel = false;
 
+        // Checking for valid emails and that no mandatory field is empty
         if(!util.isEmailValid(email,mEmailText))
             cancel = true;
         if (!util.isConnectingToInternet())
@@ -112,6 +121,7 @@ public class SignUpActivity extends AppCompatActivity {
         }
 
         if(!cancel) {
+            // Trying to check if the email id already exists
             Response.Listener<String> responseListener = new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
@@ -119,7 +129,8 @@ public class SignUpActivity extends AppCompatActivity {
                         Log.d("userExists", response);
                         JSONObject jsonResponse = new JSONObject(response);
                         boolean exists = jsonResponse.getBoolean("exists");
-                        if (exists) {
+                        if (exists) // True specifies that the user with given mail exists
+                        {
                             AlertDialog.Builder builder = new AlertDialog.Builder(SignUpActivity.this, R.style.AlertDialogTheme);
                             builder.setMessage("Email already exists")
                                 .setNegativeButton("Retry", new DialogInterface.OnClickListener() {
@@ -131,20 +142,66 @@ public class SignUpActivity extends AppCompatActivity {
                                 .create()
                                 .show();
                         }
-                        else
-                            //GPSAccess();
-                            startActivity(new Intent(SignUpActivity.this,AskingPermissionsActivity.class));
-                    } catch (JSONException e) {
+                        else // Specifies what is to be done if email id doesn't exist
+                            attemptSignUpUtil();
+                    }
+                    catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
             };
+            // Checking if email id exists on sever side
             CheckIfExists UserExists = new CheckIfExists(email,responseListener);
             RequestQueue queue = Volley.newRequestQueue(SignUpActivity.this);
             queue.add(UserExists);
         }
     }
 
+    // Utility function which helps in signing up the user
+    private void attemptSignUpUtil()
+    {
+        // Adds the user to database
+        Response.Listener<String> responseListener = new Response.Listener<String>(){
+            @Override
+            public void onResponse(String response) {
+                try {
+                    Log.d("signUp", response);
+                    JSONObject jsonResponse = new JSONObject(response);
+                    boolean success = jsonResponse.getBoolean("success");
+                    if (success) // True specifies that the sign up was successful
+                    {
+                        // Adding (updating) data on local database
+                        User newUser = new User();
+                        newUser.setPassword(password);
+                        newUser.setUsername(name);
+                        newUser.setEmail(email);
+                        userLocalStore.storeUserData(newUser);
+                        userLocalStore.setUserLoggedIn(true);
+                        util.showProgressDialog("Signing up",SignUpActivity.this);
+                        Intent intent = new Intent(SignUpActivity.this, AskingPermissionsActivity.class);
+                        startActivity(intent);
+                    }
+                    else // Handling the unsuccessful attempt to sign up
+                    {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(SignUpActivity.this, R.style.AlertDialogTheme);
+                        builder.setMessage("Sign up failed")
+                            .setNegativeButton("Retry", null)
+                            .create()
+                            .show();
+                    }
+                }
+                catch(JSONException e){
+                    e.printStackTrace();
+                }
+            }
+        };
+        // Signing up the user on server side
+        SignUpRequest signUpRequest = new SignUpRequest(email,password,name,responseListener);
+        RequestQueue queue = Volley.newRequestQueue(SignUpActivity.this);
+        queue.add(signUpRequest);
+    }
+
+    // Method returns part of the mail id, if the name field is empty
     private String GetNameFromEmail(String email){
         String ResStr = "";
         int i = 0;
@@ -155,85 +212,7 @@ public class SignUpActivity extends AppCompatActivity {
         return ResStr;
     }
 
-    private void GPSAccess(){
-        final AlertDialog.Builder GPSAccessAlert = new AlertDialog.Builder(SignUpActivity.this,R.style.AlertDialogTheme);
-        GPSAccessAlert.setTitle("GPS ACCESS")
-            .setMessage("Allow WALKNEARN to access GPS location of your device")
-            .setOnKeyListener(new DialogInterface.OnKeyListener() {
-                @Override
-                public boolean onKey(DialogInterface dialogInterface, int i, KeyEvent keyEvent) {
-                    if(i == KeyEvent.KEYCODE_BACK)
-                        startActivity(new Intent(SignUpActivity.this,LoginActivity.class));
-                    return true;
-                }
-            })
-            .setPositiveButton("Allow", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    Response.Listener<String> responseListener = new Response.Listener<String>(){
-                        @Override
-                        public void onResponse(String response) {
-                            try {
-                                Log.d("signUp", response);
-                                JSONObject jsonResponse = new JSONObject(response);
-                                boolean success = jsonResponse.getBoolean("success");
-                                if (success) {
-                                    User newUser = new User();
-                                    newUser.setPassword(password);
-                                    newUser.setUsername(name);
-                                    newUser.setEmail(email);
-                                    userLocalStore.storeUserData(newUser);
-                                    userLocalStore.setUserLggedIn(true);
-                                    util.showProgressDialog("Signing up",SignUpActivity.this);
-                                    Intent intent = new Intent(SignUpActivity.this, AskingPermissionsActivity.class);
-                                    startActivity(intent);
-                                }
-                                else {
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(SignUpActivity.this, R.style.AlertDialogTheme);
-                                    builder.setMessage("Sign up failed")
-                                        .setNegativeButton("Retry", null)
-                                        .create()
-                                        .show();
-                                }
-                            }
-                            catch(JSONException e){
-                                e.printStackTrace();
-                            }
-                        }
-                    };
-                    SignUpRequest signUpRequest = new SignUpRequest(email,password,name,responseListener);
-                    RequestQueue queue = Volley.newRequestQueue(SignUpActivity.this);
-                    queue.add(signUpRequest);
-                }
-            })
-            .setNegativeButton("Deny", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    AlertDialog.Builder GPSAlert = new AlertDialog.Builder(SignUpActivity.this,R.style.AlertDialogTheme);
-                    GPSAlert.setTitle("ALERT!!")
-                        .setMessage("Denying WALKNEARN to access GPS location prevents from continuing further")
-                        .setOnKeyListener(new DialogInterface.OnKeyListener() {
-                            @Override
-                            public boolean onKey(DialogInterface dialogInterface, int i, KeyEvent keyEvent) {
-                                if(i == KeyEvent.KEYCODE_BACK)
-                                    startActivity(new Intent(SignUpActivity.this,LoginActivity.class));
-                                return true;
-                            }
-                        })
-                        .setNegativeButton("Back", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                GPSAccess();
-                            }
-                        })
-                        .setIcon(R.drawable.ic_warning_black_24dp)
-                        .show();
-                }
-            })
-            .setIcon(R.drawable.ic_place_black_24dp)
-            .show();
-    }
-
+    // Checks if the internet is available or not
     private void showInternetSnackBar() {
         Snackbar snackbar = Snackbar
                 .make(mCoordinatorLayout,getString(R.string.internet_unavailable), Snackbar.LENGTH_LONG)

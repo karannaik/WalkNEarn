@@ -6,6 +6,7 @@ import com.android.volley.toolbox.StringRequest;
 import java.util.HashMap;
 import java.util.Map;
 
+// Class to connect to server and perform the request to update the password
 public class PasswordRequest extends StringRequest {
     private static final String PASSWORD_REQUEST_URL = "https://walknearn.000webhostapp.com/PasswordUpdate.php";
     private Map<String,String> params;

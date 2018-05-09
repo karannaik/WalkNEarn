@@ -42,6 +42,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+// Settings activity allows the users to change the user details
 public class SettingsActivity extends AppCompatActivity {
 
     ImageView ChngProfilePic;
@@ -50,48 +51,49 @@ public class SettingsActivity extends AppCompatActivity {
     CallbackManager mCallbackManager;
     final int MEDIA_ACCESS_REQUESTCODE =1;
     final int CONTACT_INVITES_REQUESTCODE = 2;
-    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        setupToolbar();
+        setupToolbar(); // Generalizing the action bars
 
         FacebookSdk.sdkInitialize(getApplicationContext());
 
-        InitializeViews();
+        InitializeViews(); // Initializing the views in the activity
+
+        // Retrieving the user data from local database
         userLocalStore = new UserLocalStore(this);
 
-        ArrayList<String> settingsActionList = new ArrayList<>();
-        settingsActionList.add("Profile picture");
-        settingsActionList.add(getString(R.string.action_change_password));
-        settingsActionList.add(getString(R.string.action_change_name));
-        settingsActionList.add(getString(R.string.notifications));
-        settingsActionList.add(getString(R.string.contacts_invite));
-        settingsActionList.add(getString(R.string.fb_invite));
-        settingsActionList.add(getString(R.string.send_feedback));
-        settingsActionList.add(getString(R.string.t_and_c));
-        settingsActionList.add(getString(R.string.privacy_policy));
-        settingsActionList.add(getString(R.string.logout));
+        // List of all the options available in the settings page
+        ArrayList<String> settingsActionList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.settings_options)));
 
+        // Custom list adapter for settings page
         ListButtonAdapter settingsListAdapter = new ListButtonAdapter(this,R.layout.listview_text_type,settingsActionList);
         SettingsList.setAdapter(settingsListAdapter);
 
+        // Specifies what is to be done on selecting an item in the list
         SettingsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
-                if(position == 0) {
+                if(position == 0) // Change Image
+                {
                     long viewId = view.getId();
                     if (viewId == R.id.ChngProfilePic)
                         ChangeProfilePic();
                 }
                 else if (position == 1) // Change password
+                {
                     startActivity(new Intent(SettingsActivity.this,PasswordChangeActivity.class));
+                    Toast.makeText(SettingsActivity.this,"Updated password successfully",Toast.LENGTH_LONG).show();
+                }
                 else if(position == 2) // Change name
+                {
                     startActivity(new Intent(SettingsActivity.this,DisplayNameChangeActivity.class));
+                    Toast.makeText(SettingsActivity.this,"Updated name successfully",Toast.LENGTH_LONG).show();
+                }
                 else if(position == 3){ // Switch view
                     long viewId = view.getId();
                     if(viewId == R.id.listViewSwitch){
@@ -106,7 +108,10 @@ public class SettingsActivity extends AppCompatActivity {
                 else if(position == 5) // FB invites
                     InviteOnFacebook();
                 else if(position == 6) // Feedback
+                {
                     startActivity(new Intent(SettingsActivity.this,FeedbackActivity.class));
+                    Toast.makeText(SettingsActivity.this,"Sent feedback successfully",Toast.LENGTH_LONG).show();
+                }
                 else if(position == 7) // T & C
                     Toast.makeText(SettingsActivity.this,"T & C checking",Toast.LENGTH_LONG).show();
                 else if(position == 8) // Privacy policy
@@ -114,7 +119,7 @@ public class SettingsActivity extends AppCompatActivity {
                 else if(position == 9) // Logout
                 {
                     userLocalStore.clearUserData();
-                    userLocalStore.setUserLggedIn(false);
+                    userLocalStore.setUserLoggedIn(false);
                     startActivity(new Intent(SettingsActivity.this, LoginActivity.class));
                 }
             }
@@ -122,16 +127,17 @@ public class SettingsActivity extends AppCompatActivity {
 
     }
 
+    // Specifies what is to be done on selecting an item
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         onBackPressed();
         return super.onOptionsItemSelected(item);
     }
 
-
+    // Method generalizes the action bars
     private void setupToolbar() {
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -139,23 +145,25 @@ public class SettingsActivity extends AppCompatActivity {
 
     }
 
+    // Method initializes the views in the activity
     void InitializeViews(){
         ChngProfilePic = findViewById(R.id.ChngProfilePic);
         SettingsList = findViewById(R.id.settingsList);
 
+        // Getting the user details from local database
         final User user = new UserLocalStore(this).getLoggedInUser();
+
+        // Updating the profile picture
         if (user.getPhotoUrl()!=null && !user.getPhotoUrl().isEmpty()) {
             //load profile pic
-
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     while (true) {
                         try {
-                            Bitmap bmp = null;
                             try {
                                 URL url = new URL(user.getPhotoUrl());
-                                bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                                Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
                                 ((de.hdodenhof.circleimageview.CircleImageView)findViewById(R.id.ProfilePic)).setImageBitmap(bmp);
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -170,11 +178,13 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
+    // Method handles the updating of profile picture
     void ChangeProfilePic(){
-        MediaAccess();
+        MediaAccess(); // Asking for permission to access media
     }
 
-    void MediaAccess(){
+    void MediaAccess()
+    {
         final AlertDialog.Builder MediaAccessAlert = new AlertDialog.Builder(SettingsActivity.this,R.style.AlertDialogTheme);
         MediaAccessAlert.setTitle("Media Access")
             .setMessage("Allow WALKNEARN to access media of your device")
@@ -228,12 +238,13 @@ public class SettingsActivity extends AppCompatActivity {
             .show();
     }
 
+    // Method helps in inviting the friends in contact list
     void InviteFromContacts(){
         Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.invitation_title))
-                .setMessage(getString(R.string.invitation_message))
-                .setDeepLink(Uri.parse(getString(R.string.invitation_deep_link)))
-                .setCallToActionText(getString(R.string.invitation_cta))
-                .build();
+            .setMessage(getString(R.string.invitation_message))
+            .setDeepLink(Uri.parse(getString(R.string.invitation_deep_link)))
+            .setCallToActionText(getString(R.string.invitation_cta))
+            .build();
         startActivityForResult(intent, CONTACT_INVITES_REQUESTCODE);
     }
 
@@ -268,6 +279,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
+    // Method helps in inviting friends on facebook
     void InviteOnFacebook(){
         mCallbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("email","user_photos","public_profile","user_friends"));

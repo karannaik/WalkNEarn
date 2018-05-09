@@ -2,15 +2,17 @@ package com.androiders.walknearn.model;
 
 public class User {
 
+    // Details of user on local database
     private String Username, Email, Password, photoUrl;
-    private int StepCount;
+    private double WalkCoins;
 
-    public int getStepCount() {
-        return StepCount;
+    // Getter and setter methods to set and retrieve user data
+    public double getWalkCoins() {
+        return WalkCoins;
     }
 
-    public void setStepCount(int stepCount) {
-        StepCount = stepCount;
+    public void setWalkCoins(double walkCoins) {
+        WalkCoins = walkCoins;
     }
 
     public String getUsername() {

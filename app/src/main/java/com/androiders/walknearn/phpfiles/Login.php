@@ -8,15 +8,15 @@
     mysqli_stmt_bind_param($statement, "ss", $email,$password);
     mysqli_stmt_execute($statement);
     mysqli_stmt_store_result($statement);
-    mysqli_stmt_bind_result($statement, $userID, $userName, $userEmail, $userStepCount, $userPassword);
-    
+    mysqli_stmt_bind_result($statement, $userID, $userName, $userEmail, $userPassword, $userWalkCoins);
+
     $response = array();
-    $response["success"] = false;  
-    
+    $response["success"] = false;
+
     while(mysqli_stmt_fetch($statement)){
         $response["success"] = true;
 		$response["userName"] = $userName;
-		$response["userStepCount"] = $userStepCount;
+		$response["userWalkCoins"] = $userWalkCoins;
     }
     echo json_encode($response);
 ?>
