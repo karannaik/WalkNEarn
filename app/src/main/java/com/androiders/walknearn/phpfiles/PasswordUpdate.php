@@ -18,11 +18,11 @@
     mysqli_stmt_bind_param($statement, "ss", $email,$password);
     mysqli_stmt_execute($statement);
     mysqli_stmt_store_result($statement);
-    mysqli_stmt_bind_result($statement, $userID, $userName, $userEmail, $userStepCount, $userPassword);
-    
+    mysqli_stmt_bind_result($statement, $userID, $userName, $userEmail, $userPassword, $userWalkCoins);
+
     while(mysqli_stmt_fetch($statement)){
 		$response["userName"] = $userName;
-		$response["userStepCount"] = $userStepCount;
+		$response["userWalkCoins"] = $userWalkCoins;
     }
     
     echo json_encode($response);

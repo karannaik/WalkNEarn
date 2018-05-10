@@ -14,6 +14,7 @@ import com.androiders.walknearn.R;
 
 import java.util.ArrayList;
 
+// Custom adapter for the coupon list items
 public class CouponItemDetailsAdapter extends ArrayAdapter<String> {
 
     private Context context;
@@ -28,7 +29,8 @@ public class CouponItemDetailsAdapter extends ArrayAdapter<String> {
     }
 
     @Override
-    public View getView(final int position, View convertView, final ViewGroup parent) {
+    public View getView(final int position, View convertView, final ViewGroup parent)
+    {
         String Offer = offers.get(position);
         if(convertView == null)
             convertView = LayoutInflater.from(context).inflate(resource,parent,false);

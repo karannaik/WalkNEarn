@@ -17,6 +17,7 @@ import com.androiders.walknearn.model.CouponItemDetails;
 
 import java.util.ArrayList;
 
+// Custom list adapter for Coupons
 public class CouponListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     Context context;

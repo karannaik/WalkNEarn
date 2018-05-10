@@ -90,7 +90,7 @@ public class Utility{
 
     public void showProgressDialog(String title,Context context){
         ProgressDialog progress = new ProgressDialog(context);
-        progress.setCancelable(false);
+        progress.setCancelable(true);
         progress.setTitle(title);
         progress.setMessage("Please wait....");
         progress.show();

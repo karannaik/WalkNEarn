@@ -55,6 +55,43 @@
     <string name="invitation_deep_link">http://google.com</string>
     <string name="invitation_cta">Invitation CTA</string>
 
+    <string-array name="settings_options">
+        <item>Profile picture</item>
+        <item>Change Password</item>
+        <item>Change Name</item>
+        <item>Notifications</item>
+        <item>Invite friends from Contacts</item>
+        <item>Invite friends on Facebook</item>
+        <item>Send Feedback</item>
+        <item>Terms and Conditions</item>
+        <item>Privacy Policy</item>
+        <item>Logout</item>
+    </string-array>
+
+    <string-array name="time_spinner">
+        <item>Daily</item>
+        <item>Weekly</item>
+        <item>Monthly</item>
+    </string-array>
+
+    <string-array name="details_spinner">
+        <item>Steps</item>
+        <item>Calories</item>
+        <item>Distance</item>
+    </string-array>
+
+    <string-array name="graph_descriptions">
+        <item># of steps walked/4 hours</item>
+        <item># of steps walked/day</item>
+        <item># of steps walked/week</item>
+        <item>calories burned/4 hours</item>
+        <item>calories burned/day</item>
+        <item>calories burned/week</item>
+        <item>distance walked/4 hours</item>
+        <item>distance walked/day</item>
+        <item>distance walked/week</item>
+    </string-array>
+
 
     <string name="title_activity_main">Sample Fitbit Client!</string>
     <string name="login_with_fitbit">Login with Fitbit</string>

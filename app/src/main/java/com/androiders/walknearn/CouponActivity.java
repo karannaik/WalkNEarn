@@ -7,33 +7,30 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import com.androiders.walknearn.R;
 import com.androiders.walknearn.adapter.CouponListAdapter;
 import com.androiders.walknearn.model.CouponItemDetails;
 
 import java.util.ArrayList;
 
+// A coupons screen which shows all the available coupons
 public class CouponActivity extends AppCompatActivity {
 
-    private Toolbar toolbar;
     private ArrayList<CouponItemDetails> mArrayList = new ArrayList<>();
-    private RecyclerView mRecyclerView;
-    private CouponListAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_coupon);
 
-        setupToolbar();
+        setupToolbar(); // Call to generalize action bars
 
-        setupRecyclerView();
+        setupRecyclerView(); // Method call to set up the view to display coupons
     }
 
-    private void setupRecyclerView() {
-
-        //Temp static code
-
+    // Method to set up the view to display coupons
+    private void setupRecyclerView()
+    {
+        //Temporary static code
         CouponItemDetails starbucks = new CouponItemDetails("starbucks",R.drawable.starbucks,"500+");
         mArrayList.add(starbucks);
         CouponItemDetails subway = new CouponItemDetails("subway",R.drawable.subway,"1000+");
@@ -51,7 +48,7 @@ public class CouponActivity extends AppCompatActivity {
         CouponItemDetails pandaexpress = new CouponItemDetails("Panda Express",R.drawable.panda_express,"500+");
         mArrayList.add(pandaexpress);
 
-        mRecyclerView = findViewById(R.id.recyclerView);
+        RecyclerView mRecyclerView = findViewById(R.id.recyclerView);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this) {
             @Override
@@ -62,20 +59,21 @@ public class CouponActivity extends AppCompatActivity {
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(linearLayoutManager);
 
-        mAdapter = new CouponListAdapter(this, R.layout.coupon_item, mArrayList);
+        // Custom adapter to view the coupons
+        CouponListAdapter mAdapter = new CouponListAdapter(this, R.layout.coupon_item, mArrayList);
         mRecyclerView.setAdapter(mAdapter);
-
     }
 
+    // Method to generalize the action bars
     private void setupToolbar() {
-
-        toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
+    // Method specifies what is to be done on selecting a coupon from the coupon list
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         onBackPressed();

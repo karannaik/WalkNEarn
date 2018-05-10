@@ -1,5 +1,6 @@
 package com.androiders.walknearn.model;
 
+// Class specifies the details of the coupons
 public class CouponItemDetails {
 
     private String OfferName;

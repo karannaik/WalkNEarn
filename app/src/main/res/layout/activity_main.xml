@@ -39,42 +39,108 @@
                 fab:piv_viewPager="@id/viewPager" />
         </RelativeLayout>
 
-
-        <TextView
-            android:id="@+id/textView"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/relative"
-            android:layout_gravity="center"
-            android:background="@color/colorPrimaryDark"
-            android:gravity="center"
-            android:maxLines="1"
-            android:padding="10dp"
-            android:text="10am         12pm           2pm            4pm          6pm          8pm"
-            android:textColor="@color/white" />
+            android:id="@+id/spinner_layout"
+            android:background="@color/colorPrimary"
+            android:paddingBottom="10dp">
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/spinner_border"
+                android:layout_marginRight="20dp"
+                android:layout_alignParentLeft="true"
+                android:id="@+id/time_spinner_layout">
+                <Spinner
+                    android:id="@+id/time_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:padding="5dp"
+                    android:layout_margin="5dp"
+                    android:dropDownWidth="wrap_content"
+                    android:popupBackground="@color/white"
+                    android:spinnerMode="dropdown"/>
+            </LinearLayout>
 
-        <com.jjoe64.graphview.GraphView
-            android:id="@+id/graph"
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/graph_refresh_btn"
+                android:background="@drawable/ic_refresh_black_24dp"
+                android:layout_centerInParent="true"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:tint="@color/white"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/spinner_border"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="20dp">
+                <Spinner
+                    android:id="@+id/details_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:padding="5dp"
+                    android:dropDownWidth="wrap_content"
+                    android:spinnerMode="dropdown"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <com.github.mikephil.charting.charts.BarChart
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/textView"
-            android:background="@color/colorPrimary" />
+            android:background="@color/colorPrimary"
+            android:id="@+id/bar_chart"
+            android:layout_below="@+id/spinner_layout"
+            android:padding="10dp">
+        </com.github.mikephil.charting.charts.BarChart>
 
-        <Spinner
-            android:id="@+id/spinner"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/textView"
-            android:background="@drawable/shape_drop_down_normal"
-            android:padding="5dp"
-            android:layout_margin="5dp"/>
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/ProfilePic"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="10dp"
+                    android:elevation="10dp"
+                    android:clickable="false"
+                    android:src="@drawable/empty_profile" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="Name"
+                    android:textSize="@dimen/text_medium"
+                    android:textColor="@color/white"
+                    android:id="@+id/user_name"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/WalkCOins"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="0.0"
+                android:textColor="@color/white"/>
+        </LinearLayout>
 
         <com.androiders.walknearn.fab.FloatingActionsMenu
             android:id="@+id/fabMenu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_margin="16dp"
@@ -82,7 +148,7 @@
             fab:fab_addButtonColorPressed="@color/colorAccentLite"
             fab:fab_addButtonPlusIconColor="@color/white"
             fab:fab_addButtonSize="normal"
-            fab:fab_expandDirection="up"
+            fab:fab_expandDirection="down"
             fab:fab_labelStyle="@style/menu_labels_style">
 
             <com.androiders.walknearn.fab.FloatingActionButton
@@ -92,7 +158,7 @@
                 android:src="@mipmap/ic_walk_white_24dp"
                 fab:fab_colorNormal="@color/colorAccentLite"
                 fab:fab_colorPressed="@color/colorAccent"
-                fab:fab_title="Walkcoins" />
+                fab:fab_title="Challenges" />
 
 
             <com.androiders.walknearn.fab.FloatingActionButton
@@ -105,25 +171,5 @@
                 fab:fab_title="Coupons" />
 
         </com.androiders.walknearn.fab.FloatingActionsMenu>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/ProfilePic"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_margin="10dp"
-                android:elevation="10dp"
-                android:clickable="false"
-                android:src="@drawable/empty_profile" />
-            <TextView
-                android:id="@+id/WalkCOins"
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="0"
-                android:textColor="@color/white"/>
-        </LinearLayout>
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

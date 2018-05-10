@@ -19,38 +19,37 @@ import com.rd.animation.type.AnimationType;
 import java.util.ArrayList;
 import java.util.List;
 
+// A Coupon Type screen which shows the type of the coupon
 public class CouponTypeActivity extends AppCompatActivity {
 
-    private WrapContentHeightViewPager mViewPager;
     private PageIndicatorView pageIndicatorView;
-    private PromotedCouponsFragment mPromotedCouponFragment;
-    private PromotedCouponsFragment mPromotedCouponFragment1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_coupon_type);
 
-        setupToolbar();
+        setupToolbar(); // Call to generalize the action bars
 
-        initializeViews();
-
+        initializeViews(); // Method call initializes the views in the activity
     }
 
+    // Method generalizes the action bars
     private void setupToolbar() {
-
         setSupportActionBar((Toolbar)findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
+    // Method specifies what is to be done on selecting an item from the list
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         onBackPressed();
         return super.onOptionsItemSelected(item);
     }
 
+    // Method initializes the views in the activity
     private void initializeViews() {
 
         findViewById(R.id.textViewFoodDrinks).setOnClickListener(new View.OnClickListener() {
@@ -81,7 +80,7 @@ public class CouponTypeActivity extends AppCompatActivity {
             }
         });
 
-        mViewPager = findViewById(R.id.viewPager);
+        WrapContentHeightViewPager mViewPager = findViewById(R.id.viewPager);
         setupViewPager(mViewPager);
 
         pageIndicatorView = findViewById(R.id.pageIndicatorView);
@@ -104,8 +103,8 @@ public class CouponTypeActivity extends AppCompatActivity {
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        mPromotedCouponFragment = new PromotedCouponsFragment();
-        mPromotedCouponFragment1 = new PromotedCouponsFragment();
+        PromotedCouponsFragment mPromotedCouponFragment = new PromotedCouponsFragment();
+        PromotedCouponsFragment mPromotedCouponFragment1 = new PromotedCouponsFragment();
         CouponTypeActivity.ViewPagerAdapter adapter = new CouponTypeActivity.ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(mPromotedCouponFragment, "");
         adapter.addFragment(mPromotedCouponFragment1, "1");
@@ -140,6 +139,5 @@ public class CouponTypeActivity extends AppCompatActivity {
             return mFragmentTitleList.get(position);
         }
     }
-
 
 }

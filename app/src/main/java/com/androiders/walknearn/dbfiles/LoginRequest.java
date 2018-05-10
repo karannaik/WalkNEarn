@@ -7,6 +7,7 @@ import com.android.volley.toolbox.StringRequest;
 import java.util.HashMap;
 import java.util.Map;
 
+// Class to connect to server and perform the request to perform login
 public class LoginRequest extends StringRequest{
     private static final String LOGIN_REQUEST_URL = "https://walknearn.000webhostapp.com/Login.php";
     private Map<String,String> params;
