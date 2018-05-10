@@ -178,7 +178,7 @@ public class SignUpActivity extends AppCompatActivity {
                                     newUser.setUsername(name);
                                     newUser.setEmail(email);
                                     userLocalStore.storeUserData(newUser);
-                                    userLocalStore.setUserLggedIn(true);
+                                    userLocalStore.setUserLoggedIn(true);
                                     util.showProgressDialog("Signing up",SignUpActivity.this);
                                     Intent intent = new Intent(SignUpActivity.this, AskingPermissionsActivity.class);
                                     startActivity(intent);

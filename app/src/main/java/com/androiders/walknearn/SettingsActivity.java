@@ -114,7 +114,7 @@ public class SettingsActivity extends AppCompatActivity {
                 else if(position == 9) // Logout
                 {
                     userLocalStore.clearUserData();
-                    userLocalStore.setUserLggedIn(false);
+                    userLocalStore.setUserLoggedIn(false);
                     startActivity(new Intent(SettingsActivity.this, LoginnActivity.class));
                 }
             }

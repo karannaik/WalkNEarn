@@ -85,7 +85,7 @@ public class LoginnActivity extends AppCompatActivity {
         }
 
         userLocalStore.storeUserData(user);
-        userLocalStore.setUserLggedIn(true);
+        userLocalStore.setUserLoggedIn(true);
     }
 
     @Override
@@ -236,10 +236,10 @@ public class LoginnActivity extends AppCompatActivity {
                             user.setUsername(name);
                             user.setEmail(email);
                             user.setPassword(password);
-                            user.setStepCount(Integer.parseInt(stepCnt));
+                            user.setWalkCoins(Integer.parseInt(stepCnt));
 
                             userLocalStore.storeUserData(user);
-                            userLocalStore.setUserLggedIn(true);
+                            userLocalStore.setUserLoggedIn(true);
                             Intent intent = new Intent(LoginnActivity.this, AskingPermissionsActivity.class);
                             startActivity(intent);
                             finish();
