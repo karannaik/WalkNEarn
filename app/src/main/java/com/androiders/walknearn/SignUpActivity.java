@@ -66,7 +66,7 @@ public class SignUpActivity extends AppCompatActivity {
         mSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent LoginIntent = new Intent(SignUpActivity.this,LoginActivity.class);
+                Intent LoginIntent = new Intent(SignUpActivity.this,LoginnActivity.class);
                 startActivity(LoginIntent);
             }
         });
@@ -158,7 +158,7 @@ public class SignUpActivity extends AppCompatActivity {
                 @Override
                 public boolean onKey(DialogInterface dialogInterface, int i, KeyEvent keyEvent) {
                     if(i == KeyEvent.KEYCODE_BACK)
-                        startActivity(new Intent(SignUpActivity.this,LoginActivity.class));
+                        startActivity(new Intent(SignUpActivity.this,LoginnActivity.class));
                     return true;
                 }
             })
@@ -211,7 +211,7 @@ public class SignUpActivity extends AppCompatActivity {
                             @Override
                             public boolean onKey(DialogInterface dialogInterface, int i, KeyEvent keyEvent) {
                                 if(i == KeyEvent.KEYCODE_BACK)
-                                    startActivity(new Intent(SignUpActivity.this,LoginActivity.class));
+                                    startActivity(new Intent(SignUpActivity.this,LoginnActivity.class));
                                 return true;
                             }
                         })

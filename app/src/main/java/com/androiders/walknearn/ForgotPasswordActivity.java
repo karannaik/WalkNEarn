@@ -111,7 +111,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                                     .setPositiveButton("Create new", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
-                                            startActivity(new Intent(ForgotPasswordActivity.this, LoginActivity.class));
+                                            startActivity(new Intent(ForgotPasswordActivity.this, LoginnActivity.class));
                                         }
                                     })
                                     .setNegativeButton("Back", new DialogInterface.OnClickListener() {

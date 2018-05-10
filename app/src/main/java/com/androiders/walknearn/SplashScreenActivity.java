@@ -34,7 +34,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                     finish();
                 }
                 else{
-                    Intent i = new Intent(SplashScreenActivity.this, LoginActivity.class);
+                    Intent i = new Intent(SplashScreenActivity.this, LoginnActivity.class);
                     startActivity(i);
                     finish();
                 }
@@ -43,7 +43,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
                 /*if (new SharedPrefs(SplashScreenActivity.this).getSyncTime() == null) {
 
-                    Intent i = new Intent(SplashScreenActivity.this, LoginActivity.class);
+                    Intent i = new Intent(SplashScreenActivity.this, LoginnActivity.class);
                     startActivity(i);
                     finish();
                 } else {

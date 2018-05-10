@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.androiders.walknearn.dbhelper.SharedPrefs;
+import com.androiders.walknearn.fitbitfiles.RootActivity;
 import com.androiders.walknearn.model.UserLocalStore;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.fitness.FitnessOptions;
@@ -36,6 +37,20 @@ public class FitnessTrackerSelectionActivity extends AppCompatActivity {
                 initializeGoogleFit();
             }
         });
+
+
+        findViewById(R.id.linearFitbit).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                initializeFitbit();
+            }
+        });
+
+    }
+
+    private void initializeFitbit() {
+
+        startActivity(new Intent(this, RootActivity.class));
     }
 
     private void setupToolbar() {

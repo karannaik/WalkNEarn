@@ -38,9 +38,9 @@ import org.json.JSONObject;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity {
+public class LoginnActivity extends AppCompatActivity {
 
-    private static final String TAG = "LoginActivity";
+    private static final String TAG = "LoginnActivity";
     // UI references.
     private EditText mEmailText, mPasswordText;
     private Button mSignIn, mSignUp;
@@ -91,7 +91,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_loginn);
         initializeViews();
         userLocalStore = new UserLocalStore(this);
 
@@ -125,14 +125,14 @@ public class LoginActivity extends AppCompatActivity {
         mForgotPassword.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(LoginActivity.this, ForgotPasswordActivity.class));
+                startActivity(new Intent(LoginnActivity.this, ForgotPasswordActivity.class));
             }
         });
 
         mSignUp.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent SignUpIntent = new Intent(LoginActivity.this, SignUpActivity.class);
+                Intent SignUpIntent = new Intent(LoginnActivity.this, SignUpActivity.class);
                 startActivity(SignUpIntent);
             }
         });
@@ -154,7 +154,7 @@ public class LoginActivity extends AppCompatActivity {
         mSignUp = findViewById(R.id.login_sign_up_button);
         mGoogleLogin = findViewById(R.id.google_login);
         mCoordinatorLayout = findViewById(R.id.LoginCoordinatorLayout);
-        mUtil = new Utility(LoginActivity.this);
+        mUtil = new Utility(LoginnActivity.this);
     }
 
     private void signInWithGoogle() {
@@ -164,7 +164,7 @@ public class LoginActivity extends AppCompatActivity {
                 .requestEmail()
                 .build();
 
-        mGoogleSignInClient = GoogleSignIn.getClient(LoginActivity.this, gso);
+        mGoogleSignInClient = GoogleSignIn.getClient(LoginnActivity.this, gso);
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
@@ -240,11 +240,11 @@ public class LoginActivity extends AppCompatActivity {
 
                             userLocalStore.storeUserData(user);
                             userLocalStore.setUserLggedIn(true);
-                            Intent intent = new Intent(LoginActivity.this, AskingPermissionsActivity.class);
+                            Intent intent = new Intent(LoginnActivity.this, AskingPermissionsActivity.class);
                             startActivity(intent);
                             finish();
                         } else {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                            AlertDialog.Builder builder = new AlertDialog.Builder(LoginnActivity.this);
                             builder.setMessage("Invalid Email or Password")
                                     .setNegativeButton("Retry", null)
                                     .create()
@@ -256,9 +256,9 @@ public class LoginActivity extends AppCompatActivity {
                 }
             };
             LoginRequest loginRequest = new LoginRequest(email, password, responseListener);
-            RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
+            RequestQueue queue = Volley.newRequestQueue(LoginnActivity.this);
             queue.add(loginRequest);
-            mUtil.showProgressDialog("Logging in", LoginActivity.this);
+            mUtil.showProgressDialog("Logging in", LoginnActivity.this);
         }
     }
 

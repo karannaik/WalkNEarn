@@ -16,6 +16,7 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application
+        android:name=".fitbitfiles.FitbitAuthApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -47,7 +48,7 @@
             android:name=".CouponActivity"
             android:label="Coupons" />
         <activity android:name=".SignUpActivity" />
-        <activity android:name=".LoginActivity" />
+        <activity android:name=".LoginnActivity" />
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_settings" />
@@ -72,8 +73,23 @@
         <activity
             android:name=".CouponTypeActivity"
             android:label="Coupons" />
-        <activity android:name=".FitnessTrackerSelectionActivity"
-            android:label="Choose a Fitness Tracker"/>
+        <activity
+            android:name=".FitnessTrackerSelectionActivity"
+            android:label="Choose a Fitness Tracker" />
+
+        <meta-data
+            android:name="com.androiders.walkearn.CLIENT_ID"
+            android:value="227YZT" />
+        <meta-data
+            android:name="com.androiders.walkearn.REDIRECT_URL"
+            android:value="https://finished" />
+
+        <activity
+            android:name=".fitbitfiles.RootActivity"
+            android:label="@string/title_activity_main"
+            android:theme="@style/Theme.Fitbit.Teal"/>
+        <activity android:name=".fitbitfiles.UserDataActivity"/>
+        <activity android:name=".FitbitActivity"/>
     </application>
 
 </manifest>

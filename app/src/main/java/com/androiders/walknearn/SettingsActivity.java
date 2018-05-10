@@ -115,7 +115,7 @@ public class SettingsActivity extends AppCompatActivity {
                 {
                     userLocalStore.clearUserData();
                     userLocalStore.setUserLggedIn(false);
-                    startActivity(new Intent(SettingsActivity.this, LoginActivity.class));
+                    startActivity(new Intent(SettingsActivity.this, LoginnActivity.class));
                 }
             }
         });
