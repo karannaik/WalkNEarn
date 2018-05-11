@@ -31,9 +31,9 @@ public class UserLocalStore {
         User loggedUser = new User();
         loggedUser.setEmail(UserLocalDatabase.getString("Email",""));
         loggedUser.setUsername(UserLocalDatabase.getString("UserName",""));
-        if (UserLocalDatabase.getInt("StepCount",0)!=0) {//temp if statment as it was crashing, @jyotsna please look into this
-            loggedUser.setWalkCoins(Double.longBitsToDouble(UserLocalDatabase.getLong("StepCount",0)));
-        }
+//        if (UserLocalDatabase.getInt("StepCount",0)!=0) {//temp if statment as it was crashing, @jyotsna please look into this
+//            loggedUser.setWalkCoins(Double.longBitsToDouble(UserLocalDatabase.getLong("StepCount",0)));
+//        }
         loggedUser.setPassword(UserLocalDatabase.getString("Password",""));
         loggedUser.setPhotoUrl(UserLocalDatabase.getString("PhotoURL",""));
         return loggedUser;

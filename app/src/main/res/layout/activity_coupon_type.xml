@@ -6,165 +6,170 @@
     android:layout_height="match_parent"
     tools:context="com.androiders.walknearn.CouponTypeActivity">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorPrimaryDark">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            style="@style/Toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="?attr/actionBarSize" />
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                style="@style/Toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize" />
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimaryDark">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="20dp"
-                android:text="PROMOTED COUPONS"
-                android:textColor="@color/colorPrimaryLight"
-                android:textSize="14sp" />
-
-            <RelativeLayout
-                android:id="@+id/relative"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorPrimaryDark">
+                android:orientation="vertical">
 
-                <com.androiders.walknearn.ui.WrapContentHeightViewPager
-                    android:id="@+id/viewPager"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    fab:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-                <com.rd.PageIndicatorView
-                    android:id="@+id/pageIndicatorView"
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/viewPager"
-                    android:layout_centerInParent="true"
-                    fab:piv_animationType="scale"
-                    fab:piv_dynamicCount="true"
-                    fab:piv_interactiveAnimation="true"
-                    fab:piv_padding="5dp"
-                    fab:piv_radius="4dp"
-                    fab:piv_selectedColor="@color/colorAccent"
-                    fab:piv_unselectedColor="@color/grey"
-                    fab:piv_viewPager="@id/viewPager" />
-            </RelativeLayout>
+                    android:padding="20dp"
+                    android:text="PROMOTED COUPONS"
+                    android:textColor="@color/colorPrimaryLight"
+                    android:textSize="14sp" />
+
+                <RelativeLayout
+                    android:id="@+id/relative"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorPrimaryDark">
+
+                    <com.androiders.walknearn.ui.WrapContentHeightViewPager
+                        android:id="@+id/viewPager"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        fab:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+                    <com.rd.PageIndicatorView
+                        android:id="@+id/pageIndicatorView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/viewPager"
+                        android:layout_centerInParent="true"
+                        fab:piv_animationType="scale"
+                        fab:piv_dynamicCount="true"
+                        fab:piv_interactiveAnimation="true"
+                        fab:piv_padding="5dp"
+                        fab:piv_radius="4dp"
+                        fab:piv_selectedColor="@color/colorAccent"
+                        fab:piv_unselectedColor="@color/grey"
+                        fab:piv_viewPager="@id/viewPager" />
+                </RelativeLayout>
 
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="20dp"
-                android:paddingEnd="10dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingStart="10dp"
-                android:paddingTop="20dp"
-                android:text="CATEGORIES"
-                android:textColor="@color/colorPrimaryLight"
-                android:textSize="14sp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="20dp"
+                    android:paddingEnd="10dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingStart="10dp"
+                    android:paddingTop="20dp"
+                    android:text="CATEGORIES"
+                    android:textColor="@color/colorPrimaryLight"
+                    android:textSize="14sp" />
 
-            <!--Temp below code for categories-->
+                <!--Temp below code for categories-->
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_margin="10dp"
-                android:background="@color/colorPrimary" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_margin="10dp"
+                    android:background="@color/colorPrimary" />
 
-            <TextView
-                android:id="@+id/textViewFoodDrinks"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableEnd="@mipmap/ic_chevron_right_white_24dp"
-                android:drawableRight="@mipmap/ic_chevron_right_white_24dp"
-                android:gravity="center_vertical"
-                android:paddingBottom="10dp"
-                android:paddingEnd="10dp"
-                android:paddingLeft="20dp"
-                android:paddingRight="10dp"
-                android:paddingStart="20dp"
-                android:paddingTop="10dp"
-                android:text="Food and Drinks"
-                android:textColor="@color/white"
-                android:textSize="14sp" />
+                <TextView
+                    android:id="@+id/textViewFoodDrinks"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableEnd="@mipmap/ic_chevron_right_white_24dp"
+                    android:drawableRight="@mipmap/ic_chevron_right_white_24dp"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="10dp"
+                    android:paddingEnd="10dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="10dp"
+                    android:paddingStart="20dp"
+                    android:paddingTop="10dp"
+                    android:text="Food and Drinks"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_margin="10dp"
-                android:background="@color/colorPrimary" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_margin="10dp"
+                    android:background="@color/colorPrimary" />
 
-            <TextView
-                android:id="@+id/textViewSports"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableEnd="@mipmap/ic_chevron_right_white_24dp"
-                android:drawableRight="@mipmap/ic_chevron_right_white_24dp"
-                android:paddingBottom="10dp"
-                android:paddingEnd="10dp"
-                android:paddingLeft="20dp"
-                android:paddingRight="10dp"
-                android:paddingStart="20dp"
-                android:paddingTop="10dp"
-                android:text="Sports and Fitness"
-                android:textColor="@color/white"
-                android:textSize="14sp" />
+                <TextView
+                    android:id="@+id/textViewSports"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableEnd="@mipmap/ic_chevron_right_white_24dp"
+                    android:drawableRight="@mipmap/ic_chevron_right_white_24dp"
+                    android:paddingBottom="10dp"
+                    android:paddingEnd="10dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="10dp"
+                    android:paddingStart="20dp"
+                    android:paddingTop="10dp"
+                    android:text="Sports and Fitness"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_margin="10dp"
-                android:background="@color/colorPrimary" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_margin="10dp"
+                    android:background="@color/colorPrimary" />
 
-            <TextView
-                android:id="@+id/textViewComputers"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableEnd="@mipmap/ic_chevron_right_white_24dp"
-                android:drawableRight="@mipmap/ic_chevron_right_white_24dp"
-                android:paddingBottom="10dp"
-                android:paddingEnd="10dp"
-                android:paddingLeft="20dp"
-                android:paddingRight="10dp"
-                android:paddingStart="20dp"
-                android:paddingTop="10dp"
-                android:text="Computers"
-                android:textColor="@color/white"
-                android:textSize="14sp" />
+                <TextView
+                    android:id="@+id/textViewComputers"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableEnd="@mipmap/ic_chevron_right_white_24dp"
+                    android:drawableRight="@mipmap/ic_chevron_right_white_24dp"
+                    android:paddingBottom="10dp"
+                    android:paddingEnd="10dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="10dp"
+                    android:paddingStart="20dp"
+                    android:paddingTop="10dp"
+                    android:text="Computers"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_margin="10dp"
-                android:background="@color/colorPrimary" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_margin="10dp"
+                    android:background="@color/colorPrimary" />
 
-            <TextView
-                android:id="@+id/textViewCinema"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableEnd="@mipmap/ic_chevron_right_white_24dp"
-                android:drawableRight="@mipmap/ic_chevron_right_white_24dp"
-                android:paddingBottom="10dp"
-                android:paddingEnd="10dp"
-                android:paddingLeft="20dp"
-                android:paddingRight="10dp"
-                android:paddingStart="20dp"
-                android:paddingTop="10dp"
-                android:text="Cinema"
-                android:textColor="@color/white"
-                android:textSize="14sp" />
+                <TextView
+                    android:id="@+id/textViewCinema"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableEnd="@mipmap/ic_chevron_right_white_24dp"
+                    android:drawableRight="@mipmap/ic_chevron_right_white_24dp"
+                    android:paddingBottom="10dp"
+                    android:paddingEnd="10dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="10dp"
+                    android:paddingStart="20dp"
+                    android:paddingTop="10dp"
+                    android:text="Cinema"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
 
-        </LinearLayout>
+            </LinearLayout>
 
-    </ScrollView>
-
+        </ScrollView>
+    </LinearLayout>
 </android.support.constraint.ConstraintLayout>

@@ -11,6 +11,7 @@ import android.view.View;
 
 import com.androiders.walknearn.MainActivity;
 import com.androiders.walknearn.databinding.ActivityRootBinding;
+import com.androiders.walknearn.dbhelper.SharedPrefs;
 import com.fitbit.authentication.AuthenticationHandler;
 import com.fitbit.authentication.AuthenticationManager;
 import com.fitbit.authentication.AuthenticationResult;
@@ -50,6 +51,7 @@ public class RootActivity extends AppCompatActivity implements AuthenticationHan
 
     public void onLoggedIn() {
 //        Intent intent = UserDataActivity.newIntent(this);
+        new SharedPrefs(this).setFitnessTrackerGiven(SharedPrefs.FITNESS_TRACKER_FITBIT);
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         binding.setLoading(false);

@@ -26,8 +26,9 @@ public class FitnessTrackerSelectionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fitness_tracker_selection);
-        if (new SharedPrefs(this).getIsFitnessTrackerGiven()) {
+        if (new SharedPrefs(this).getFitnessTrackerGiven() != null) {
             startMainActivity();
+            finish();
         }
         setupToolbar();
 
@@ -87,13 +88,13 @@ public class FitnessTrackerSelectionActivity extends AppCompatActivity {
                     fitnessOptions);
         } else {
 
+            new SharedPrefs(this).setFitnessTrackerGiven(SharedPrefs.FITNESS_TRACKER_GOOGLE_FIT);
             startMainActivity();
         }
     }
 
     private void startMainActivity() {
 
-        new SharedPrefs(this).setIsFitnessTrackerGiven(true);
         Intent i = new Intent(FitnessTrackerSelectionActivity.this, MainActivity.class);
         startActivity(i);
         finish();
@@ -105,6 +106,7 @@ public class FitnessTrackerSelectionActivity extends AppCompatActivity {
             if (requestCode == REQUEST_OAUTH_REQUEST_CODE) {
 
                 Toast.makeText(this, "Subscribed to Google Fit", Toast.LENGTH_SHORT).show();
+                new SharedPrefs(this).setFitnessTrackerGiven(SharedPrefs.FITNESS_TRACKER_GOOGLE_FIT);
                 startMainActivity();
             }
         } else {

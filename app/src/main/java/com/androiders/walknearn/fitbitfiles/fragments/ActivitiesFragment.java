@@ -4,6 +4,7 @@ package com.androiders.walknearn.fitbitfiles.fragments;
 import android.content.Loader;
 import android.os.Bundle;
 
+import com.androiders.walknearn.MainActivity;
 import com.fitbit.api.loaders.ResourceLoaderResult;
 import com.fitbit.api.models.DailyActivitySummary;
 import com.fitbit.api.models.Goals;
@@ -57,6 +58,7 @@ public class ActivitiesFragment extends InfoFragment<DailyActivitySummary> {
         stringBuilder.append("<br />");
         printKeys(stringBuilder, goals);
 
+        ((MainActivity)getActivity()).setMainText(stringBuilder.toString());
         setMainText(stringBuilder.toString());
     }
 }

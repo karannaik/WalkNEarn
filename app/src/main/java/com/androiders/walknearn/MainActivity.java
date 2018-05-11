@@ -12,19 +12,27 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.androiders.walknearn.dbhelper.SharedPrefs;
 import com.androiders.walknearn.fab.FloatingActionButton;
+import com.androiders.walknearn.fitbitfiles.UserDataActivity;
+import com.androiders.walknearn.fitbitfiles.fragments.ActivitiesFragment;
+import com.androiders.walknearn.fragment.LeftFloatingDrawerMenuFragment;
 import com.androiders.walknearn.fragment.TotalCaloriesFragment;
 import com.androiders.walknearn.fragment.TotalDistanceFragment;
 import com.androiders.walknearn.fragment.TotalStepsFragment;
 import com.androiders.walknearn.model.User;
 import com.androiders.walknearn.model.UserLocalStore;
+import com.androiders.walknearn.widgets.flowingdrawer.FlowingView;
+import com.androiders.walknearn.widgets.flowingdrawer.LeftDrawerLayout;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
@@ -65,6 +73,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import butterknife.ButterKnife;
+
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     public static final String TAG = "StepCounter";
@@ -85,17 +95,64 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private static final int GRAPH_DISTANCE = 3;
     private BarChart barChart;
 
+    private Toolbar mToolbar;
+    private LeftDrawerLayout mLeftDrawerLayout;
+    private LeftFloatingDrawerMenuFragment mMenuFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);//for mOverlappingMenu View
+
+        setupToolbar();
 
         initializeViews(); // Call to method that initializes  all views
 
-        subscribe(); // Querying the daily data about user's physical activity and showing them on main page
+        String currentFitnessTracker = new SharedPrefs(this).getFitnessTrackerGiven();
+
+        setupLeftFloatingDrawer();
+
+        if (currentFitnessTracker == SharedPrefs.FITNESS_TRACKER_FITBIT) {
+
+//            Intent intent = UserDataActivity.newIntent(this);
+//            startActivity(intent);
+
+        } else {//else google fit
+
+            subscribe(); // Querying the daily data about user's physical activity and showing them on main page
+        }
 
         setSpinnerForGraph(); // Setting up the spinners for selecting the criteria for displaying graph
+
+    }
+
+
+    protected void setupToolbar() {
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        mToolbar.setNavigationIcon(R.mipmap.ic_menu);
+
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mLeftDrawerLayout.toggle();
+            }
+        });
+    }
+
+    private void setupLeftFloatingDrawer() {
+
+        FragmentManager fm = getSupportFragmentManager();
+        mMenuFragment = (LeftFloatingDrawerMenuFragment) fm.findFragmentById(R.id.id_container_menu);
+        FlowingView mFlowingView = (FlowingView) findViewById(R.id.sv);
+        if (mMenuFragment == null) {
+            fm.beginTransaction().add(R.id.id_container_menu, mMenuFragment = new LeftFloatingDrawerMenuFragment()).commit();
+        }
+        mLeftDrawerLayout.setFluidView(mFlowingView);
+        mLeftDrawerLayout.setMenuFragment(mMenuFragment);
     }
 
     // Method specifies what is to be done on pressing back button on the main activity page
@@ -111,27 +168,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private void initializeViews() {
 
         barChart = findViewById(R.id.bar_chart);
-        mWalkCoins = findViewById(R.id.WalkCOins);
 
         // Calling initializeGraph() method on clicking the refresh image
         findViewById(R.id.graph_refresh_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 initializeGraph(timeSpinnerPos,detailsSpinnerPos);
-            }
-        });
-
-        findViewById(R.id.btnFabCoupons).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, CouponTypeActivity.class));
-            }
-        });
-
-        findViewById(R.id.ProfilePic).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this,SettingsActivity.class));
             }
         });
 
@@ -159,9 +201,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         final User user = new UserLocalStore(this).getLoggedInUser();
 
-        TextView user_name = findViewById(R.id.user_name);
-        user_name.setText(user.getUsername());
-
         // Updates the photo if the photo slot is empty and an image url is present (given)
         if (user.getPhotoUrl() != null && !user.getPhotoUrl().isEmpty()) {
             //load profile pic
@@ -185,6 +224,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }).start();
 
         }
+
+        mLeftDrawerLayout = (LeftDrawerLayout) findViewById(R.id.id_drawerlayout);
     }
 
     // Sets the viewsPager on the main activity to display the user physical activity
@@ -273,7 +314,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     Log.i(TAG, "Total steps: " + total);
                     //call fragment methods
                     mFragmentTotalSteps.updateText(total);
-                    mWalkCoins.setText(Double.toString(total/2000.0));
+                    mMenuFragment.updateStepcount(Double.toString(total/2000.0));
                 }
             })
             .addOnFailureListener(new OnFailureListener() {
@@ -719,10 +760,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
-
-
-
-
+    public void setMainText(String text) {
+        Toast.makeText(this, ": "+text, Toast.LENGTH_SHORT).show();
+    }
 
     private void setAutomaticRefreshTimers() {
         final Handler mHandler = new Handler();

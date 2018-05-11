@@ -14,6 +14,8 @@ public class SharedPrefs {
     private static final String SYNC_TIME = "sync_time";
     private static final String LOCATION_PERMISSION = "location_permission";
     private static final String FITNESS_TRACKER_PERMISSION = "fitness_tracker_permission";
+    public static final String FITNESS_TRACKER_GOOGLE_FIT = "fitness_tracker_google_fit";
+    public static final String FITNESS_TRACKER_FITBIT = "fitness_tracker_fitbit";
 
     public SharedPrefs(Context context) {
         mContext = context;
@@ -51,19 +53,19 @@ public class SharedPrefs {
         return sharedpreferences.getBoolean(LOCATION_PERMISSION, false);
     }
 
-    public void setIsFitnessTrackerGiven(boolean isGiven) {
+    public void setFitnessTrackerGiven(String fitnessTrackerName) {
 
         SharedPreferences sharedpreferences = mContext.getSharedPreferences(
                 PREFS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
-        editor.putBoolean(FITNESS_TRACKER_PERMISSION, isGiven);
+        editor.putString(FITNESS_TRACKER_PERMISSION, fitnessTrackerName);
         editor.apply();
     }
 
-    public boolean getIsFitnessTrackerGiven() {
+    public String getFitnessTrackerGiven() {
         SharedPreferences sharedpreferences = mContext.getSharedPreferences(
                 PREFS, Context.MODE_PRIVATE);
-        return sharedpreferences.getBoolean(FITNESS_TRACKER_PERMISSION, false);
+        return sharedpreferences.getString(FITNESS_TRACKER_PERMISSION, null);
     }
 
     public void clearSharedPreferences() {
