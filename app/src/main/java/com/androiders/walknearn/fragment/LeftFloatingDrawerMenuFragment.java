@@ -19,6 +19,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.androiders.walknearn.CouponTypeActivity;
+import com.androiders.walknearn.FeedbackActivity;
+import com.androiders.walknearn.LoginnActivity;
 import com.androiders.walknearn.MainActivity;
 import com.androiders.walknearn.R;
 import com.androiders.walknearn.SettingsActivity;
@@ -33,6 +35,8 @@ import java.net.URL;
 
 public class LeftFloatingDrawerMenuFragment extends MenuFragment {
 
+
+    private UserLocalStore userLocalStore;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,6 +67,24 @@ public class LeftFloatingDrawerMenuFragment extends MenuFragment {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getActivity(),SettingsActivity.class));
+            }
+        });
+
+        view.findViewById(R.id.textViewSendFeedback).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(),FeedbackActivity.class));
+            }
+        });
+
+        view.findViewById(R.id.textViewLogout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                userLocalStore = new UserLocalStore(getActivity());
+                userLocalStore.clearUserData();
+                userLocalStore.setUserLoggedIn(false);
+                startActivity(new Intent(getActivity(), LoginnActivity.class));
             }
         });
 

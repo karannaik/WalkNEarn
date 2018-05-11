@@ -51,7 +51,9 @@ public class CouponDetailsActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(CouponDetailsActivity.this,"Redeem coupon in progress",Toast.LENGTH_LONG).show();
+                Toast.makeText(CouponDetailsActivity.this,"Insufficient walkcoins" +
+                        "",Toast.LENGTH_LONG).show();
+
             }
         });
     }

@@ -1,5 +1,6 @@
 package com.androiders.walknearn;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -35,9 +37,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-/**
- * A login screen that offers login via email/password.
- */
+// A login screen that offers login via email/password.
 public class LoginnActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginnActivity";
@@ -50,40 +50,40 @@ public class LoginnActivity extends AppCompatActivity {
     String email, password;
     private Utility mUtil;
     UserLocalStore userLocalStore;
-
-    private GoogleSignInClient mGoogleSignInClient;
     private int RC_SIGN_IN = 11;
 
     @Override
     protected void onStart() {
         super.onStart();
-        // Check for existing Google Sign In account, if the user is already signed in
-        // the GoogleSignInAccount will be non-null.
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        if (account!=null) {
 
-            startPermissionsActivity(account);
-            finish();
+        // Get the account details only if the user is logged in
+        // setUserLoggedIn is set to false on clicking Logout button in settings page
+        if(userLocalStore.isUserLoggedIn()) {
+            // Check for existing Google Sign In account, if the user is already signed in
+            // the GoogleSignInAccount will be non-null.
+            GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+            if (account != null) {
+                startPermissionsActivity(account);
+                finish();
+            }
         }
     }
 
     private void startPermissionsActivity(GoogleSignInAccount account) {
-
-        storeUserData(account);
+        //storeUserData(account); // Call to update user details on local database
         Intent intent = new Intent(this, AskingPermissionsActivity.class);
         intent.putExtra("email", account.getEmail());
         startActivity(intent);
     }
 
+    // Method updates the local database with the details from the google account
     private void storeUserData(GoogleSignInAccount account) {
         User user = new User();
         user.setUsername(account.getDisplayName()+"");
         user.setEmail(account.getEmail());
         if(account.getPhotoUrl()!=null) {
-
             user.setPhotoUrl(account.getPhotoUrl().toString());
         }
-
         userLocalStore.storeUserData(user);
         userLocalStore.setUserLoggedIn(true);
     }
@@ -92,36 +92,37 @@ public class LoginnActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loginn);
-        initializeViews();
+        initializeViews(); // Initializing the views in the activity
+
+        // Retrieving the user details from local database
         userLocalStore = new UserLocalStore(this);
 
-        // Login on pressing enter key rather than clicking Login button
+        // Login on pressing enter key rather than clicking "Login" button
         mPasswordText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (keyEvent.getAction() != KeyEvent.ACTION_DOWN)
+                if (i != EditorInfo.IME_ACTION_DONE)
                     return false;
-
-                if (!mUtil.isConnectingToInternet()) {
+                if (!mUtil.isConnectingToInternet())
                     showInternetSnackBar();
-                } else {
+                else
                     attemptLogin();
-                }
                 return true;
             }
         });
 
+        // Login on clicking the "Login" button
         mSignIn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!mUtil.isConnectingToInternet()) {
+                if (!mUtil.isConnectingToInternet())
                     showInternetSnackBar();
-                } else {
+                else
                     attemptLogin();
-                }
             }
         });
 
+        // Specifying what is to be done on clicking "Forgot Password"
         mForgotPassword.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -129,6 +130,7 @@ public class LoginnActivity extends AppCompatActivity {
             }
         });
 
+        // Specifying what is to be done on clicking "Sign Up" button
         mSignUp.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -137,15 +139,16 @@ public class LoginnActivity extends AppCompatActivity {
             }
         });
 
+        // Specifying what is to be done on clicking " Sign Up Google" button
         mGoogleLogin.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 signInWithGoogle();
             }
         });
-
     }
 
+    // Method initializes the views in the activity
     void initializeViews() {
         mEmailText = findViewById(R.id.email_login);
         mPasswordText = findViewById(R.id.password_login);
@@ -157,14 +160,15 @@ public class LoginnActivity extends AppCompatActivity {
         mUtil = new Utility(LoginnActivity.this);
     }
 
+    // Method allows the user to sign up with google account
     private void signInWithGoogle() {
-// Configure sign-in to request the user's ID, email address, and basic
-// profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+        // Configure sign-in to request the user's ID, email address, and basic
+        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
 
-        mGoogleSignInClient = GoogleSignIn.getClient(LoginnActivity.this, gso);
+        GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(LoginnActivity.this, gso);
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
@@ -182,27 +186,23 @@ public class LoginnActivity extends AppCompatActivity {
         }
     }
 
-
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-
             // Signed in successfully, show authenticated UI.
             startPermissionsActivity(account);
             Toast.makeText(this, "Welcome "+account.getGivenName(), Toast.LENGTH_LONG).show();
-
-        } catch (ApiException e) {
+        }
+        catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
         }
     }
 
-    /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
-     */
+    // Attempts to sign in or register the account specified by the login form.
+    // If there are form errors (invalid email, missing fields, etc.), the
+    // errors are presented and no actual login attempt is made.
     private void attemptLogin() {
         // Reset errors.
         mEmailText.setError(null);
@@ -214,6 +214,7 @@ public class LoginnActivity extends AppCompatActivity {
 
         boolean cancel = false;
 
+        // Checks if fields are empty
         if (mUtil.isFieldEmpty(email, mEmailText))
             cancel = true;
         if (mUtil.isFieldEmpty(password, mPasswordText)) {
@@ -221,7 +222,7 @@ public class LoginnActivity extends AppCompatActivity {
                 cancel = true;
         }
         if (!cancel) {
-
+            // Attempting to login
             Response.Listener<String> responseListener = new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
@@ -229,39 +230,49 @@ public class LoginnActivity extends AppCompatActivity {
                     try {
                         JSONObject jsonResponse = new JSONObject(response);
                         boolean success = jsonResponse.getBoolean("success");
-                        if (success) {
+                        if (success) // True specifies that the attempt to login was successful
+                        {
+                            // Retrieving the data from database and updating the local database
                             String name = jsonResponse.getString("userName");
-                            String stepCnt = jsonResponse.getString("userStepCount");
+                            String walkCoins = jsonResponse.getString("userWalkCoins");
                             User user = new User();
                             user.setUsername(name);
                             user.setEmail(email);
                             user.setPassword(password);
-                            user.setWalkCoins(Integer.parseInt(stepCnt));
+                            user.setWalkCoins(Double.parseDouble(walkCoins));
 
                             userLocalStore.storeUserData(user);
                             userLocalStore.setUserLoggedIn(true);
-                            Intent intent = new Intent(LoginnActivity.this, AskingPermissionsActivity.class);
-                            startActivity(intent);
-                            finish();
-                        } else {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(LoginnActivity.this);
+                            mUtil.showProgressDialog("Logging in", LoginnActivity.this);
+                            startActivity(new Intent(LoginnActivity.this, AskingPermissionsActivity.class));
+                        }
+                        else // Handing the situation where login was unsuccessful
+                        {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(LoginnActivity.this,R.style.AlertDialogTheme);
                             builder.setMessage("Invalid Email or Password")
-                                    .setNegativeButton("Retry", null)
+                                    .setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            mEmailText.requestFocus();
+                                        }
+                                    })
                                     .create()
                                     .show();
                         }
-                    } catch (JSONException e) {
+                    }
+                    catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
             };
+            // Handing the login attempt in server side
             LoginRequest loginRequest = new LoginRequest(email, password, responseListener);
             RequestQueue queue = Volley.newRequestQueue(LoginnActivity.this);
             queue.add(loginRequest);
-            mUtil.showProgressDialog("Logging in", LoginnActivity.this);
         }
     }
 
+    // Method checks if the internet is available
     private void showInternetSnackBar() {
         Snackbar snackbar = Snackbar
                 .make(mCoordinatorLayout, getString(R.string.internet_unavailable), Snackbar.LENGTH_LONG)
@@ -274,4 +285,3 @@ public class LoginnActivity extends AppCompatActivity {
         snackbar.show();
     }
 }
-
