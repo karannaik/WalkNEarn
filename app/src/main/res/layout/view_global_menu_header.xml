@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:clickable="true">
+
+    <LinearLayout
+        android:id="@+id/linearMain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/linearProfile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:id="@+id/vGlobalMenuHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/ProfilePic"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="12dp"
+                    android:clickable="false"
+                    android:elevation="10dp"
+                    android:src="@drawable/empty_profile" />
+
+                <TextView
+                    android:id="@+id/textViewEmail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:text="abc@xyz.com"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/white"
+                android:layout_margin="20dp"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textViewCoupons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Coupons"
+            android:padding="20dp"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textViewAboutUs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Challenges"
+            android:padding="20dp"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textViewSendFeedback"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Send Feedback"
+            android:padding="20dp"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+        <TextView
+            android:id="@+id/textViewBusinessPlan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Terms and conditions"
+            android:padding="20dp"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textViewLogout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/logout"
+            android:padding="20dp"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:id="@+id/linearZones">
+
+        <ImageView
+            android:id="@+id/imageViewBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:src="@mipmap/ic_backburger_white_36dp"/>
+
+        <TextView
+            android:id="@+id/textViewConnectFriends"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Connect friends"
+            android:padding="20dp"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textViewConnectPassions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Connect passion"
+            android:padding="20dp"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+</FrameLayout>
