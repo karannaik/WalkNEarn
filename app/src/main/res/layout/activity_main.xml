@@ -49,11 +49,6 @@
                             android:textStyle="bold"
                             android:textSize="17sp"/>
 
-                        <!--<ImageView-->
-                            <!--android:id="@+id/overlapping_content_burger"-->
-                            <!--style="@style/ImageView.OverlappingButton"-->
-                            <!--android:layout_gravity="right"-->
-                            <!--android:src="@mipmap/ic_menu" />-->
                     </android.support.v7.widget.Toolbar>
                 </android.support.design.widget.AppBarLayout>
 

@@ -1,32 +1,29 @@
-package com.androiders.walknearn;
+package com.androiders.walknearn.fragment;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Intent;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.androiders.walknearn.MainActivity;
+import com.androiders.walknearn.R;
 import com.androiders.walknearn.dbhelper.SharedPrefs;
-import com.androiders.walknearn.fragment.LeftFloatingDrawerMenuFragment;
-import com.androiders.walknearn.fragment.TotalCaloriesFragment;
-import com.androiders.walknearn.fragment.TotalDistanceFragment;
-import com.androiders.walknearn.fragment.TotalStepsFragment;
 import com.androiders.walknearn.model.User;
 import com.androiders.walknearn.model.UserLocalStore;
 import com.androiders.walknearn.widgets.flowingdrawer.LeftDrawerLayout;
@@ -70,10 +67,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import butterknife.ButterKnife;
+public class HomeFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-
+    private View view;
     public static final String TAG = "StepCounter";
     private TotalCaloriesFragment mFragmentTotalCalories;
     private TotalStepsFragment mFragmentTotalSteps;
@@ -92,22 +88,26 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private static final int GRAPH_DISTANCE = 3;
     private BarChart barChart;
 
-    private Toolbar mToolbar;
-    private LeftDrawerLayout mLeftDrawerLayout;
-    private LeftFloatingDrawerMenuFragment mMenuFragment;
+    public HomeFragment() {
+        // Required empty public constructor
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);//for mOverlappingMenu View
 
-        setupToolbar();
+    }
 
-        initializeViews(); // Call to method that initializes  all views
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        String currentFitnessTracker = new SharedPrefs(this).getFitnessTrackerGiven();
+        initializeViews(view);
+
+        String currentFitnessTracker = new SharedPrefs(getActivity()).getFitnessTrackerGiven();
+
 
         if (currentFitnessTracker == SharedPrefs.FITNESS_TRACKER_FITBIT) {
 
@@ -118,51 +118,27 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             subscribe(); // Querying the daily data about user's physical activity and showing them on main page
         }
-        setSpinnerForGraph(); // Setting up the spinners for selecting the criteria for displaying graph
+        setSpinnerForGraph(view); // Setting up the spinners for selecting the criteria for displaying graph
+
+        return view;
     }
 
+    private void initializeViews(View view) {
 
-    protected void setupToolbar() {
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        mToolbar.setNavigationIcon(R.mipmap.ic_menu);
-
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mLeftDrawerLayout.toggle();
-            }
-        });
-    }
-
-
-    // Method specifies what is to be done on pressing back button on the main activity page
-    @Override
-    public void onBackPressed(){
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-    }
-
-    // Method initialises all the views specified in the .xml resource file
-    private void initializeViews() {
-
-        barChart = findViewById(R.id.bar_chart);
+        barChart = view.findViewById(R.id.bar_chart);
 
         // Calling initializeGraph() method on clicking the refresh image
-        findViewById(R.id.graph_refresh_btn).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.graph_refresh_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 initializeGraph(timeSpinnerPos,detailsSpinnerPos);
             }
         });
 
-        ViewPager mViewPager = findViewById(R.id.viewPager);
+        ViewPager mViewPager = view.findViewById(R.id.viewPager);
         setupViewPager(mViewPager);
 
-        pageIndicatorView = findViewById(R.id.pageIndicatorView);
+        pageIndicatorView = view.findViewById(R.id.pageIndicatorView);
         pageIndicatorView.setCount(3); // specify total count of indicators
         pageIndicatorView.setAnimationType(AnimationType.WORM);
 
@@ -181,33 +157,32 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         mViewPager.setOffscreenPageLimit(3);
 
-        final User user = new UserLocalStore(this).getLoggedInUser();
+        final User user = new UserLocalStore(getActivity()).getLoggedInUser();
 
         // Updates the photo if the photo slot is empty and an image url is present (given)
-        if (user.getPhotoUrl() != null && !user.getPhotoUrl().isEmpty()) {
-            //load profile pic
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    while (true) {
-                        try {
-                            try {
-                                URL url = new URL(user.getPhotoUrl());
-                                Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                                ((de.hdodenhof.circleimageview.CircleImageView)findViewById(R.id.ProfilePic)).setImageBitmap(bmp);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }).start();
+//        if (user.getPhotoUrl() != null && !user.getPhotoUrl().isEmpty()) {
+//            //load profile pic
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    while (true) {
+//                        try {
+//                            try {
+//                                URL url = new URL(user.getPhotoUrl());
+//                                Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+//                                ((de.hdodenhof.circleimageview.CircleImageView)view.findViewById(R.id.ProfilePic)).setImageBitmap(bmp);
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            }
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }
+//            }).start();
+//
+//        }
 
-        }
-
-        mLeftDrawerLayout = (LeftDrawerLayout) findViewById(R.id.id_drawerlayout);
     }
 
     // Sets the viewsPager on the main activity to display the user physical activity
@@ -215,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         mFragmentTotalSteps = new TotalStepsFragment();
         mFragmentTotalCalories = new TotalCaloriesFragment();
         mFragmentTotalDistance = new TotalDistanceFragment();
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getFragmentManager());
+        HomeFragment.ViewPagerAdapter adapter = new HomeFragment.ViewPagerAdapter(getFragmentManager());
         adapter.addFragment(mFragmentTotalSteps, "Total Steps");
         adapter.addFragment(mFragmentTotalCalories, "Total Calories");
         adapter.addFragment(mFragmentTotalDistance, "Total Distance");
@@ -256,21 +231,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void subscribe() {
         // To create a subscription, invoke the Recording API. As soon as the subscription is
         // active, fitness data will start recording.
-        Fitness.getRecordingClient(this, GoogleSignIn.getLastSignedInAccount(this))
-            .subscribe(DataType.TYPE_STEP_COUNT_CUMULATIVE)
-            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if (task.isSuccessful()) {
-                        Log.i(TAG, "Successfully subscribed!");
-                        //setAutomaticRefreshTimers();
-                        readData();
+        Fitness.getRecordingClient(getActivity(), GoogleSignIn.getLastSignedInAccount(getActivity()))
+                .subscribe(DataType.TYPE_STEP_COUNT_CUMULATIVE)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.i(TAG, "Successfully subscribed!");
+                            //setAutomaticRefreshTimers();
+                            readData();
+                        }
+                        else {
+                            Log.w(TAG, "There was a problem subscribing.", task.getException());
+                        }
                     }
-                    else {
-                        Log.w(TAG, "There was a problem subscribing.", task.getException());
-                    }
-                }
-            });
+                });
     }
 
     // Reads the current daily steps taken, daily calories burned, and distance walked
@@ -287,74 +262,74 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     // This method reads the steps taken daily, and updates it on the first view page of the main activity
     private void readDailyStepsData()
     {
-        Fitness.getHistoryClient(this, GoogleSignIn.getLastSignedInAccount(this))
-            .readDailyTotal(DataType.TYPE_STEP_COUNT_DELTA)
-            .addOnSuccessListener(new OnSuccessListener<DataSet>() {
-                @Override
-                public void onSuccess(DataSet dataSet) {
-                    long total = dataSet.isEmpty() ? 0 : dataSet.getDataPoints().get(0).getValue(Field.FIELD_STEPS).asInt();
-                    Log.i(TAG, "Total steps: " + total);
-                    //call fragment methods
-                    mFragmentTotalSteps.updateText(total);
-                    mMenuFragment.updateStepcount(Double.toString(total/2000.0));
-                }
-            })
-            .addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {Log.w(TAG, "There was a problem getting the step count.", e);
-                }
-            });
+        Fitness.getHistoryClient(getActivity(), GoogleSignIn.getLastSignedInAccount(getActivity()))
+                .readDailyTotal(DataType.TYPE_STEP_COUNT_DELTA)
+                .addOnSuccessListener(new OnSuccessListener<DataSet>() {
+                    @Override
+                    public void onSuccess(DataSet dataSet) {
+                        long total = dataSet.isEmpty() ? 0 : dataSet.getDataPoints().get(0).getValue(Field.FIELD_STEPS).asInt();
+                        Log.i(TAG, "Total steps: " + total);
+                        //call fragment methods
+                        mFragmentTotalSteps.updateText(total);
+//                        mMenuFragment.updateStepcount(Double.toString(total/2000.0));
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {Log.w(TAG, "There was a problem getting the step count.", e);
+                    }
+                });
     }
 
     // This method reads the calories burned daily, and updates it on the second view page of the main activity
     private void readDailyCaloriesData()
     {
-        Fitness.getHistoryClient(this, GoogleSignIn.getLastSignedInAccount(this))
-            .readDailyTotal(DataType.TYPE_CALORIES_EXPENDED)
-            .addOnSuccessListener(new OnSuccessListener<DataSet>() {
-                @Override
-                public void onSuccess(DataSet dataSet) {
-                    if(dataSet.getDataPoints().size()!=0) {
-                        String total = dataSet.getDataPoints().get(0).getValue(Field.FIELD_CALORIES).toString();
-                        Log.i(TAG, "Total calories: " + total);
-                        //call fragment methods
-                        mFragmentTotalCalories.updateText(""+Math.round(Float.parseFloat(total)));
+        Fitness.getHistoryClient(getActivity(), GoogleSignIn.getLastSignedInAccount(getActivity()))
+                .readDailyTotal(DataType.TYPE_CALORIES_EXPENDED)
+                .addOnSuccessListener(new OnSuccessListener<DataSet>() {
+                    @Override
+                    public void onSuccess(DataSet dataSet) {
+                        if(dataSet.getDataPoints().size()!=0) {
+                            String total = dataSet.getDataPoints().get(0).getValue(Field.FIELD_CALORIES).toString();
+                            Log.i(TAG, "Total calories: " + total);
+                            //call fragment methods
+                            mFragmentTotalCalories.updateText(""+Math.round(Float.parseFloat(total)));
+                        }
                     }
-                }
-            })
-            .addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.w(TAG, "There was a problem getting the calories burned.", e);
-                }
-            });
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "There was a problem getting the calories burned.", e);
+                    }
+                });
     }
 
     // This method reads the distance walked daily, and updates it on the third view page of the main activity
     private void readDailyDistanceData()
     {
-        Fitness.getHistoryClient(this, GoogleSignIn.getLastSignedInAccount(this))
-            .readDailyTotal(DataType.TYPE_DISTANCE_DELTA)
-            .addOnSuccessListener(new OnSuccessListener<DataSet>() {
-                @Override
-                public void onSuccess(DataSet dataSet) {
-                    long total = dataSet.isEmpty() ? 0 : dataSet.getDataPoints().get(0).getValue(Field.FIELD_DISTANCE).asInt();
-                    Log.i(TAG, "Total distance: " + total);
-                    mFragmentTotalCalories.updateText(""+total);
-                }
-            })
-            .addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.w(TAG, "There was a problem getting the distance walked count.", e);
-                }
-            });
+        Fitness.getHistoryClient(getActivity(), GoogleSignIn.getLastSignedInAccount(getActivity()))
+                .readDailyTotal(DataType.TYPE_DISTANCE_DELTA)
+                .addOnSuccessListener(new OnSuccessListener<DataSet>() {
+                    @Override
+                    public void onSuccess(DataSet dataSet) {
+                        long total = dataSet.isEmpty() ? 0 : dataSet.getDataPoints().get(0).getValue(Field.FIELD_DISTANCE).asInt();
+                        Log.i(TAG, "Total distance: " + total);
+                        mFragmentTotalCalories.updateText(""+total);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "There was a problem getting the distance walked count.", e);
+                    }
+                });
     }
 
     // Method helps in selecting the criteria for displaying the graph
-    private void setSpinnerForGraph() {
-        Spinner timeSpinner = findViewById(R.id.time_spinner);
-        Spinner detailsSpinner = findViewById(R.id.details_spinner);
+    private void setSpinnerForGraph(View view) {
+        Spinner timeSpinner = view.findViewById(R.id.time_spinner);
+        Spinner detailsSpinner = view.findViewById(R.id.details_spinner);
 
         // Spinner click listener
         timeSpinner.setOnItemSelectedListener(this);
@@ -365,8 +340,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         List<String> detailsCategories = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.details_spinner)));
 
         // Creating adapter for spinners
-        ArrayAdapter<String> timeDataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, timeCategories);
-        ArrayAdapter<String> detailsDataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, detailsCategories);
+        ArrayAdapter<String> timeDataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, timeCategories);
+        ArrayAdapter<String> detailsDataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, detailsCategories);
 
         // Drop down layout style - list view with radio Button
         timeDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -380,7 +355,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     // Method specifies what is to be done on selecting the spinner options
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
+//        ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
         String ItemSelected = parent.getSelectedItem().toString();
         if(ItemSelected.compareTo("Daily") == 0)
             timeSpinnerPos = 1;
@@ -525,7 +500,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // Calling queryGraphData() which queries based on the input passed
         DataReadRequest readRequest = queryGraphData(startTime,endTime,timeUnit,dataType,aggregateDataType,groupSize);
         // Retrieving the history based on the result obtained from querying
-        Fitness.getHistoryClient(this, GoogleSignIn.getLastSignedInAccount(this))
+        Fitness.getHistoryClient(getActivity(), GoogleSignIn.getLastSignedInAccount(getActivity()))
                 .readData(readRequest)
                 .addOnSuccessListener(new OnSuccessListener<DataReadResponse>() {
                     @Override
@@ -694,7 +669,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         BarDataSet barDataSet = new BarDataSet(yData,getResources().getStringArray(R.array.graph_descriptions)[descriptionCode-1]);
         barDataSet.setColors(getResources().getColor(R.color.colorAccent)); // Sets default colour of bars to colorAccent
         barDataSet.setHighLightColor(Color.WHITE); // Sets the bar color on selection to white
-        barDataSet.setValueFormatter(new IntValueFormatter()); // Sets bar labels to be integers only
+        barDataSet.setValueFormatter(new HomeFragment.IntValueFormatter()); // Sets bar labels to be integers only
         //barDataSet.setHighlightEnabled(false); // Uncomment to disable highlighting bar selection
 
         // Creating a BarData
@@ -711,7 +686,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // Splits the labels to two lines for lengthy labels like for MONTHLY graphs
         if(descriptionCode == 3 || descriptionCode == 6 || descriptionCode == 9)
-            barChart.setXAxisRenderer(new CustomXAxisRenderer(barChart.getViewPortHandler(),xAxis,barChart.getTransformer(YAxis.AxisDependency.LEFT)));
+            barChart.setXAxisRenderer(new HomeFragment.CustomXAxisRenderer(barChart.getViewPortHandler(),xAxis,barChart.getTransformer(YAxis.AxisDependency.LEFT)));
     }
 
     // Class to format the bar labels so that the labels will only be integers
@@ -742,32 +717,4 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
-    public void setMainText(String text) {
-        Toast.makeText(this, ": "+text, Toast.LENGTH_SHORT).show();
-    }
-
-    private void setAutomaticRefreshTimers() {
-        final Handler mHandler = new Handler();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-                    try {
-                        Thread.sleep(4000);
-                        mHandler.post(new Runnable() {
-
-                            @Override
-                            public void run() {
-
-                                readData();
-                            }
-                        });
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }).start();
-    }
 }

@@ -27,11 +27,7 @@
             android:name=".MainActivity"
             android:label="@string/app_name" />
         <activity android:name=".SplashScreenActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <meta-data
@@ -87,9 +83,17 @@
         <activity
             android:name=".fitbitfiles.RootActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/Theme.Fitbit.Teal"/>
-        <activity android:name=".fitbitfiles.UserDataActivity"/>
-        <activity android:name=".FitbitActivity"/>
+            android:theme="@style/Theme.Fitbit.Teal" />
+        <activity android:name=".fitbitfiles.UserDataActivity" />
+        <activity android:name=".FitbitActivity" />
+        <activity
+            android:name=".Main2Activity"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

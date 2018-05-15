@@ -58,7 +58,6 @@ public class ActivitiesFragment extends InfoFragment<DailyActivitySummary> {
         stringBuilder.append("<br />");
         printKeys(stringBuilder, goals);
 
-        ((MainActivity)getActivity()).setMainText(stringBuilder.toString());
         setMainText(stringBuilder.toString());
     }
 }
