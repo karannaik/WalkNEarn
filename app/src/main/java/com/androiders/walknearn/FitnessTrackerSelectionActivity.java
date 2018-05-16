@@ -95,7 +95,7 @@ public class FitnessTrackerSelectionActivity extends AppCompatActivity {
 
     private void startMainActivity() {
 
-        Intent i = new Intent(FitnessTrackerSelectionActivity.this, MainActivity.class);
+        Intent i = new Intent(FitnessTrackerSelectionActivity.this, Main2Activity.class);
         startActivity(i);
         finish();
     }

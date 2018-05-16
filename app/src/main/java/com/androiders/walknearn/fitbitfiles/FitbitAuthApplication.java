@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.os.Bundle;
 
 import com.fitbit.authentication.AuthenticationConfiguration;
@@ -22,6 +23,9 @@ import static com.fitbit.authentication.Scope.activity;
 
 public class FitbitAuthApplication extends Application {
 
+
+    private static final String CANARO_EXTRA_BOLD_PATH = "fonts/canaro_extra_bold.otf";
+    public static Typeface canaroExtraBold;
     /**
      * These client credentials come from creating an app on https://dev.fitbit.com.
      * <p>
@@ -83,6 +87,11 @@ public class FitbitAuthApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        initTypeface();
         AuthenticationManager.configure(this, generateAuthenticationConfiguration(this, RootActivity.class));
+    }
+
+    private void initTypeface() {
+        canaroExtraBold = Typeface.createFromAsset(getAssets(), CANARO_EXTRA_BOLD_PATH);
     }
 }

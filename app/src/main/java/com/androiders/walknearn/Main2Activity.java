@@ -2,6 +2,8 @@ package com.androiders.walknearn;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.design.widget.TabLayout;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -14,7 +16,12 @@ import com.androiders.walknearn.fitbitfiles.fragments.ActivitiesFragment;
 import com.androiders.walknearn.fitbitfiles.fragments.DeviceFragment;
 import com.androiders.walknearn.fitbitfiles.fragments.ProfileFragment;
 import com.androiders.walknearn.fragment.HomeFragment;
+import com.androiders.walknearn.model.User;
+import com.androiders.walknearn.model.UserLocalStore;
 import com.androiders.walknearn.ui.CustomFixedViewPager;
+
+import java.io.IOException;
+import java.net.URL;
 
 public class Main2Activity extends AppCompatActivity {
 
@@ -27,6 +34,7 @@ public class Main2Activity extends AppCompatActivity {
             R.mipmap.ic_home_white_36dp,
             R.mipmap.ic_settings_white_36dp,
             R.mipmap.ic_account_white_36dp,
+            R.mipmap.ic_wallet_white_36dp
     };
 
     @Override
@@ -39,7 +47,36 @@ public class Main2Activity extends AppCompatActivity {
         mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
 
         setViewPagerAndTabLayout();
-//        setupToolbar();
+        loadProfilePic();
+    }
+
+    private void loadProfilePic() {
+
+        final User user = new UserLocalStore(this).getLoggedInUser();
+
+        if (user.getPhotoUrl() != null && !user.getPhotoUrl().isEmpty()) {
+            //load profile pic
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (true) {
+                        try {
+                            try {
+                                URL url = new URL(user.getPhotoUrl());
+                                Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                                ((de.hdodenhof.circleimageview.CircleImageView)findViewById(R.id.ProfilePic)).setImageBitmap(bmp);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }).start();
+
+        }
+
     }
 
     private void setViewPagerAndTabLayout() {
@@ -51,6 +88,7 @@ public class Main2Activity extends AppCompatActivity {
 
         mTabLayout = (TabLayout) findViewById(R.id.tabs);
         mTabLayout.setupWithViewPager(mViewPager);
+
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -59,24 +97,7 @@ public class Main2Activity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                switch (position) {
-                    case 0:
-                        mTabLayout.getTabAt(0).getIcon().setAlpha(255);
-                        mTabLayout.getTabAt(1).getIcon().setAlpha(88);
-                        mTabLayout.getTabAt(2).getIcon().setAlpha(88);
-                        break;
-                    case 1:
-                        mTabLayout.getTabAt(0).getIcon().setAlpha(88);
-                        mTabLayout.getTabAt(1).getIcon().setAlpha(255);
-                        mTabLayout.getTabAt(2).getIcon().setAlpha(88);
-                        break;
-                    case 2:
-                        mTabLayout.getTabAt(0).getIcon().setAlpha(88);
-                        mTabLayout.getTabAt(1).getIcon().setAlpha(88);
-                        mTabLayout.getTabAt(2).getIcon().setAlpha(255);
-                        break;
-
-                }
+                setIconColorsSelectables(position);
             }
 
             @Override
@@ -88,6 +109,38 @@ public class Main2Activity extends AppCompatActivity {
         mTabLayout.getTabAt(0).setIcon(ICONS[0]);
         mTabLayout.getTabAt(1).setIcon(ICONS[1]);
         mTabLayout.getTabAt(2).setIcon(ICONS[2]);
+        mTabLayout.getTabAt(3).setIcon(ICONS[3]);
+        setIconColorsSelectables(0);
+        mViewPager.setPagingEnabled(false);
+    }
+
+    private void setIconColorsSelectables(int position) {
+        switch (position) {
+            case 0:
+                mTabLayout.getTabAt(0).getIcon().setAlpha(255);
+                mTabLayout.getTabAt(1).getIcon().setAlpha(50);
+                mTabLayout.getTabAt(2).getIcon().setAlpha(50);
+                mTabLayout.getTabAt(3).getIcon().setAlpha(50);
+                break;
+            case 1:
+                mTabLayout.getTabAt(0).getIcon().setAlpha(50);
+                mTabLayout.getTabAt(1).getIcon().setAlpha(255);
+                mTabLayout.getTabAt(2).getIcon().setAlpha(50);
+                mTabLayout.getTabAt(3).getIcon().setAlpha(50);
+                break;
+            case 2:
+                mTabLayout.getTabAt(0).getIcon().setAlpha(50);
+                mTabLayout.getTabAt(1).getIcon().setAlpha(50);
+                mTabLayout.getTabAt(2).getIcon().setAlpha(255);
+                mTabLayout.getTabAt(3).getIcon().setAlpha(50);
+                break;
+            case 3:
+                mTabLayout.getTabAt(0).getIcon().setAlpha(50);
+                mTabLayout.getTabAt(1).getIcon().setAlpha(50);
+                mTabLayout.getTabAt(2).getIcon().setAlpha(50);
+                mTabLayout.getTabAt(3).getIcon().setAlpha(255);
+                break;
+        }
     }
 
     protected void setupToolbar() {
@@ -123,7 +176,7 @@ public class Main2Activity extends AppCompatActivity {
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+            return 4;
         }
     }
 }

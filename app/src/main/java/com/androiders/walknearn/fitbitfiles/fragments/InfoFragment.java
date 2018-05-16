@@ -58,15 +58,15 @@ public abstract class InfoFragment<T> extends Fragment implements LoaderManager.
 
     @Override
     public void onLoadFinished(Loader<ResourceLoaderResult<T>> loader, ResourceLoaderResult<T> data) {
-        binding.swipeRefreshLayout.setRefreshing(false);
-        binding.setLoading(false);
+//        binding.swipeRefreshLayout.setRefreshing(false);
+//        binding.setLoading(false);
         switch (data.getResultType()) {
             case ERROR:
-                Toast.makeText(getActivity(), R.string.error_loading_data, Toast.LENGTH_LONG).show();
+//                Toast.makeText(getActivity(), R.string.error_loading_data, Toast.LENGTH_LONG).show();
                 break;
             case EXCEPTION:
                 Log.e(TAG, "Error loading data", data.getException());
-                Toast.makeText(getActivity(), R.string.error_loading_data, Toast.LENGTH_LONG).show();
+//                Toast.makeText(getActivity(), R.string.error_loading_data, Toast.LENGTH_LONG).show();
                 break;
         }
     }

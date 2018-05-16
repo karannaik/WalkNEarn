@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.androiders.walknearn.Main2Activity;
 import com.androiders.walknearn.MainActivity;
 import com.androiders.walknearn.databinding.ActivityRootBinding;
 import com.androiders.walknearn.dbhelper.SharedPrefs;
@@ -50,9 +51,9 @@ public class RootActivity extends AppCompatActivity implements AuthenticationHan
     }
 
     public void onLoggedIn() {
-       Intent intent = UserDataActivity.newIntent(this);
+//       Intent intent = UserDataActivity.newIntent(this);
         new SharedPrefs(this).setFitnessTrackerGiven(SharedPrefs.FITNESS_TRACKER_FITBIT);
-//        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, Main2Activity.class);
         startActivity(intent);
         binding.setLoading(false);
     }

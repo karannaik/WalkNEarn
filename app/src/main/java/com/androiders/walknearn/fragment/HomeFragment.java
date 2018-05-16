@@ -3,6 +3,7 @@ package com.androiders.walknearn.fragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.Loader;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -24,9 +25,15 @@ import android.widget.TextView;
 import com.androiders.walknearn.MainActivity;
 import com.androiders.walknearn.R;
 import com.androiders.walknearn.dbhelper.SharedPrefs;
+import com.androiders.walknearn.fitbitfiles.fragments.InfoFragment;
 import com.androiders.walknearn.model.User;
 import com.androiders.walknearn.model.UserLocalStore;
 import com.androiders.walknearn.widgets.flowingdrawer.LeftDrawerLayout;
+import com.fitbit.api.loaders.ResourceLoaderResult;
+import com.fitbit.api.models.DailyActivitySummary;
+import com.fitbit.api.models.Goals;
+import com.fitbit.api.models.Summary;
+import com.fitbit.api.services.ActivityService;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
@@ -67,7 +74,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class HomeFragment extends Fragment implements AdapterView.OnItemSelectedListener {
+public class HomeFragment extends InfoFragment<DailyActivitySummary> implements AdapterView.OnItemSelectedListener {
 
     private View view;
     public static final String TAG = "StepCounter";
@@ -77,7 +84,6 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     private PageIndicatorView pageIndicatorView;
     private TextView mWalkCoins;
     private int timeSpinnerPos = 1;
-    private int detailsSpinnerPos = 1;
 
     private static final int GRAPH_DAILY = 1;
     private static final int GRAPH_WEEKLY = 2;
@@ -87,6 +93,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     private static final int GRAPH_CALORIES = 2;
     private static final int GRAPH_DISTANCE = 3;
     private BarChart barChart;
+    private int detailsSpinnerPos = 1;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -111,8 +118,6 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
 
         if (currentFitnessTracker == SharedPrefs.FITNESS_TRACKER_FITBIT) {
 
-//            Intent intent = UserDataActivity.newIntent(this);
-//            startActivity(intent);
 
         } else {//else google fit
 
@@ -126,14 +131,6 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     private void initializeViews(View view) {
 
         barChart = view.findViewById(R.id.bar_chart);
-
-        // Calling initializeGraph() method on clicking the refresh image
-        view.findViewById(R.id.graph_refresh_btn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                initializeGraph(timeSpinnerPos,detailsSpinnerPos);
-            }
-        });
 
         ViewPager mViewPager = view.findViewById(R.id.viewPager);
         setupViewPager(mViewPager);
@@ -149,6 +146,21 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
             @Override
             public void onPageSelected(int position) {
                 pageIndicatorView.setSelection(position);
+
+                switch (position) {
+                    case 0:
+                        detailsSpinnerPos = GRAPH_STEPS;
+                        initializeGraph(GRAPH_STEPS, detailsSpinnerPos);
+                        break;
+                    case 1:
+                        detailsSpinnerPos = GRAPH_CALORIES;
+                        initializeGraph(GRAPH_CALORIES, detailsSpinnerPos);
+                        break;
+                    case 2:
+                        detailsSpinnerPos = GRAPH_DISTANCE;
+                        initializeGraph(GRAPH_DISTANCE, detailsSpinnerPos);
+                        break;
+                }
             }
 
             @Override
@@ -156,32 +168,6 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         });
 
         mViewPager.setOffscreenPageLimit(3);
-
-        final User user = new UserLocalStore(getActivity()).getLoggedInUser();
-
-        // Updates the photo if the photo slot is empty and an image url is present (given)
-//        if (user.getPhotoUrl() != null && !user.getPhotoUrl().isEmpty()) {
-//            //load profile pic
-//            new Thread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    while (true) {
-//                        try {
-//                            try {
-//                                URL url = new URL(user.getPhotoUrl());
-//                                Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-//                                ((de.hdodenhof.circleimageview.CircleImageView)view.findViewById(R.id.ProfilePic)).setImageBitmap(bmp);
-//                            } catch (IOException e) {
-//                                e.printStackTrace();
-//                            }
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }
-//            }).start();
-//
-//        }
 
     }
 
@@ -196,6 +182,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         adapter.addFragment(mFragmentTotalDistance, "Total Distance");
         viewPager.setAdapter(adapter);
     }
+
 
     // Class which helps in displaying the user's physical activity in the viewer pages
     class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -240,8 +227,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
                             Log.i(TAG, "Successfully subscribed!");
                             //setAutomaticRefreshTimers();
                             readData();
-                        }
-                        else {
+                        } else {
                             Log.w(TAG, "There was a problem subscribing.", task.getException());
                         }
                     }
@@ -259,41 +245,51 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         //readDailyDistanceData();
     }
 
+    private void updateTotalSteps(long total) {
+        mFragmentTotalSteps.updateText(total);
+    }
+
+
+    private void updateTotalCalories(String total) {
+        mFragmentTotalCalories.updateText(total);
+    }
+
+    private void updateTotalDistance(long total) {
+        mFragmentTotalDistance.updateText("" + total);
+    }
+
     // This method reads the steps taken daily, and updates it on the first view page of the main activity
-    private void readDailyStepsData()
-    {
+    private void readDailyStepsData() {
         Fitness.getHistoryClient(getActivity(), GoogleSignIn.getLastSignedInAccount(getActivity()))
                 .readDailyTotal(DataType.TYPE_STEP_COUNT_DELTA)
                 .addOnSuccessListener(new OnSuccessListener<DataSet>() {
                     @Override
                     public void onSuccess(DataSet dataSet) {
                         long total = dataSet.isEmpty() ? 0 : dataSet.getDataPoints().get(0).getValue(Field.FIELD_STEPS).asInt();
-                        Log.i(TAG, "Total steps: " + total);
                         //call fragment methods
-                        mFragmentTotalSteps.updateText(total);
+                        updateTotalSteps(total);
 //                        mMenuFragment.updateStepcount(Double.toString(total/2000.0));
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
-                    public void onFailure(@NonNull Exception e) {Log.w(TAG, "There was a problem getting the step count.", e);
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "There was a problem getting the step count.", e);
                     }
                 });
     }
 
     // This method reads the calories burned daily, and updates it on the second view page of the main activity
-    private void readDailyCaloriesData()
-    {
+    private void readDailyCaloriesData() {
         Fitness.getHistoryClient(getActivity(), GoogleSignIn.getLastSignedInAccount(getActivity()))
                 .readDailyTotal(DataType.TYPE_CALORIES_EXPENDED)
                 .addOnSuccessListener(new OnSuccessListener<DataSet>() {
                     @Override
                     public void onSuccess(DataSet dataSet) {
-                        if(dataSet.getDataPoints().size()!=0) {
+                        if (dataSet.getDataPoints().size() != 0) {
                             String total = dataSet.getDataPoints().get(0).getValue(Field.FIELD_CALORIES).toString();
-                            Log.i(TAG, "Total calories: " + total);
                             //call fragment methods
-                            mFragmentTotalCalories.updateText(""+Math.round(Float.parseFloat(total)));
+                            updateTotalCalories("" + Math.round(Float.parseFloat(total)));
                         }
                     }
                 })
@@ -306,8 +302,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     }
 
     // This method reads the distance walked daily, and updates it on the third view page of the main activity
-    private void readDailyDistanceData()
-    {
+    private void readDailyDistanceData() {
         Fitness.getHistoryClient(getActivity(), GoogleSignIn.getLastSignedInAccount(getActivity()))
                 .readDailyTotal(DataType.TYPE_DISTANCE_DELTA)
                 .addOnSuccessListener(new OnSuccessListener<DataSet>() {
@@ -315,7 +310,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
                     public void onSuccess(DataSet dataSet) {
                         long total = dataSet.isEmpty() ? 0 : dataSet.getDataPoints().get(0).getValue(Field.FIELD_DISTANCE).asInt();
                         Log.i(TAG, "Total distance: " + total);
-                        mFragmentTotalCalories.updateText(""+total);
+                        updateTotalDistance(total);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -329,11 +324,9 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     // Method helps in selecting the criteria for displaying the graph
     private void setSpinnerForGraph(View view) {
         Spinner timeSpinner = view.findViewById(R.id.time_spinner);
-        Spinner detailsSpinner = view.findViewById(R.id.details_spinner);
 
         // Spinner click listener
         timeSpinner.setOnItemSelectedListener(this);
-        detailsSpinner.setOnItemSelectedListener(this);
 
         // Spinner Drop down elements
         List<String> timeCategories = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.time_spinner)));
@@ -341,15 +334,12 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
 
         // Creating adapter for spinners
         ArrayAdapter<String> timeDataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, timeCategories);
-        ArrayAdapter<String> detailsDataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, detailsCategories);
 
         // Drop down layout style - list view with radio Button
         timeDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        detailsDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         // attaching data adapter to spinner
         timeSpinner.setAdapter(timeDataAdapter);
-        detailsSpinner.setAdapter(detailsDataAdapter);
     }
 
     // Method specifies what is to be done on selecting the spinner options
@@ -357,94 +347,79 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 //        ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
         String ItemSelected = parent.getSelectedItem().toString();
-        if(ItemSelected.compareTo("Daily") == 0)
+        if (ItemSelected.compareTo("Daily") == 0)
             timeSpinnerPos = 1;
-        else if(ItemSelected.compareTo("Weekly") == 0)
+        else if (ItemSelected.compareTo("Weekly") == 0)
             timeSpinnerPos = 2;
-        else if(ItemSelected.compareTo("Monthly") == 0)
+        else if (ItemSelected.compareTo("Monthly") == 0)
             timeSpinnerPos = 3;
-        else if(ItemSelected.compareTo("Steps") == 0)
-            detailsSpinnerPos = 1;
-        else if(ItemSelected.compareTo("Calories") == 0)
-            detailsSpinnerPos = 2;
-        else if(ItemSelected.compareTo("Distance") == 0)
-            detailsSpinnerPos = 3;
-        initializeGraph(timeSpinnerPos,detailsSpinnerPos);
+        initializeGraph(timeSpinnerPos, detailsSpinnerPos);
     }
 
     // Method sets default spinner items when no spinner item is selected
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
         timeSpinnerPos = 1;
-        detailsSpinnerPos = 1;
-        initializeGraph(timeSpinnerPos,detailsSpinnerPos);
+        initializeGraph(timeSpinnerPos, detailsSpinnerPos);
     }
 
     // Input parameters : criteria based on which graph is drawn (Time criteria, Type of History)
     // Method sets the bucket size for retrieving the data,
     // specifies what is to be retrieved, and
     // the time frame within which it is to be retrieved
-    private void initializeGraph(int timeType,int detailsType)
-    {
-        long startTime = 0,endTime = 0;
+    private void initializeGraph(int timeType, int detailsType) {
+        long startTime = 0, endTime = 0;
         TimeUnit timeUnit = TimeUnit.DAYS;
-        DataType dataType = DataType.TYPE_STEP_COUNT_DELTA,aggregateDataType = DataType.AGGREGATE_STEP_COUNT_DELTA;
+        DataType dataType = DataType.TYPE_STEP_COUNT_DELTA, aggregateDataType = DataType.AGGREGATE_STEP_COUNT_DELTA;
         Field field = Field.FIELD_STEPS;
         int calendarType = Calendar.DAY_OF_WEEK, groupSize = 1, descriptionCode, typeDesc = 1, detailDesc = 1;
-        switch(timeType)
-        {
-            case GRAPH_DAILY:
-            {
+        switch (timeType) {
+            case GRAPH_DAILY: {
                 calendarType = Calendar.HOUR_OF_DAY;
                 Calendar calendar = Calendar.getInstance();
                 Date date = new Date();
                 calendar.setTime(date);
-                if((calendar.get(Calendar.HOUR) > 0 ) || (calendar.get(Calendar.HOUR) == 0 && (calendar.get(Calendar.MINUTE) > 0 || calendar.get(Calendar.SECOND) > 0)))
-                {
-                    calendar.add(Calendar.DATE,+1);
+                if ((calendar.get(Calendar.HOUR) > 0) || (calendar.get(Calendar.HOUR) == 0 && (calendar.get(Calendar.MINUTE) > 0 || calendar.get(Calendar.SECOND) > 0))) {
+                    calendar.add(Calendar.DATE, +1);
                     calendar.set(Calendar.MINUTE, 0);
                     calendar.set(Calendar.SECOND, 0);
                     calendar.set(Calendar.HOUR_OF_DAY, 0);
                 }
                 endTime = calendar.getTimeInMillis();
-                calendar.add(Calendar.HOUR_OF_DAY,-24); // Past 24 hours
+                calendar.add(Calendar.HOUR_OF_DAY, -24); // Past 24 hours
                 startTime = calendar.getTimeInMillis();
                 timeUnit = TimeUnit.HOURS;
                 groupSize = 4;
                 typeDesc = 1;
             }
             break;
-            case GRAPH_WEEKLY:
-            {
+            case GRAPH_WEEKLY: {
                 calendarType = Calendar.DAY_OF_WEEK;
                 Calendar calendar = Calendar.getInstance();
                 Date date = new Date();
                 calendar.setTime(date);
-                if((calendar.get(Calendar.HOUR) > 0 ) || (calendar.get(Calendar.HOUR) == 0 && (calendar.get(Calendar.MINUTE) > 0 || calendar.get(Calendar.SECOND) > 0)))
-                {
-                    calendar.add(Calendar.DATE,+1);
+                if ((calendar.get(Calendar.HOUR) > 0) || (calendar.get(Calendar.HOUR) == 0 && (calendar.get(Calendar.MINUTE) > 0 || calendar.get(Calendar.SECOND) > 0))) {
+                    calendar.add(Calendar.DATE, +1);
                     calendar.set(Calendar.MINUTE, 0);
                     calendar.set(Calendar.SECOND, 0);
                     calendar.set(Calendar.HOUR_OF_DAY, 0);
                 }
                 endTime = calendar.getTimeInMillis();
-                calendar.add(Calendar.DAY_OF_WEEK,-7); // Past 7 days
+                calendar.add(Calendar.DAY_OF_WEEK, -7); // Past 7 days
                 startTime = calendar.getTimeInMillis();
                 timeUnit = TimeUnit.DAYS;
                 typeDesc = 2;
             }
             break;
-            case GRAPH_MONTHLY:
-            {
+            case GRAPH_MONTHLY: {
                 calendarType = Calendar.WEEK_OF_MONTH;
                 Calendar calendar = Calendar.getInstance();
                 Date date = new Date();
                 calendar.setTime(date);
                 int day_of_week = calendar.get(Calendar.DAY_OF_WEEK);
-                if((day_of_week < 7) || (day_of_week == 7 && ((calendar.get(Calendar.HOUR) > 0) ||
-                        (calendar.get(Calendar.HOUR) == 0 && (calendar.get(Calendar.MINUTE) > 0 || calendar.get(Calendar.SECOND) > 0)))))
-                {
-                    calendar.add(Calendar.DATE,+7-day_of_week+1);
+                if ((day_of_week < 7) || (day_of_week == 7 && ((calendar.get(Calendar.HOUR) > 0) ||
+                        (calendar.get(Calendar.HOUR) == 0 && (calendar.get(Calendar.MINUTE) > 0 || calendar.get(Calendar.SECOND) > 0))))) {
+                    calendar.add(Calendar.DATE, +7 - day_of_week + 1);
                     calendar.set(Calendar.MINUTE, 0);
                     calendar.set(Calendar.SECOND, 0);
                     calendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -458,8 +433,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
             }
             break;
         }
-        switch(detailsType)
-        {
+        switch (detailsType) {
             case GRAPH_STEPS:
                 dataType = DataType.TYPE_STEP_COUNT_DELTA;
                 aggregateDataType = DataType.AGGREGATE_STEP_COUNT_DELTA;
@@ -479,9 +453,9 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
                 detailDesc = 3;
                 break;
         }
-        descriptionCode = 3*(detailDesc-1)+typeDesc;
+        descriptionCode = 3 * (detailDesc - 1) + typeDesc;
         // Calling a method which retrieves the data, and thereby plots a graph
-        readGraphHistory(startTime,endTime,timeUnit,dataType,aggregateDataType,field,calendarType,groupSize,descriptionCode);
+        readGraphHistory(startTime, endTime, timeUnit, dataType, aggregateDataType, field, calendarType, groupSize, descriptionCode);
     }
 
     // Input parameters : startTime, endTime - range within which the data is to be retrieved
@@ -495,10 +469,9 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     // This method obtains the data (history) based on the input, and calls a plotGraph() method to plot the graph
     private void readGraphHistory(final long startTime, final long endTime, TimeUnit timeUnit,
                                   DataType dataType, final DataType aggregateDataType, final Field field,
-                                  final int calendarType, final int groupSize, final int descriptionCode)
-    {
+                                  final int calendarType, final int groupSize, final int descriptionCode) {
         // Calling queryGraphData() which queries based on the input passed
-        DataReadRequest readRequest = queryGraphData(startTime,endTime,timeUnit,dataType,aggregateDataType,groupSize);
+        DataReadRequest readRequest = queryGraphData(startTime, endTime, timeUnit, dataType, aggregateDataType, groupSize);
         // Retrieving the history based on the result obtained from querying
         Fitness.getHistoryClient(getActivity(), GoogleSignIn.getLastSignedInAccount(getActivity()))
                 .readData(readRequest)
@@ -510,27 +483,23 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
                         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                         //java.text.DateFormat dateFormat = getDateInstance();
                         Log.i(TAG, "NOW No of Buckets = " + dataReadResponse.getBuckets().size());
-                        for (Bucket bucket : dataReadResponse.getBuckets())
-                        {
+                        for (Bucket bucket : dataReadResponse.getBuckets()) {
                             DataSet dataSet = bucket.getDataSet(aggregateDataType);
-                            if (!dataSet.isEmpty())
-                            {
+                            if (!dataSet.isEmpty()) {
                                 com.google.android.gms.fitness.data.DataPoint dataPoint = dataSet.getDataPoints().get(0);
                                 Log.i(TAG, "NOW Bucket Start: " + formatter.format(dataSet.getDataPoints().get(0).getStartTime(TimeUnit.MILLISECONDS)));
                                 Log.i(TAG, "NOW Bucket End: " + formatter.format(dataSet.getDataPoints().get(0).getEndTime(TimeUnit.MILLISECONDS)));
-                                Log.i(TAG, "NOW " + getResources().getStringArray(R.array.graph_descriptions)[descriptionCode-1]+" = " + dataSet.getDataPoints().get(0).getValue(Field.FIELD_STEPS).asInt());
+                                Log.i(TAG, "NOW " + getResources().getStringArray(R.array.graph_descriptions)[descriptionCode - 1] + " = " + dataSet.getDataPoints().get(0).getValue(Field.FIELD_STEPS).asInt());
                                 YValues.add(dataPoint.getValue(field).asInt());
-                            }
-                            else
-                            {
-                                Log.i(TAG,"NOW "+getResources().getStringArray(R.array.graph_descriptions)[descriptionCode-1]+" = 0");
+                            } else {
+                                Log.i(TAG, "NOW " + getResources().getStringArray(R.array.graph_descriptions)[descriptionCode - 1] + " = 0");
                                 YValues.add(0);
                             }
                         }
                         // Calling a method which returns the list of labels on X-Axis
-                        XValues = getXValues(calendarType,startTime);
+                        XValues = getXValues(calendarType, startTime);
                         // Calling a method which plots the graph
-                        plotGraph(XValues,YValues,descriptionCode);
+                        plotGraph(XValues, YValues, descriptionCode);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -547,9 +516,8 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     //                    aggregateDataType - same as dataType, but specifies aggregate type (used for querying data)
     //                    groupSize - specifies the size of the bucket i.e data for a group of days or hours
     // This method returns the query result based on the input parameters
-    public static DataReadRequest queryGraphData(long startTime,long endTime, TimeUnit timeUnit,
-                                                 DataType dataType,DataType aggregateDataType, int groupSize)
-    {
+    public static DataReadRequest queryGraphData(long startTime, long endTime, TimeUnit timeUnit,
+                                                 DataType dataType, DataType aggregateDataType, int groupSize) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         //java.text.DateFormat dateFormat = getDateInstance();
         Log.i(TAG, "NOW Range Start: " + formatter.format(startTime));
@@ -564,11 +532,9 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     // Input parameters : startTime - start time of the time period for which the graph is being displayed
     //                    calendarType - specifies the time type (DAY_OF_WEEK,HOUR_OF_DAY,etc)
     // Method returns the list of labels to be displayed on X-Axis of the graph
-    private List<String> getXValues(int calendarType, long startTime)
-    {
+    private List<String> getXValues(int calendarType, long startTime) {
         List<String> XValues = new ArrayList<>();
-        switch (calendarType)
-        {
+        switch (calendarType) {
             case Calendar.HOUR_OF_DAY:
                 XValues = getXValuesDaily();
                 break;
@@ -583,8 +549,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     }
 
     // Method returns the X-Axis labels (time frames in a day) for the DAILY graph plotted
-    private List<String> getXValuesDaily()
-    {
+    private List<String> getXValuesDaily() {
         List<String> XValues = new ArrayList<>();
         XValues.add("0-4am");
         XValues.add("4-8am");
@@ -596,34 +561,30 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     }
 
     // Method returns the X-Axis labels (day of the week) for the WEEKLY graph plotted
-    private List<String> getXValuesWeekly(long startTime)
-    {
+    private List<String> getXValuesWeekly(long startTime) {
         List<String> XValues = new ArrayList<>();
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat simpleDateformat = new SimpleDateFormat("EEE"); // the day of the week abbreviated
-        for(int i = 0; i < 7; i++)
-        {
+        for (int i = 0; i < 7; i++) {
             calendar.setTimeInMillis(startTime);
             XValues.add(simpleDateformat.format(new Date(startTime)));
-            calendar.add(Calendar.DAY_OF_WEEK,+1);
+            calendar.add(Calendar.DAY_OF_WEEK, +1);
             startTime = calendar.getTimeInMillis();
         }
         return XValues;
     }
 
     // Method returns the X-Axis labels (time frames in a month) for the MONTHLY graph plotted
-    private List<String> getXValuesMonthly(long startTime)
-    {
+    private List<String> getXValuesMonthly(long startTime) {
         List<String> XValues = new ArrayList<>();
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat simpleDateformat = new SimpleDateFormat("MM/dd"); // the day of the week abbreviated
-        for(int i = 0; i < 4; i++)
-        {
+        for (int i = 0; i < 4; i++) {
             calendar.setTimeInMillis(startTime);
-            String xValues = simpleDateformat.format(new Date(startTime))+"-\n";
-            calendar.add(Calendar.DAY_OF_WEEK,+6);
+            String xValues = simpleDateformat.format(new Date(startTime)) + "-\n";
+            calendar.add(Calendar.DAY_OF_WEEK, +6);
             xValues += simpleDateformat.format(new Date(calendar.getTimeInMillis()));
-            calendar.add(Calendar.DAY_OF_WEEK,+1);
+            calendar.add(Calendar.DAY_OF_WEEK, +1);
             startTime = calendar.getTimeInMillis();
             XValues.add(xValues);
         }
@@ -634,12 +595,11 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
     //                    yValues - values to be displayed on Y-Axis of the graph
     //                    descriptionCode - specifies what each bar in the graph represents
     // This method plots the bars with the history data on Y-Axis and the time period on X-Axis
-    private void plotGraph(final List<String> xValues, List<Integer> yValues, int descriptionCode)
-    {
+    private void plotGraph(final List<String> xValues, List<Integer> yValues, int descriptionCode) {
         // Adding data points
         ArrayList<BarEntry> yData = new ArrayList<>();
-        for(int i = 0; i < yValues.size(); i++){
-            yData.add(new BarEntry(i,yValues.get(i)));
+        for (int i = 0; i < yValues.size(); i++) {
+            yData.add(new BarEntry(i, yValues.get(i)));
         }
 
         // Setting label  on X-Axis
@@ -647,7 +607,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         xAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                if((int) value < xValues.size())
+                if ((int) value < xValues.size())
                     return xValues.get((int) value);
                 else
                     return null;
@@ -666,7 +626,7 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         leftYAxis.setAxisMinimum(0);
 
         // Setting bar features
-        BarDataSet barDataSet = new BarDataSet(yData,getResources().getStringArray(R.array.graph_descriptions)[descriptionCode-1]);
+        BarDataSet barDataSet = new BarDataSet(yData, getResources().getStringArray(R.array.graph_descriptions)[descriptionCode - 1]);
         barDataSet.setColors(getResources().getColor(R.color.colorAccent)); // Sets default colour of bars to colorAccent
         barDataSet.setHighLightColor(Color.WHITE); // Sets the bar color on selection to white
         barDataSet.setValueFormatter(new HomeFragment.IntValueFormatter()); // Sets bar labels to be integers only
@@ -685,8 +645,8 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
         barChart.setFitBars(true);
 
         // Splits the labels to two lines for lengthy labels like for MONTHLY graphs
-        if(descriptionCode == 3 || descriptionCode == 6 || descriptionCode == 9)
-            barChart.setXAxisRenderer(new HomeFragment.CustomXAxisRenderer(barChart.getViewPortHandler(),xAxis,barChart.getTransformer(YAxis.AxisDependency.LEFT)));
+        if (descriptionCode == 3 || descriptionCode == 6 || descriptionCode == 9)
+            barChart.setXAxisRenderer(new HomeFragment.CustomXAxisRenderer(barChart.getViewPortHandler(), xAxis, barChart.getTransformer(YAxis.AxisDependency.LEFT)));
     }
 
     // Class to format the bar labels so that the labels will only be integers
@@ -699,16 +659,13 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
 
     // Class to handle lengthy labels
     // Assuming that the label contains '\n' where a split should occur
-    public class CustomXAxisRenderer extends XAxisRenderer
-    {
-        public CustomXAxisRenderer(ViewPortHandler viewPortHandler, XAxis xAxis, Transformer trans)
-        {
+    public class CustomXAxisRenderer extends XAxisRenderer {
+        public CustomXAxisRenderer(ViewPortHandler viewPortHandler, XAxis xAxis, Transformer trans) {
             super(viewPortHandler, xAxis, trans);
         }
 
         @Override
-        protected void drawLabel(Canvas c, String formattedLabel, float x, float y, MPPointF anchor, float angleDegrees)
-        {
+        protected void drawLabel(Canvas c, String formattedLabel, float x, float y, MPPointF anchor, float angleDegrees) {
             String line[] = formattedLabel.split("\n");
             for (int i = 0; i < line.length; i++) {
                 float vOffset = i * mAxisLabelPaint.getTextSize();
@@ -716,5 +673,54 @@ public class HomeFragment extends Fragment implements AdapterView.OnItemSelected
             }
         }
     }
+
+
+    ////////////////////////////////////Everything Fitbit down
+
+    @Override
+    public int getTitleResourceId() {
+        return R.string.activity_info;
+    }
+
+    @Override
+    protected int getLoaderId() {
+        return 3;
+    }
+
+    @Override
+    public Loader<ResourceLoaderResult<DailyActivitySummary>> onCreateLoader(int id, Bundle args) {
+        return ActivityService.getDailyActivitySummaryLoader(getActivity(), new Date());
+    }
+
+    @Override
+    public void onLoadFinished(Loader<ResourceLoaderResult<DailyActivitySummary>> loader, ResourceLoaderResult<DailyActivitySummary> data) {
+        super.onLoadFinished(loader, data);
+        if (data.isSuccessful()) {
+            bindActivityData(data.getResult());
+        }
+    }
+
+    public void bindActivityData(DailyActivitySummary dailyActivitySummary) {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        Summary summary = dailyActivitySummary.getSummary();
+        Goals goals = dailyActivitySummary.getGoals();
+
+        stringBuilder.append("<b>TODAY</b> ");
+        stringBuilder.append("<br />");
+        printKeys(stringBuilder, summary);
+
+        stringBuilder.append("<br /><br />");
+        stringBuilder.append("<b>GOALS</b> ");
+        stringBuilder.append("<br />");
+        printKeys(stringBuilder, goals);
+
+//        setMainText(stringBuilder.toString());
+
+        updateTotalSteps(summary.getSteps());
+        updateTotalCalories("" + summary.getCaloriesOut());
+//        updateTotalDistance(summary.getDistances());
+    }
+
 
 }

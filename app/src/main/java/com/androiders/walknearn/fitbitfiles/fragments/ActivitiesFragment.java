@@ -49,6 +49,7 @@ public class ActivitiesFragment extends InfoFragment<DailyActivitySummary> {
         Summary summary = dailyActivitySummary.getSummary();
         Goals goals = dailyActivitySummary.getGoals();
 
+
         stringBuilder.append("<b>TODAY</b> ");
         stringBuilder.append("<br />");
         printKeys(stringBuilder, summary);
