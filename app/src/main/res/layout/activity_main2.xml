@@ -18,22 +18,39 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/ProfilePic"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:src="@mipmap/ic_account_white_24dp" />
 
-        <com.androiders.walknearn.ui.CanaroTextView
-            android:id="@+id/toolbar_title"
+        <LinearLayout
+            android:id="@+id/linear"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
-            android:layout_toRightOf="@+id/ProfilePic"
-            android:textColor="@color/white"
             android:layout_marginLeft="10dp"
-            android:textSize="13sp"
-            android:textStyle="bold" />
+            android:layout_toRightOf="@+id/ProfilePic"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <com.androiders.walknearn.ui.CanaroTextView
+                android:id="@+id/toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="asd"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <com.androiders.walknearn.ui.CanaroTextView
+                android:id="@+id/textViewWalkcoins"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0 walkcoins"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
+        </LinearLayout>
+
     </RelativeLayout>
 
 
@@ -51,11 +68,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_gravity="end|bottom"
-        app:elevation="10dp"
-        android:elevation="10dp"
         android:background="?attr/colorPrimary"
-        app:tabIndicatorColor="@color/colorPrimary"
+        android:elevation="10dp"
+        app:elevation="10dp"
         app:tabGravity="fill"
+        app:tabIndicatorColor="@color/colorPrimary"
         app:tabMode="fixed"
         app:tabTextColor="@color/grey" />
 

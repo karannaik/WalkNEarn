@@ -35,7 +35,6 @@ public class TotalCaloriesFragment extends Fragment {
         return view;
     }
 
-
     private void initializeViews(View view) {
 
         mTextViewCalories = (TextView) view.findViewById(R.id.textViewCalories);

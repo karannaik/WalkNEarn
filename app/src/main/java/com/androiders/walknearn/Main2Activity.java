@@ -11,17 +11,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 
 import com.androiders.walknearn.fitbitfiles.fragments.ActivitiesFragment;
 import com.androiders.walknearn.fitbitfiles.fragments.DeviceFragment;
 import com.androiders.walknearn.fitbitfiles.fragments.ProfileFragment;
+import com.androiders.walknearn.fragment.CouponsFragment;
 import com.androiders.walknearn.fragment.HomeFragment;
+import com.androiders.walknearn.fragment.SettingsFragment;
 import com.androiders.walknearn.model.User;
 import com.androiders.walknearn.model.UserLocalStore;
+import com.androiders.walknearn.ui.CanaroTextView;
 import com.androiders.walknearn.ui.CustomFixedViewPager;
 
 import java.io.IOException;
 import java.net.URL;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Main2Activity extends AppCompatActivity {
 
@@ -32,10 +39,14 @@ public class Main2Activity extends AppCompatActivity {
     private TabLayout mTabLayout;
     final int[] ICONS = new int[]{
             R.mipmap.ic_home_white_36dp,
-            R.mipmap.ic_settings_white_36dp,
             R.mipmap.ic_account_white_36dp,
-            R.mipmap.ic_wallet_white_36dp
+            R.mipmap.ic_ticket_percent_white_36dp,
+            R.mipmap.ic_settings_white_36dp
     };
+
+    private User user;
+    private CircleImageView mProfilePic;
+    private CanaroTextView mTextViewWalkcoins;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,13 +57,15 @@ public class Main2Activity extends AppCompatActivity {
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
 
-        setViewPagerAndTabLayout();
+        user= new UserLocalStore(this).getLoggedInUser();
         loadProfilePic();
+        setViewPagerAndTabLayout();
     }
 
     private void loadProfilePic() {
 
-        final User user = new UserLocalStore(this).getLoggedInUser();
+        mProfilePic = (de.hdodenhof.circleimageview.CircleImageView)findViewById(R.id.ProfilePic);
+        mTextViewWalkcoins = (CanaroTextView)findViewById(R.id.textViewWalkcoins);
 
         if (user.getPhotoUrl() != null && !user.getPhotoUrl().isEmpty()) {
             //load profile pic
@@ -64,7 +77,7 @@ public class Main2Activity extends AppCompatActivity {
                             try {
                                 URL url = new URL(user.getPhotoUrl());
                                 Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                                ((de.hdodenhof.circleimageview.CircleImageView)findViewById(R.id.ProfilePic)).setImageBitmap(bmp);
+                                mProfilePic.setImageBitmap(bmp);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -77,6 +90,14 @@ public class Main2Activity extends AppCompatActivity {
 
         }
 
+        if(user.getUsername()!=null) {
+
+            changeTitle(user.getUsername());
+        }
+    }
+
+    public void changeTitle(String title){
+        ((CanaroTextView)findViewById(R.id.toolbar_title)).setText(title);
     }
 
     private void setViewPagerAndTabLayout() {
@@ -121,24 +142,39 @@ public class Main2Activity extends AppCompatActivity {
                 mTabLayout.getTabAt(1).getIcon().setAlpha(50);
                 mTabLayout.getTabAt(2).getIcon().setAlpha(50);
                 mTabLayout.getTabAt(3).getIcon().setAlpha(50);
-                break;
-            case 1:
-                mTabLayout.getTabAt(0).getIcon().setAlpha(50);
-                mTabLayout.getTabAt(1).getIcon().setAlpha(255);
-                mTabLayout.getTabAt(2).getIcon().setAlpha(50);
-                mTabLayout.getTabAt(3).getIcon().setAlpha(50);
-                break;
-            case 2:
-                mTabLayout.getTabAt(0).getIcon().setAlpha(50);
-                mTabLayout.getTabAt(1).getIcon().setAlpha(50);
-                mTabLayout.getTabAt(2).getIcon().setAlpha(255);
-                mTabLayout.getTabAt(3).getIcon().setAlpha(50);
+                if(user.getUsername()!=null) {
+
+                    changeTitle(user.getUsername());
+                }
+                mProfilePic.setVisibility(View.VISIBLE);
+                mTextViewWalkcoins.setVisibility(View.VISIBLE);
                 break;
             case 3:
                 mTabLayout.getTabAt(0).getIcon().setAlpha(50);
                 mTabLayout.getTabAt(1).getIcon().setAlpha(50);
                 mTabLayout.getTabAt(2).getIcon().setAlpha(50);
                 mTabLayout.getTabAt(3).getIcon().setAlpha(255);
+                changeTitle("Settings");
+                mProfilePic.setVisibility(View.GONE);
+                mTextViewWalkcoins.setVisibility(View.GONE);
+                break;
+            case 2:
+                mTabLayout.getTabAt(0).getIcon().setAlpha(50);
+                mTabLayout.getTabAt(1).getIcon().setAlpha(50);
+                mTabLayout.getTabAt(2).getIcon().setAlpha(255);
+                mTabLayout.getTabAt(3).getIcon().setAlpha(50);
+                changeTitle("Coupons");
+                mProfilePic.setVisibility(View.GONE);
+                mTextViewWalkcoins.setVisibility(View.GONE);
+                break;
+            case 1:
+                mTabLayout.getTabAt(0).getIcon().setAlpha(50);
+                mTabLayout.getTabAt(1).getIcon().setAlpha(255);
+                mTabLayout.getTabAt(2).getIcon().setAlpha(50);
+                mTabLayout.getTabAt(3).getIcon().setAlpha(50);
+                changeTitle("Challenges");
+                mProfilePic.setVisibility(View.GONE);
+                mTextViewWalkcoins.setVisibility(View.GONE);
                 break;
         }
     }
@@ -163,11 +199,11 @@ public class Main2Activity extends AppCompatActivity {
                 case 0:
                     return new HomeFragment();
 
-                case 1:
-                    return new DeviceFragment();
+                case 3:
+                    return new SettingsFragment();
 
                 case 2:
-                    return new ActivitiesFragment();
+                    return new CouponsFragment();
 
             }
             return new ProfileFragment();

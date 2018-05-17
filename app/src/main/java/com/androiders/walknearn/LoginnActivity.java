@@ -191,6 +191,7 @@ public class LoginnActivity extends AppCompatActivity {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             // Signed in successfully, show authenticated UI.
             startPermissionsActivity(account);
+            storeUserData(account);
             Toast.makeText(this, "Welcome "+account.getGivenName(), Toast.LENGTH_LONG).show();
         }
         catch (ApiException e) {

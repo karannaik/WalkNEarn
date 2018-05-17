@@ -1,9 +1,9 @@
 package com.androiders.walknearn;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -105,7 +105,7 @@ public class CouponTypeActivity extends AppCompatActivity {
     private void setupViewPager(ViewPager viewPager) {
         PromotedCouponsFragment mPromotedCouponFragment = new PromotedCouponsFragment();
         PromotedCouponsFragment mPromotedCouponFragment1 = new PromotedCouponsFragment();
-        CouponTypeActivity.ViewPagerAdapter adapter = new CouponTypeActivity.ViewPagerAdapter(getSupportFragmentManager());
+        CouponTypeActivity.ViewPagerAdapter adapter = new CouponTypeActivity.ViewPagerAdapter(getFragmentManager());
         adapter.addFragment(mPromotedCouponFragment, "");
         adapter.addFragment(mPromotedCouponFragment1, "1");
         viewPager.setAdapter(adapter);
@@ -120,7 +120,7 @@ public class CouponTypeActivity extends AppCompatActivity {
         }
 
         @Override
-        public android.support.v4.app.Fragment getItem(int position) {
+        public Fragment getItem(int position) {
             return mFragmentList.get(position);
         }
 
@@ -129,7 +129,7 @@ public class CouponTypeActivity extends AppCompatActivity {
             return mFragmentList.size();
         }
 
-        public void addFragment(android.support.v4.app.Fragment fragment, String title) {
+        public void addFragment(Fragment fragment, String title) {
             mFragmentList.add(fragment);
             mFragmentTitleList.add(title);
         }
