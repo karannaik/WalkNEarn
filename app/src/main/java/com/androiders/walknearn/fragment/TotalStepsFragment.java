@@ -1,9 +1,7 @@
 package com.androiders.walknearn.fragment;
 
-import android.app.Fragment;
 import android.content.Loader;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +13,7 @@ import com.androiders.walknearn.R;
 import com.androiders.walknearn.fitbitfiles.fragments.InfoFragment;
 import com.fitbit.api.loaders.ResourceLoaderResult;
 import com.fitbit.api.models.HistorySteps;
-import com.fitbit.api.models.HistoryStepsValue;
+import com.fitbit.api.models.HistoryValuesModel;
 import com.fitbit.api.services.HistoryStepsService;
 
 import java.util.ArrayList;
@@ -26,7 +24,7 @@ public class TotalStepsFragment extends InfoFragment<HistorySteps> {
 
     private View view;
     private TextView mTextViewSteps;
-    public List<HistoryStepsValue> historyStepsValueList = new ArrayList<>();
+    public List<HistoryValuesModel> historyValuesModelList = new ArrayList<>();
 
     public TotalStepsFragment() {
         // Required empty public constructor
@@ -79,10 +77,8 @@ public class TotalStepsFragment extends InfoFragment<HistorySteps> {
     public void onLoadFinished(Loader<ResourceLoaderResult<HistorySteps>> loader, ResourceLoaderResult<HistorySteps> data) {
         super.onLoadFinished(loader, data);
         if (data.isSuccessful()) {
-            historyStepsValueList = data.getResult().getActivity();
-            ((Main2Activity)getActivity()).updateSteps(historyStepsValueList);
+            historyValuesModelList = data.getResult().getActivity();
+            ((Main2Activity)getActivity()).updateSteps(historyValuesModelList);
         }
     }
-
-
 }

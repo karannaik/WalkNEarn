@@ -9,6 +9,7 @@ import com.fitbit.fitbitcommon.network.BasicHttpResponse;
 import android.app.Activity;
 import android.content.AsyncTaskLoader;
 import android.os.Handler;
+import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -52,6 +53,7 @@ public class ResourceLoader<T> extends AsyncTaskLoader<ResourceLoaderResult<T>> 
             int responseCode = response.getStatusCode();
             final String json = response.getBodyAsString();
             if (response.isSuccessful()) {
+                Log.d("asdasdasd :::: ", json);
                 final T resource = new Gson().fromJson(json, classType);
                 return ResourceLoaderResult.onSuccess(resource);
             } else {

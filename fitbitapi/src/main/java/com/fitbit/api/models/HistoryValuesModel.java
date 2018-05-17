@@ -7,14 +7,14 @@ import com.google.gson.annotations.SerializedName;
  * Created by KARAN on 16-05-2018.
  */
 
-public class HistoryStepsValue {
+public class HistoryValuesModel {
 
     @SerializedName("dateTime")
     @Expose
     private String dateTime;
     @SerializedName("value")
     @Expose
-    private Integer value;
+    private String value;
 
     /**
      * @return The date
@@ -33,14 +33,14 @@ public class HistoryStepsValue {
     /**
      * @return The value
      */
-    public Integer getValue() {
+    public String getValue() {
         return value;
     }
 
     /**
      * @param value The value
      */
-    public void setValue(Integer value) {
+    public void setValue(String value) {
         this.value = value;
     }
 }

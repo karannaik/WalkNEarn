@@ -12,19 +12,19 @@ public class HistorySteps {
 
     @SerializedName("activities-steps")
     @Expose
-    private List<HistoryStepsValue> activity;
+    private List<HistoryValuesModel> activity;
 
     /**
      * @return The activity
      */
-    public List<HistoryStepsValue> getActivity() {
+    public List<HistoryValuesModel> getActivity() {
         return activity;
     }
 
     /**
      * @param activity The activity
      */
-    public void setActivity(List<HistoryStepsValue> activity) {
+    public void setActivity(List<HistoryValuesModel> activity) {
         this.activity = activity;
     }
 

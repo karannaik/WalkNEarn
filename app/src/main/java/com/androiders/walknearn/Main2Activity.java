@@ -11,12 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
-import com.androiders.walknearn.fitbitfiles.fragments.ActivitiesFragment;
-import com.androiders.walknearn.fitbitfiles.fragments.DeviceFragment;
 import com.androiders.walknearn.fitbitfiles.fragments.ProfileFragment;
 import com.androiders.walknearn.fragment.CouponsFragment;
 import com.androiders.walknearn.fragment.HomeFragment;
@@ -25,7 +21,7 @@ import com.androiders.walknearn.model.User;
 import com.androiders.walknearn.model.UserLocalStore;
 import com.androiders.walknearn.ui.CanaroTextView;
 import com.androiders.walknearn.ui.CustomFixedViewPager;
-import com.fitbit.api.models.HistoryStepsValue;
+import com.fitbit.api.models.HistoryValuesModel;
 
 import java.io.IOException;
 import java.net.URL;
@@ -227,15 +223,15 @@ public class Main2Activity extends AppCompatActivity {
 
     //////Fitbit methods for steps, calories and distance for graph
 
-    public void updateSteps(List<HistoryStepsValue> list) {
+    public void updateSteps(List<HistoryValuesModel> list) {
 
     }
 
-    public void updateCalories(List<HistoryStepsValue> list) {
+    public void updateCalories(List<HistoryValuesModel> list) {
 
     }
 
-    public void updateDistance(List<HistoryStepsValue> list) {
+    public void updateDistance(List<HistoryValuesModel> list) {
 
     }
 }
