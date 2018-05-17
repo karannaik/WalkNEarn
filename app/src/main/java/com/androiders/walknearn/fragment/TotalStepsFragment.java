@@ -1,19 +1,32 @@
 package com.androiders.walknearn.fragment;
 
 import android.app.Fragment;
+import android.content.Loader;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.androiders.walknearn.Main2Activity;
 import com.androiders.walknearn.R;
+import com.androiders.walknearn.fitbitfiles.fragments.InfoFragment;
+import com.fitbit.api.loaders.ResourceLoaderResult;
+import com.fitbit.api.models.HistorySteps;
+import com.fitbit.api.models.HistoryStepsValue;
+import com.fitbit.api.services.HistoryStepsService;
 
-public class TotalStepsFragment extends Fragment {
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+public class TotalStepsFragment extends InfoFragment<HistorySteps> {
 
     private View view;
     private TextView mTextViewSteps;
+    public List<HistoryStepsValue> historyStepsValueList = new ArrayList<>();
 
     public TotalStepsFragment() {
         // Required empty public constructor
@@ -45,5 +58,31 @@ public class TotalStepsFragment extends Fragment {
 
         ((TextView)view.findViewById(R.id.textViewSteps)).setText(""+total);
     }
+
+
+    @Override
+    public int getTitleResourceId() {
+        return R.string.activity_info;
+    }
+
+    @Override
+    protected int getLoaderId() {
+        return 3;
+    }
+
+    @Override
+    public Loader<ResourceLoaderResult<HistorySteps>> onCreateLoader(int id, Bundle args) {
+        return HistoryStepsService.getHistoryStepsSummaryLoader(getActivity(), new Date());
+    }
+
+    @Override
+    public void onLoadFinished(Loader<ResourceLoaderResult<HistorySteps>> loader, ResourceLoaderResult<HistorySteps> data) {
+        super.onLoadFinished(loader, data);
+        if (data.isSuccessful()) {
+            historyStepsValueList = data.getResult().getActivity();
+            ((Main2Activity)getActivity()).updateSteps(historyStepsValueList);
+        }
+    }
+
 
 }

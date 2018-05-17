@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -24,9 +25,11 @@ import com.androiders.walknearn.model.User;
 import com.androiders.walknearn.model.UserLocalStore;
 import com.androiders.walknearn.ui.CanaroTextView;
 import com.androiders.walknearn.ui.CustomFixedViewPager;
+import com.fitbit.api.models.HistoryStepsValue;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -135,6 +138,12 @@ public class Main2Activity extends AppCompatActivity {
         mViewPager.setPagingEnabled(false);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
     private void setIconColorsSelectables(int position) {
         switch (position) {
             case 0:
@@ -214,5 +223,19 @@ public class Main2Activity extends AppCompatActivity {
             // Show 3 total pages.
             return 4;
         }
+    }
+
+    //////Fitbit methods for steps, calories and distance for graph
+
+    public void updateSteps(List<HistoryStepsValue> list) {
+
+    }
+
+    public void updateCalories(List<HistoryStepsValue> list) {
+
+    }
+
+    public void updateDistance(List<HistoryStepsValue> list) {
+
     }
 }
