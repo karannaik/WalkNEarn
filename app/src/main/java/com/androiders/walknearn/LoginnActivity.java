@@ -240,7 +240,7 @@ public class LoginnActivity extends AppCompatActivity {
                             user.setUsername(name);
                             user.setEmail(email);
                             user.setPassword(password);
-                            user.setWalkCoins(Double.parseDouble(walkCoins));
+                            user.setWalkCoins(Integer.parseInt(walkCoins));
 
                             userLocalStore.storeUserData(user);
                             userLocalStore.setUserLoggedIn(true);

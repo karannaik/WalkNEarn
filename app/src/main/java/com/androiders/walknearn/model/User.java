@@ -4,14 +4,14 @@ public class User {
 
     // Details of user on local database
     private String Username, Email, Password, photoUrl;
-    private double WalkCoins;
+    private int WalkCoins;
 
     // Getter and setter methods to set and retrieve user data
-    public double getWalkCoins() {
+    public int getWalkCoins() {
         return WalkCoins;
     }
 
-    public void setWalkCoins(double walkCoins) {
+    public void setWalkCoins(int walkCoins) {
         WalkCoins = walkCoins;
     }
 

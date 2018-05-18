@@ -174,7 +174,7 @@ public class UpdateForgotPasswordActivity extends AppCompatActivity {
                         // Updating user data on local database
                         User newUser = new User();
                         newUser.setUsername(name);
-                        newUser.setWalkCoins(Double.parseDouble(stepCnt));
+                        newUser.setWalkCoins(Integer.parseInt(stepCnt));
                         newUser.setEmail(email);
                         newUser.setPassword(password);
                         userLocalStore.storeUserData(newUser);
