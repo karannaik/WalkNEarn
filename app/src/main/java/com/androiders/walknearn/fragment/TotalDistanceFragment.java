@@ -57,6 +57,7 @@ public class TotalDistanceFragment extends InfoFragment<HistoryDistance> {
 
     public void updateText(String total) {
 
+//        total = String.format("%.3f", Double.parseDouble(total) * 0.000621371);
         ((TextView)view.findViewById(R.id.textViewDistance)).setText(""+total);
     }
 

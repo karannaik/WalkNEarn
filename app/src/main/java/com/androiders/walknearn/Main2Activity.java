@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import com.androiders.walknearn.fitbitfiles.fragments.ProfileFragment;
 import com.androiders.walknearn.fragment.ChallengesFragment;
@@ -23,6 +24,8 @@ import com.androiders.walknearn.model.UserLocalStore;
 import com.androiders.walknearn.ui.CanaroTextView;
 import com.androiders.walknearn.ui.CustomFixedViewPager;
 import com.fitbit.api.models.HistoryValuesModel;
+
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.net.URL;
@@ -60,6 +63,10 @@ public class Main2Activity extends AppCompatActivity {
         user= new UserLocalStore(this).getLoggedInUser();
         loadProfilePic();
         setViewPagerAndTabLayout();
+    }
+
+    public void updateWalkcoins(int walkCoins) {
+        ((TextView)findViewById(R.id.textViewWalkcoins)).setText(walkCoins+" walkcoins");
     }
 
     private void loadProfilePic() {

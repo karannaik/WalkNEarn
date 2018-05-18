@@ -38,6 +38,7 @@ dependencies {
 
     //noinspection GradleCompatible
     compile 'com.google.firebase:firebase-invites:15.0.1'
+    implementation 'com.google.firebase:firebase-database:15.0.1'
     compile 'com.android.support:cardview-v7:27.1.1'
     compile 'com.android.support:design:27.1.1'
     compile 'com.android.support.constraint:constraint-layout:1.1.0'

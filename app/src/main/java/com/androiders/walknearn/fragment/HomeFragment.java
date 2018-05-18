@@ -22,6 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.androiders.walknearn.Main2Activity;
 import com.androiders.walknearn.MainActivity;
 import com.androiders.walknearn.R;
 import com.androiders.walknearn.dbhelper.SharedPrefs;
@@ -150,17 +151,19 @@ public class HomeFragment extends InfoFragment<DailyActivitySummary> implements 
                 switch (position) {
                     case 0:
                         detailsSpinnerPos = GRAPH_STEPS;
-                        initializeGraph(timeSpinnerPos, detailsSpinnerPos);
+                        readDailyStepsData();
                         break;
                     case 1:
                         detailsSpinnerPos = GRAPH_CALORIES;
-                        initializeGraph(timeSpinnerPos, detailsSpinnerPos);
+                        readDailyCaloriesData();
                         break;
                     case 2:
                         detailsSpinnerPos = GRAPH_DISTANCE;
-                        initializeGraph(timeSpinnerPos, detailsSpinnerPos);
+                        readDailyDistanceData();
                         break;
                 }
+
+                initializeGraph(timeSpinnerPos, detailsSpinnerPos);
             }
 
             @Override
@@ -181,8 +184,8 @@ public class HomeFragment extends InfoFragment<DailyActivitySummary> implements 
         adapter.addFragment(mFragmentTotalCalories, "Total Calories");
         adapter.addFragment(mFragmentTotalDistance, "Total Distance");
         viewPager.setAdapter(adapter);
+        viewPager.setOffscreenPageLimit(3);
     }
-
 
     // Class which helps in displaying the user's physical activity in the viewer pages
     class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -242,11 +245,12 @@ public class HomeFragment extends InfoFragment<DailyActivitySummary> implements 
         // Call to the method which reads the calories burned daily
         readDailyCaloriesData();
         // Call to the method which reads the distance walked daily
-        //readDailyDistanceData();
+        readDailyDistanceData();
     }
 
     private void updateTotalSteps(long total) {
         mFragmentTotalSteps.updateText(total);
+        ((Main2Activity)getActivity()).updateWalkcoins(Integer.parseInt(""+total/1000));
     }
 
 
@@ -254,7 +258,7 @@ public class HomeFragment extends InfoFragment<DailyActivitySummary> implements 
         mFragmentTotalCalories.updateText(total);
     }
 
-    private void updateTotalDistance(long total) {
+    private void updateTotalDistance(float total) {
         mFragmentTotalDistance.updateText("" + total);
     }
 
@@ -308,7 +312,7 @@ public class HomeFragment extends InfoFragment<DailyActivitySummary> implements 
                 .addOnSuccessListener(new OnSuccessListener<DataSet>() {
                     @Override
                     public void onSuccess(DataSet dataSet) {
-                        long total = dataSet.isEmpty() ? 0 : dataSet.getDataPoints().get(0).getValue(Field.FIELD_DISTANCE).asInt();
+                        float total = dataSet.isEmpty() ? 0 : dataSet.getDataPoints().get(0).getValue(Field.FIELD_DISTANCE).asFloat();
                         Log.i(TAG, "Total distance: " + total);
                         updateTotalDistance(total);
                     }
