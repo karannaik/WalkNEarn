@@ -150,15 +150,15 @@ public class HomeFragment extends InfoFragment<DailyActivitySummary> implements 
                 switch (position) {
                     case 0:
                         detailsSpinnerPos = GRAPH_STEPS;
-                        initializeGraph(GRAPH_STEPS, detailsSpinnerPos);
+                        initializeGraph(timeSpinnerPos, detailsSpinnerPos);
                         break;
                     case 1:
                         detailsSpinnerPos = GRAPH_CALORIES;
-                        initializeGraph(GRAPH_CALORIES, detailsSpinnerPos);
+                        initializeGraph(timeSpinnerPos, detailsSpinnerPos);
                         break;
                     case 2:
                         detailsSpinnerPos = GRAPH_DISTANCE;
-                        initializeGraph(GRAPH_DISTANCE, detailsSpinnerPos);
+                        initializeGraph(timeSpinnerPos, detailsSpinnerPos);
                         break;
                 }
             }
@@ -489,8 +489,11 @@ public class HomeFragment extends InfoFragment<DailyActivitySummary> implements 
                                 com.google.android.gms.fitness.data.DataPoint dataPoint = dataSet.getDataPoints().get(0);
                                 Log.i(TAG, "NOW Bucket Start: " + formatter.format(dataSet.getDataPoints().get(0).getStartTime(TimeUnit.MILLISECONDS)));
                                 Log.i(TAG, "NOW Bucket End: " + formatter.format(dataSet.getDataPoints().get(0).getEndTime(TimeUnit.MILLISECONDS)));
-                                Log.i(TAG, "NOW " + getResources().getStringArray(R.array.graph_descriptions)[descriptionCode - 1] + " = " + dataSet.getDataPoints().get(0).getValue(Field.FIELD_STEPS).asInt());
-                                YValues.add(dataPoint.getValue(field).asInt());
+                                if(field.equals(Field.FIELD_STEPS))
+                                    YValues.add(dataPoint.getValue(field).asInt());
+                                else
+                                    YValues.add(Math.round(dataPoint.getValue(field).asFloat()));
+
                             } else {
                                 Log.i(TAG, "NOW " + getResources().getStringArray(R.array.graph_descriptions)[descriptionCode - 1] + " = 0");
                                 YValues.add(0);

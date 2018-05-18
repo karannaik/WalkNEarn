@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.androiders.walknearn.fitbitfiles.fragments.ProfileFragment;
+import com.androiders.walknearn.fragment.ChallengesFragment;
 import com.androiders.walknearn.fragment.CouponsFragment;
 import com.androiders.walknearn.fragment.HomeFragment;
 import com.androiders.walknearn.fragment.SettingsFragment;
@@ -38,9 +39,9 @@ public class Main2Activity extends AppCompatActivity {
     private TabLayout mTabLayout;
     final int[] ICONS = new int[]{
             R.mipmap.ic_home_white_36dp,
-            R.mipmap.ic_account_white_36dp,
+            R.mipmap.challenges_36dp,
             R.mipmap.ic_ticket_percent_white_36dp,
-            R.mipmap.ic_settings_white_36dp
+            R.mipmap.ic_account_white_36dp
     };
 
     private User user;
@@ -203,12 +204,13 @@ public class Main2Activity extends AppCompatActivity {
             switch (position) {
                 case 0:
                     return new HomeFragment();
-
+                case 1:
+                    return new ChallengesFragment();
+                case 2:
+                    return new CouponsFragment();
                 case 3:
                     return new SettingsFragment();
 
-                case 2:
-                    return new CouponsFragment();
 
             }
             return new ProfileFragment();
