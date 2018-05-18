@@ -78,6 +78,7 @@ public class TotalStepsFragment extends InfoFragment<HistorySteps> {
         super.onLoadFinished(loader, data);
         if (data.isSuccessful()) {
             historyValuesModelList = data.getResult().getActivity();
+            updateText(Long.parseLong(historyValuesModelList.get(historyValuesModelList.size()-1).getValue()));
             ((Main2Activity)getActivity()).updateSteps(historyValuesModelList);
         }
     }

@@ -82,6 +82,7 @@ public class TotalDistanceFragment extends InfoFragment<HistoryDistance> {
         super.onLoadFinished(loader, data);
         if (data.isSuccessful()) {
             historyValuesModelList = data.getResult().getActivity();
+            updateText(historyValuesModelList.get(historyValuesModelList.size()-1).getValue());
             ((Main2Activity)getActivity()).updateDistance(historyValuesModelList);
         }
     }

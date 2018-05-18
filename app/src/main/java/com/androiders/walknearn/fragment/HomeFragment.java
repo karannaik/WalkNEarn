@@ -21,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.androiders.walknearn.Main2Activity;
 import com.androiders.walknearn.MainActivity;
@@ -95,6 +96,7 @@ public class HomeFragment extends InfoFragment<DailyActivitySummary> implements 
     private static final int GRAPH_DISTANCE = 3;
     private BarChart barChart;
     private int detailsSpinnerPos = 1;
+    private String currentFitnessTracker;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -114,14 +116,10 @@ public class HomeFragment extends InfoFragment<DailyActivitySummary> implements 
 
         initializeViews(view);
 
-        String currentFitnessTracker = new SharedPrefs(getActivity()).getFitnessTrackerGiven();
+        currentFitnessTracker = new SharedPrefs(getActivity()).getFitnessTrackerGiven();
 
 
-        if (currentFitnessTracker == SharedPrefs.FITNESS_TRACKER_FITBIT) {
-
-
-        } else {//else google fit
-
+        if (currentFitnessTracker.equals(SharedPrefs.FITNESS_TRACKER_GOOGLE_FIT)) {
             subscribe(); // Querying the daily data about user's physical activity and showing them on main page
         }
         setSpinnerForGraph(view); // Setting up the spinners for selecting the criteria for displaying graph
@@ -151,15 +149,24 @@ public class HomeFragment extends InfoFragment<DailyActivitySummary> implements 
                 switch (position) {
                     case 0:
                         detailsSpinnerPos = GRAPH_STEPS;
-                        readDailyStepsData();
+                        if (currentFitnessTracker.equals(SharedPrefs.FITNESS_TRACKER_GOOGLE_FIT)) {
+
+                            readDailyStepsData();
+                        }
                         break;
                     case 1:
                         detailsSpinnerPos = GRAPH_CALORIES;
-                        readDailyCaloriesData();
+
+                        if (currentFitnessTracker.equals(SharedPrefs.FITNESS_TRACKER_GOOGLE_FIT)) {
+
+                            readDailyCaloriesData();
+                        }
                         break;
                     case 2:
                         detailsSpinnerPos = GRAPH_DISTANCE;
-                        readDailyDistanceData();
+                        if (currentFitnessTracker.equals(SharedPrefs.FITNESS_TRACKER_GOOGLE_FIT)) {
+                            readDailyDistanceData();
+                        }
                         break;
                 }
 
@@ -248,17 +255,17 @@ public class HomeFragment extends InfoFragment<DailyActivitySummary> implements 
         readDailyDistanceData();
     }
 
-    private void updateTotalSteps(long total) {
+    public void updateTotalSteps(long total) {
         mFragmentTotalSteps.updateText(total);
         ((Main2Activity)getActivity()).updateWalkcoins(Integer.parseInt(""+total/1000));
     }
 
 
-    private void updateTotalCalories(String total) {
+    public void updateTotalCalories(String total) {
         mFragmentTotalCalories.updateText(total);
     }
 
-    private void updateTotalDistance(float total) {
+    public void updateTotalDistance(float total) {
         mFragmentTotalDistance.updateText("" + total);
     }
 
@@ -364,7 +371,9 @@ public class HomeFragment extends InfoFragment<DailyActivitySummary> implements 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
         timeSpinnerPos = 1;
-        initializeGraph(timeSpinnerPos, detailsSpinnerPos);
+        if (currentFitnessTracker.equals(SharedPrefs.FITNESS_TRACKER_GOOGLE_FIT)) {
+            initializeGraph(timeSpinnerPos, detailsSpinnerPos);
+        }
     }
 
     // Input parameters : criteria based on which graph is drawn (Time criteria, Type of History)
@@ -723,9 +732,10 @@ public class HomeFragment extends InfoFragment<DailyActivitySummary> implements 
         printKeys(stringBuilder, goals);
 
 //        setMainText(stringBuilder.toString());
-
-        updateTotalSteps(summary.getSteps());
-        updateTotalCalories("" + summary.getCaloriesOut());
+//
+//        Toast.makeText(getActivity(), ""+summary.getCaloriesOut(), Toast.LENGTH_LONG).show();
+//        updateTotalSteps(summary.getSteps());
+//        updateTotalCalories("" + summary.getCaloriesOut());
 //        updateTotalDistance(summary.getDistances());
     }
 

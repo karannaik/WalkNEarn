@@ -49,7 +49,8 @@ public class Main2Activity extends AppCompatActivity {
 
     private User user;
     private CircleImageView mProfilePic;
-    private CanaroTextView mTextViewWalkcoins;
+    private TextView mTextViewWalkcoins;
+    private HomeFragment homeFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +73,7 @@ public class Main2Activity extends AppCompatActivity {
     private void loadProfilePic() {
 
         mProfilePic = (de.hdodenhof.circleimageview.CircleImageView)findViewById(R.id.ProfilePic);
-        mTextViewWalkcoins = (CanaroTextView)findViewById(R.id.textViewWalkcoins);
+        mTextViewWalkcoins = (TextView)findViewById(R.id.textViewWalkcoins);
 
         if (user.getPhotoUrl() != null && !user.getPhotoUrl().isEmpty()) {
             //load profile pic
@@ -210,7 +211,8 @@ public class Main2Activity extends AppCompatActivity {
             // Return a PlaceholderFragment (defined as a static inner class below).
             switch (position) {
                 case 0:
-                    return new HomeFragment();
+                    homeFragment = new HomeFragment();
+                    return homeFragment;
                 case 1:
                     return new ChallengesFragment();
                 case 2:
@@ -241,6 +243,5 @@ public class Main2Activity extends AppCompatActivity {
     }
 
     public void updateDistance(List<HistoryValuesModel> list) {
-
     }
 }

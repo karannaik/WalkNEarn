@@ -62,7 +62,7 @@
                             android:textSize="16sp" />
 
                         <TextView
-                            android:id="@+id/textViewDesc"
+                            android:id="@+id/textViewName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Starbucks Coffee"
@@ -98,17 +98,13 @@
                     android:padding="20dp">
 
                     <TextView
+                        android:id="@+id/desc"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="YOUR FITAPP BALANCE IS "
+                        android:text=""
+                        android:maxLines="2"
                         android:textColor="@color/white" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="250"
-                        android:textColor="@color/white"
-                        android:textStyle="bold" />
                 </LinearLayout>
 
 
@@ -156,9 +152,9 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:layout_weight="3"
+                    android:layout_weight="4"
                     android:background="@color/colorAccent"
-                    android:padding="10dp"
+                    android:padding="8dp"
                     android:text="REDEEM"
                     android:textColor="@color/white"
                     android:textSize="18sp"
@@ -168,6 +164,7 @@
                     android:id="@+id/imageButtonFav"
                     style="?android:textAppearanceSmall"
                     android:layout_width="0dp"
+                    android:visibility="gone"
                     android:layout_height="match_parent"
                     android:padding="10dp"
                     android:layout_gravity="center"

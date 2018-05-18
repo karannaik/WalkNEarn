@@ -42,7 +42,7 @@
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
-            <com.androiders.walknearn.ui.CanaroTextView
+            <TextView
                 android:id="@+id/textViewWalkcoins"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
