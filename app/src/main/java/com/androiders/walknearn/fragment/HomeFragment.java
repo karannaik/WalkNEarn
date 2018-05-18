@@ -250,7 +250,7 @@ public class HomeFragment extends InfoFragment<DailyActivitySummary> implements 
 
     private void updateTotalSteps(long total) {
         mFragmentTotalSteps.updateText(total);
-        ((Main2Activity)getActivity()).updateWalkcoins(Integer.parseInt(""+total/1000));
+        //((Main2Activity)getActivity()).updateWalkcoins(Integer.parseInt(""+total/1000));
     }
 
 

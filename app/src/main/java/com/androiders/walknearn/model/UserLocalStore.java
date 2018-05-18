@@ -21,7 +21,7 @@ public class UserLocalStore {
         spEditor.putString("UserName",user.getUsername());
         spEditor.putString("Email",user.getEmail());
         spEditor.putString("Password",user.getPassword());
-        spEditor.putLong("StepCount",Double.doubleToRawLongBits(user.getWalkCoins()));
+        spEditor.putInt("StepCount",user.getWalkCoins());
         spEditor.putString("PhotoURL",user.getPhotoUrl());
         spEditor.commit();
     }
